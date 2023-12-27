@@ -6,14 +6,17 @@
   "scripts": {
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
-    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand"
+    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
+    "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts"
   },
   "author": "Shani and Shiraz",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3"
   },
   "devDependencies": {

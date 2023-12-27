@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
-    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand"
+    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
+    "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts"
   },
   "author": "Shani and Shiraz",
   "license": "ISC",

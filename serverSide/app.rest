@@ -1,0 +1,33 @@
+
+###
+
+POST http://localhost:3000/auth/register
+Content-Type: "application/json"
+
+{
+  "email": "test@test.com",
+  "password": "test123"
+}
+
+
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: "application/json"
+
+{
+  "email": "test@test.com",
+  "password": "test123"
+}
+
+
+
+###
+
+POST http://localhost:3000/auth/logout
+Content-Type: "application/json"
+
+{
+  "token": "auth_token_here"
+}

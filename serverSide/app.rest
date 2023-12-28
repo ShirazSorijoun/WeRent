@@ -31,30 +31,3 @@ Content-Type: "application/json"
 {
   "token": "auth_token_here"
 }
-
-###
-GET http://localhost:3000/user
-
-###
-GET http://localhost:3000/user/yaish@gmail.com
-
-###
-GET http://localhost:3000/user/id/658d76dbaccde9cdd0d12be0
-
-###
-PATCH http://localhost:3000/user/update
-Content-Type: application/json
-
-{
-  "id": "658d76dbaccde9cdd0d12be0",
-  "user": {
-    "name": "Shiraz",
-    "email": "ShirazS123@example.com",
-    "password": "55555"
-  }
-}
-
-###
-DELETE http://localhost:3000/user/delete?id=658d76c1accde9cdd0d12bdc
-
-###

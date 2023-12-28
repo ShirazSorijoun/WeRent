@@ -10,7 +10,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  roles?: UserRole[];
+  roles?: UserRole;
   advertisedApartments?: string[];
 }
 
@@ -28,13 +28,12 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roles: [
+  roles:
     {
       type: String,
       enum: Object.values(UserRole),
-      default: [UserRole.Tenant],
+      default: UserRole.Tenant,
     },
-  ],
   advertisedApartments: [
     {
       type: mongoose.Schema.Types.ObjectId,

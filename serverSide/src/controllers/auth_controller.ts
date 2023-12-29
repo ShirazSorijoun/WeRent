@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from '../models/user_model';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 const register = async (req: Request, res: Response) => {
@@ -31,7 +32,29 @@ const register = async (req: Request, res: Response) => {
 
 
 const login = async (req: Request, res: Response) => {
-    res.status(400).send("unimplemented-login");
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!email || !password || !name) {
+        return res.status(400).send("missing email or password or name");
+    }
+    try {
+        const user = await User.findOne({ 'email': email });
+        if (user == null) {
+            return res.status(401).send("email or password incorrect");
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).send("email or password incorrect");
+        }
+
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION});
+        return res.status(200).send({'accessToken': token});
+
+    } catch (error) {
+        res.status(400).send("error");
+    }
 }
 
 

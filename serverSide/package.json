@@ -7,7 +7,9 @@
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
-    "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts"
+    "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
+    "testApartment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/apartment.test.ts",
+    "testUser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts"
   },
   "author": "Shani and Shiraz",
   "license": "ISC",

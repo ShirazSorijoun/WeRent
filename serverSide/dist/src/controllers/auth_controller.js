@@ -8,14 +8,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const register = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(400).send("unimplemented-register");
+const user_model_1 = __importDefault(require("../models/user_model"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!email || !password || !name) {
+        return res.status(400).send("missing email or password or name");
+    }
+    try {
+        const rs = yield user_model_1.default.findOne({ 'email': email });
+        if (rs != null) {
+            return res.status(406).send("email already exists");
+        }
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
+        const rs2 = yield user_model_1.default.create({
+            'name': name,
+            'email': email,
+            'password': encryptedPassword
+        });
+        return res.status(201).send(rs2);
+    }
+    catch (error) {
+        res.status(400).send("error");
+    }
 });
-const login = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-login");
 });
-const logout = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-logout");
 });
 exports.default = {

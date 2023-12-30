@@ -3,6 +3,8 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
+//import { UserRole } from "../models/user_model";
+
 
 let app: Express;
 
@@ -10,7 +12,8 @@ let app: Express;
 const user = {
     name: "testUser",
     email: "test@test.com",
-    password: "test123"
+    password: "test123",
+    roles: "admin"
 };
 
 
@@ -27,7 +30,6 @@ afterAll(async () => {
 
 let accessToken: string;
 let refreshToken: string;
-//let newRefreshToken: string;
 
 
 describe ("Auth test", () => {

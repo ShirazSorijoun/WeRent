@@ -12,13 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(400).send("unimplemented-register");
-});
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(400).send("unimplemented-login");
-=======
 const user_model_1 = __importDefault(require("../models/user_model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -69,7 +62,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         res.status(400).send("error");
     }
->>>>>>> cff3e50168e937d3ea670323d3ce0c9820ac0f97
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-logout");

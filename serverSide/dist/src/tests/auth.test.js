@@ -31,21 +31,32 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 let accessToken;
+let refreshToken;
+//let newRefreshToken: string;
 describe("Auth test", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send(user);
         expect(response.statusCode).toBe(201);
     }));
     test("Test Register exist email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send(user);
         expect(response.statusCode).toBe(406);
     }));
     test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
+<<<<<<< HEAD
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
 <<<<<<< HEAD
             username: "test@test.com",
             password: "test123"
 =======
+=======
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
+>>>>>>> 3228cf1adaa447165e2f467bd5aeffb170008b6c
             name: "testUser",
             email: "test@test.com"
 >>>>>>> cff3e50168e937d3ea670323d3ce0c9820ac0f97
@@ -53,20 +64,23 @@ describe("Auth test", () => {
         expect(response.statusCode).toBe(400);
     }));
     test("Test Register missing email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
             name: "testUser",
             password: "test123"
         });
         expect(response.statusCode).toBe(400);
     }));
     test("Test Register missing name", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register").send({
             email: "test@test.com",
             password: "test123"
         });
         expect(response.statusCode).toBe(400);
     }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
+<<<<<<< HEAD
 <<<<<<< HEAD
         const response = yield (0, supertest_1.default)(app).post("/auth/login").send({
             username: "test@test.com",
@@ -75,8 +89,13 @@ describe("Auth test", () => {
 =======
         const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
 >>>>>>> cff3e50168e937d3ea670323d3ce0c9820ac0f97
+=======
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login").send(user);
+>>>>>>> 3228cf1adaa447165e2f467bd5aeffb170008b6c
         expect(response.statusCode).toBe(200);
         accessToken = response.body.accessToken;
+        refreshToken = response.body.refreshToken;
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -94,6 +113,28 @@ describe("Auth test", () => {
             .get("/user")
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).toBe(401);
+    }));
+    jest.setTimeout(10000);
+    test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield new Promise(resolve => setTimeout(() => resolve("done"), 5000));
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).not.toBe(200);
+    }));
+    test("Test refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/refresh")
+            .set("Authorization", "JWT " + refreshToken)
+            .send();
+        expect(response.statusCode).toBe(200);
+        expect(response.body.accessToken).toBeDefined();
+        expect(response.body.refreshToken).toBeDefined();
+        const newAccessToken = response.body.accessToken;
+        const response2 = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + newAccessToken);
+        expect(response2.statusCode).toBe(200);
     }));
 });
 //# sourceMappingURL=auth.test.js.map

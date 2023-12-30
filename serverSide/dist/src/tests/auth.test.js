@@ -27,7 +27,7 @@ describe("Auth test", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
             username: "test@test.com",
-            password: "1234567890"
+            password: "test123"
         });
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual({ message: "OK" });
@@ -35,7 +35,7 @@ describe("Auth test", () => {
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/login").send({
             username: "test@test.com",
-            password: "1234567890"
+            password: "test123"
         });
         expect(response.statusCode).toBe(200);
     }));

@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const register = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-register");
 });
-const login = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-login");
 });
-const logout = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-logout");
 });
 exports.default = {

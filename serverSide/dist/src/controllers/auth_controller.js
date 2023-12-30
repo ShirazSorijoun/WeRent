@@ -41,6 +41,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("login");
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -56,19 +57,88 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!isMatch) {
             return res.status(401).send("email or password incorrect");
         }
-        const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-        return res.status(200).send({ 'accessToken': token });
+        const accessToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        const refreshToken = yield jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+        if (user.tokens == null) {
+            user.tokens = [refreshToken];
+        }
+        else {
+            user.tokens.push(refreshToken);
+        }
+        yield user.save();
+        return res.status(200).send({ 'accessToken': accessToken, 'refreshToken': refreshToken });
     }
     catch (error) {
         res.status(400).send("error");
     }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(400).send("unimplemented-logout");
+    const authHeader = req.headers['authorization'];
+    const refreshToken = authHeader && authHeader.split(' ')[1];
+    if (refreshToken == null) {
+        return res.sendStatus(401);
+    }
+    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(err);
+        if (err) {
+            return res.sendStatus(401);
+        }
+        try {
+            const userFromDb = yield user_model_1.default.findOne({ '_id': user._id });
+            if (!userFromDb.tokens || !userFromDb.tokens.includes(refreshToken)) {
+                userFromDb.tokens = [];
+                yield userFromDb.save();
+                return res.sendStatus(401);
+            }
+            else {
+                userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
+                yield userFromDb.save();
+                return res.status(200);
+            }
+        }
+        catch (err) {
+            res.sendStatus(401).send(err.message);
+        }
+    }));
+});
+const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authHeader = req.headers['authorization'];
+    const refreshToken = authHeader && authHeader.split(' ')[1];
+    if (refreshToken == null) {
+        return res.sendStatus(401);
+    }
+    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(401);
+        }
+        try {
+            const userFromDb = yield user_model_1.default.findOne({ '_id': user._id });
+            if (!userFromDb.tokens || !userFromDb.tokens.includes(refreshToken)) {
+                userFromDb.tokens = []; //invalidates all user tokens
+                yield userFromDb.save();
+                return res.sendStatus(401);
+            }
+            //in case everything is fine
+            const accessToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+            const newRefreshToken = jsonwebtoken_1.default.sign({ '_id': user._id }, process.env.JWT_REFRESH_SECRET);
+            userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
+            userFromDb.tokens.push(newRefreshToken);
+            yield userFromDb.save();
+            return res.status(200).send({
+                'accessToken': accessToken,
+                'refreshToken': refreshToken
+            });
+        }
+        catch (err) {
+            res.sendStatus(401).send(err.message);
+        }
+    }));
 });
 exports.default = {
     register,
     login,
-    logout
+    logout,
+    refresh,
 };
 //# sourceMappingURL=auth_controller.js.map

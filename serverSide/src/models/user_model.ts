@@ -12,6 +12,7 @@ export interface IUser extends Document {
   password: string;
   roles?: UserRole;
   advertisedApartments?: string[];
+  tokens?: string[];
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -40,6 +41,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
       ref: 'Apartment',
     },
   ],
+  tokens: {
+    type: [String],
+    required: false,
+  },
 });
 
 const User = mongoose.model<IUser>('User', userSchema);

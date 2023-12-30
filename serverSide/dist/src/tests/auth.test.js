@@ -47,19 +47,10 @@ describe("Auth test", () => {
         expect(response.statusCode).toBe(406);
     }));
     test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
-<<<<<<< HEAD
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-<<<<<<< HEAD
-            username: "test@test.com",
-            password: "test123"
-=======
-=======
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register").send({
->>>>>>> 3228cf1adaa447165e2f467bd5aeffb170008b6c
             name: "testUser",
             email: "test@test.com"
->>>>>>> cff3e50168e937d3ea670323d3ce0c9820ac0f97
         });
         expect(response.statusCode).toBe(400);
     }));
@@ -80,19 +71,8 @@ describe("Auth test", () => {
         expect(response.statusCode).toBe(400);
     }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        const response = yield (0, supertest_1.default)(app).post("/auth/login").send({
-            username: "test@test.com",
-            password: "test123"
-        });
-=======
-        const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
->>>>>>> cff3e50168e937d3ea670323d3ce0c9820ac0f97
-=======
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/login").send(user);
->>>>>>> 3228cf1adaa447165e2f467bd5aeffb170008b6c
         expect(response.statusCode).toBe(200);
         accessToken = response.body.accessToken;
         refreshToken = response.body.refreshToken;

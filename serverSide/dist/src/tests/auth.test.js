@@ -70,6 +70,8 @@ describe("Auth test", () => {
             password: "test123"
         });
         expect(response.statusCode).toBe(200);
+        const token = response.body.accessToken;
+        expect(token).toBeDefined();
     }));
 });
 //# sourceMappingURL=auth.test.js.map

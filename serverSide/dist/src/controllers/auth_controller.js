@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const name = req.body.name;
     const email = req.body.email;
@@ -40,7 +41,27 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(400).send("unimplemented-login");
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!email || !password || !name) {
+        return res.status(400).send("missing email or password or name");
+    }
+    try {
+        const user = yield user_model_1.default.findOne({ 'email': email });
+        if (user == null) {
+            return res.status(401).send("email or password incorrect");
+        }
+        const isMatch = yield bcrypt_1.default.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).send("email or password incorrect");
+        }
+        const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        return res.status(200).send({ 'accessToken': token });
+    }
+    catch (error) {
+        res.status(400).send("error");
+    }
 });
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(400).send("unimplemented-logout");

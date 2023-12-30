@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from '../models/user_model';
+//import { UserRole } from "../models/user_model";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -8,8 +9,10 @@ const register = async (req: Request, res: Response) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    if (!email || !password || !name) {
-        return res.status(400).send("missing email or password or name");
+    const role = req.body.roles;
+
+    if (!email || !password || !name || !role) {
+        return res.status(400).send("missing email or password or name or role");
     }
     try {
         const rs = await User.findOne({ 'email': email });
@@ -21,7 +24,8 @@ const register = async (req: Request, res: Response) => {
         const rs2 = await User.create({
             'name': name,
             'email': email,
-            'password': encryptedPassword
+            'password': encryptedPassword,
+            'roles': role
         });
         return res.status(201).send(rs2);
 

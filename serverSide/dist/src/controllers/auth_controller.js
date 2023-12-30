@@ -13,14 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
+//import { UserRole } from "../models/user_model";
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    if (!email || !password || !name) {
-        return res.status(400).send("missing email or password or name");
+    const role = req.body.roles;
+    if (!email || !password || !name || !role) {
+        return res.status(400).send("missing email or password or name or role");
     }
     try {
         const rs = yield user_model_1.default.findOne({ 'email': email });
@@ -32,7 +34,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const rs2 = yield user_model_1.default.create({
             'name': name,
             'email': email,
-            'password': encryptedPassword
+            'password': encryptedPassword,
+            'roles': role
         });
         return res.status(201).send(rs2);
     }

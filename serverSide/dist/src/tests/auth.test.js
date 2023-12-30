@@ -16,11 +16,13 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+//import { UserRole } from "../models/user_model";
 let app;
 const user = {
     name: "testUser",
     email: "test@test.com",
-    password: "test123"
+    password: "test123",
+    roles: "admin"
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -32,7 +34,6 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 }));
 let accessToken;
 let refreshToken;
-//let newRefreshToken: string;
 describe("Auth test", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)

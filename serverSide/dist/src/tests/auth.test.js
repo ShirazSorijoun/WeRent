@@ -17,41 +17,39 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
+const user = {
+    name: "testUser",
+    email: "test@test.com",
+    password: "test123"
+};
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    yield user_model_1.default.deleteMany();
+    yield user_model_1.default.deleteMany({ 'email': user.email });
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
+let accessToken;
 describe("Auth test", () => {
     test("Test Register", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            name: "test",
-            email: "test@test.com",
-            password: "test123"
-        });
+        const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
         expect(response.statusCode).toBe(201);
     }));
     test("Test Register exist email", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            name: "test",
-            email: "test@test.com",
-            password: "test123"
-        });
+        const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
         expect(response.statusCode).toBe(406);
     }));
     test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            name: "test",
+            name: "testUser",
             email: "test@test.com"
         });
         expect(response.statusCode).toBe(400);
     }));
     test("Test Register missing email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/auth/register").send({
-            name: "test",
+            name: "testUser",
             password: "test123"
         });
         expect(response.statusCode).toBe(400);
@@ -64,14 +62,26 @@ describe("Auth test", () => {
         expect(response.statusCode).toBe(400);
     }));
     test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/auth/login").send({
-            name: "test",
-            email: "test@test.com",
-            password: "test123"
-        });
+        const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
         expect(response.statusCode).toBe(200);
-        const token = response.body.accessToken;
-        expect(token).toBeDefined();
+        accessToken = response.body.accessToken;
+        expect(accessToken).toBeDefined();
+    }));
+    test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/user");
+        expect(response.statusCode).toBe(401);
+    }));
+    test("Test access with valid token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+    }));
+    test("Test access with invalid token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT 1" + accessToken);
+        expect(response.statusCode).toBe(401);
     }));
 });
 //# sourceMappingURL=auth.test.js.map

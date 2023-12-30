@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface CustomRequest extends Request {
-    user: {_id: string};
+    user?: {_id: string};
 }
 
 const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {

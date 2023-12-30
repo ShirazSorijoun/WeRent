@@ -32,6 +32,7 @@ const register = async (req: Request, res: Response) => {
 
 
 const login = async (req: Request, res: Response) => {
+    console.log("login");
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -49,8 +50,26 @@ const login = async (req: Request, res: Response) => {
             return res.status(401).send("email or password incorrect");
         }
 
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION});
-        return res.status(200).send({'accessToken': token});
+        const accessToken = await jwt.sign(
+            { '_id': user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRATION}
+        );
+
+        const refreshToken = await jwt.sign(
+            { '_id': user._id },
+            process.env.JWT_REFRESH_SECRET
+        )
+
+        if (user.tokens == null) {
+            user.tokens = [refreshToken];
+        }
+        else {
+            user.tokens.push(refreshToken);
+        }
+        await user.save();
+
+        return res.status(200).send({'accessToken': accessToken, 'refreshToken': refreshToken});
 
     } catch (error) {
         res.status(400).send("error");
@@ -59,11 +78,80 @@ const login = async (req: Request, res: Response) => {
 
 
 const logout = async (req: Request, res: Response) => {
-    res.status(400).send("unimplemented-logout");
+    const authHeader = req.headers['authorization'];
+    const refreshToken = authHeader && authHeader.split(' ')[1];
+    if (refreshToken == null) {
+        return res.sendStatus(401);
+    }
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: {'_id': string}) => {
+        console.log(err);
+        if (err) {
+            return res.sendStatus(401);
+        }
+        try{
+            const userFromDb = await User.findOne({'_id': user._id});
+            if (!userFromDb.tokens || !userFromDb.tokens.includes(refreshToken)) {
+                userFromDb.tokens = [];
+                await userFromDb.save();
+                return res.sendStatus(401);
+            }else{
+                userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
+                await userFromDb.save();
+                return res.status(200);
+            }
+        }catch (err) {
+            res.sendStatus(401).send(err.message);
+        }
+    });
+}
+
+
+const refresh = async (req: Request, res: Response) => {
+    const authHeader = req.headers['authorization'];
+    const refreshToken = authHeader && authHeader.split(' ')[1];
+    if (refreshToken == null) {
+        return res.sendStatus(401);
+    }
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: {'_id': string}) => {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(401);
+        }
+        try{
+            const userFromDb = await User.findOne({'_id': user._id});
+            if (!userFromDb.tokens || !userFromDb.tokens.includes(refreshToken)) {
+                userFromDb.tokens = []; //invalidates all user tokens
+                await userFromDb.save();
+                return res.sendStatus(401);
+            }
+
+            //in case everything is fine
+            const accessToken = jwt.sign(
+                { '_id': user._id },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_EXPIRATION}
+            );
+            const newRefreshToken = jwt.sign(
+                { '_id': user._id },
+                process.env.JWT_REFRESH_SECRET
+            );
+
+            userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
+            userFromDb.tokens.push(newRefreshToken);
+            await userFromDb.save();
+            return res.status(200).send({
+                'accessToken': accessToken,
+                'refreshToken': refreshToken
+            });
+        }catch (err) {
+            res.sendStatus(401).send(err.message);
+        }
+    });
 }
 
 export default {
     register,
     login,
-    logout
+    logout,
+    refresh,
 }

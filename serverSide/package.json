@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist/src/server.js",
+    "start": "tsc && nodemon ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",

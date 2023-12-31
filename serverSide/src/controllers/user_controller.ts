@@ -40,9 +40,8 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 
 const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email } = req.params;
+    const { email } = req.body;
     const user = await User.findOne({ email });
-    //console.log('Email:', email);
     res.status(200).json(user);
   } catch (err) {
     res.status(400).send('Something went wrong -> getUserByEmail');
@@ -82,14 +81,16 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.query;
+    const { id } = req.params;
 
     // Ensure that id is provided
     if (!id) {
       res.status(400).send('User ID is required for deletion');
       return;
     }
+
     const deletedUser = await User.findByIdAndDelete(id);
+
     if (!deletedUser) {
       res.status(404).send('User not found');
       return;

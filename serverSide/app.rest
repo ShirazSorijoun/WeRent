@@ -6,12 +6,33 @@ Content-Type: application/json
 
 {
   "name": "testUser",
-  "email": "test3@test.com",
+  "email": "test@test.com",
   "password": "test123",
-  "roles": "admin"
+  "roles": "owner"
 }
 
+###
 
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "shani",
+  "email": "shani@test.com",
+  "password": "12345",
+  "roles": "owner"
+}
+
+###
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "name": "shani",
+  "email": "shani@test.com",
+  "password": "12345"
+}
 
 ###
 
@@ -24,8 +45,6 @@ Content-Type: application/json
   "password": "test123"
 }
 
-
-
 ###
 
 POST http://localhost:3000/auth/logout
@@ -36,26 +55,34 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/user
+GET http://localhost:3000/user/
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI0MjksImV4cCI6MTcwNDA3MzIyOX0.xrkshri4aYxIixHgU97sAWHK4mKNFArrs8lSIsvKSUI
+###
+
+GET http://localhost:3000/user/shani@test.com
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI1NDEsImV4cCI6MTcwNDA3MzM0MX0.uTvfGzBuhvsBNFl0hT1vty5E8RrtXXbGVN7E7lEbHio
+
 
 ###
-GET http://localhost:3000/user/yaish@gmail.com
+GET http://localhost:3000/user/id/6591ecc3105977c20d67c620
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI0MjksImV4cCI6MTcwNDA3MzIyOX0.xrkshri4aYxIixHgU97sAWHK4mKNFArrs8lSIsvKSUI
 
-###
-GET http://localhost:3000/user/id/658d76dbaccde9cdd0d12be0
 
 ###
 PATCH http://localhost:3000/user/update
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZjM3MTY0ZWRmYTQ2MTk3OWE3NGYiLCJpYXQiOjE3MDQwNjM4NzYsImV4cCI6MTcwNDA3NDY3Nn0.ITVIyV-grbMWJs_11cD7jNbbEbSeb5rt1Suq-2Ausl4
 Content-Type: application/json
 
 {
-  "id": "658d76dbaccde9cdd0d12be0",
+  "id": "6591ed27b131ca5028fea8a4",
   "user": {
     "name": "Shiraz",
     "email": "ShirazS123@example.com",
     "password": "55555"
   }
 }
+
+
 
 ###
 DELETE http://localhost:3000/user/delete?id=658d76c1accde9cdd0d12bdc

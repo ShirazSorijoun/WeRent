@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { IUser } from '../models/user_model';
+
 
 interface CustomRequest extends Request {
     user?: {_id: string};
@@ -15,14 +17,20 @@ const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunct
         return res.status(401).send("missing authorization token");
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        console.log(err);
-        if (err) {
-            return res.status(401).send(err.message);
-        }
-        req.user = user as {_id: string};
-        next();
-    });
+    try {
+        jwt.verify(token, process.env.JWT_SECRET, (err:unknown, user:IUser) => {
+            if (err) {
+                console.error('Token Verification Error:', err);
+                return res.status(401).json({ error: 'Token is not valid' });
+            }
+
+            req.user = user as { _id: string };
+            next();
+        });
+    } catch (err) {
+        console.error('Unexpected Error:', err);
+        res.status(500).send('Internal Server Error');
+    }
 }
 
 

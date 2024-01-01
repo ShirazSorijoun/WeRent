@@ -5,6 +5,9 @@ import { IUser } from '../models/user_model';
 
 interface CustomRequest extends Request {
     user?: {_id: string};
+    locals?: {
+        currentUserId?: string;
+    };
 }
 
 const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -25,6 +28,8 @@ const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunct
             }
 
             req.user = user as { _id: string };
+            req.locals = req.locals || {};
+            req.locals.currentUserId = user._id;
             next();
         });
     } catch (err) {

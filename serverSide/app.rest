@@ -56,28 +56,25 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/user/
-authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI0MjksImV4cCI6MTcwNDA3MzIyOX0.xrkshri4aYxIixHgU97sAWHK4mKNFArrs8lSIsvKSUI
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyYjE3ZWYyYzFlMWQxYTcwYTQwODMiLCJpYXQiOjE3MDQxMTI1MTB9.KyfBMHGe1yB9MpB74D8ry-nammjJJ1dgKL9TRILkew4
 ###
-
-GET http://localhost:3000/user/shani@test.com
-authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI1NDEsImV4cCI6MTcwNDA3MzM0MX0.uTvfGzBuhvsBNFl0hT1vty5E8RrtXXbGVN7E7lEbHio
+GET http://localhost:3000/user/test@test.com
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyYjE3ZWYyYzFlMWQxYTcwYTQwODMiLCJpYXQiOjE3MDQxMTI1MTB9.KyfBMHGe1yB9MpB74D8ry-nammjJJ1dgKL9TRILkew4
 
 
 ###
-GET http://localhost:3000/user/id/6591ecc3105977c20d67c620
-authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZWQyN2IxMzFjYTUwMjhmZWE4YTQiLCJpYXQiOjE3MDQwNjI0MjksImV4cCI6MTcwNDA3MzIyOX0.xrkshri4aYxIixHgU97sAWHK4mKNFArrs8lSIsvKSUI
-
-
+GET http://localhost:3000/user/id/6592b17ef2c1e1d1a70a407e
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyYjE3ZWYyYzFlMWQxYTcwYTQwN2UiLCJpYXQiOjE3MDQxMTI1MTB9.2v21FY73BHh--_ouKTwnVE_1da_N8SGJ8vUNpMVmPSM
 ###
 PATCH http://localhost:3000/user/update
-authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkxZjM3MTY0ZWRmYTQ2MTk3OWE3NGYiLCJpYXQiOjE3MDQwNjM4NzYsImV4cCI6MTcwNDA3NDY3Nn0.ITVIyV-grbMWJs_11cD7jNbbEbSeb5rt1Suq-2Ausl4
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyODU3YzYzNDEyMjdmOTBlM2ZkZDgiLCJpYXQiOjE3MDQxMDEyNDR9.TEnFYNnvbzgw96hcumzSttxQcWBFNM1lPQUFGDkV8v0
 Content-Type: application/json
 
 {
-  "id": "6591ed27b131ca5028fea8a4",
+  "id": "6592857c6341227f90e3fdd3",
   "user": {
-    "name": "Shiraz",
-    "email": "ShirazS123@example.com",
+    "name": "Shani Yaish",
+    "email": "update@example.com",
     "password": "55555"
   }
 }
@@ -85,6 +82,19 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:3000/user/delete?id=658d76c1accde9cdd0d12bdc
+DELETE http://localhost:3000/user/delete/659297dde267a89fbb7a52ec
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyOTdlZTVjZTA5NDRhMjU3Y2Q0NDIiLCJpYXQiOjE3MDQxMDU5NzF9.wcSn8bBsnC4xlLIChSxf0QttvfQcCSHfYXSdrj7agTw
 
 ###
+PATCH http://localhost:3000/user/updateOwnProfile
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTkyYzQ3NzdlNjZkZTcyMDEyYmYzODQiLCJpYXQiOjE3MDQxMTczNjd9.6IVv6HL9B39inVpQfscDJlz73sYVzf2RKm3xgFJv1uQ
+Content-Type: application/json
+
+{
+  "id": "6592c4777e66de72012bf37f",
+  "user": {
+    "name": "Shani Yaish",
+    "email": "update@gmail.com",
+    "password": "8888"
+  }
+}

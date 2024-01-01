@@ -2,6 +2,7 @@ import express from 'express';
 import UserController from '../controllers/user_controller';
 import authMiddleware from '../common/auth_middleware';
 import adminMiddleware from '../common/admin_middleware';
+import verifyUserOwnership  from '../common/verify_user_ownership';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.delete('/delete/:id',authMiddleware,adminMiddleware,UserController.delete
 
 // Routes for managing users by owner
 
-
+router.patch('/updateOwnProfile', authMiddleware, verifyUserOwnership,UserController.updateOwnProfile);
 router.get('/:email',authMiddleware,UserController.getUserByEmail);
 
 export default router;

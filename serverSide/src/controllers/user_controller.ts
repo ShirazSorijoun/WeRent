@@ -3,11 +3,11 @@ import User from '../models/user_model';
 import bcrypt from 'bcrypt';
 //import AuthRequest from '../middlewares/auth_middleware';
 
-/*interface AuthRequest extends Request {
+interface CustomRequest  extends Request {
     locals: {
       currentUserId?: string;
     };
-  }*/
+  }
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -108,6 +108,45 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 
+const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void> => {
+
+    const { currentUserId } = req.locals;
+
+    if (!currentUserId) {
+      res.status(400).send('User ID is required for updating the profile');
+      return;
+    }
+
+    const { name, email, password } = req.body.user;
+    
+    if (!name && !email && !password) {
+      res.status(400).send('At least one field (name, email, or password) is required for update');
+      return;
+    }
+
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const encryptedPassword = await bcrypt.hash(password, salt);
+
+      const updatedUser = await User.findByIdAndUpdate(
+        currentUserId,
+        { name, email, encryptedPassword },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        res.status(404).send('User not found');
+        return;
+      }
+
+      res.status(200).json(updatedUser);
+    } catch (err) {
+    console.error('Error in updateOwnProfile:', err);
+    res.status(500).send('Internal Server Error -> updateOwnProfile');
+  }
+};
+
+
 
 export default {
   getAllUsers,
@@ -115,6 +154,7 @@ export default {
   getUserByEmail,
   updateUser,
   deleteUser,
+  updateOwnProfile,
 };
 
 

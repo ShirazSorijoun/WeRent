@@ -18,9 +18,9 @@ const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunct
     }
 
     try {
-        jwt.verify(token, process.env.JWT_SECRET, (err:unknown, user:IUser) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, user:IUser) => {
             if (err) {
-                console.error('Token Verification Error:', err);
+                //console.error('Token Verification Error:', err);
                 return res.status(401).json({ error: 'Token is not valid' });
             }
 

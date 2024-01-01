@@ -21,7 +21,7 @@ const adminMiddleware = async (req: CustomRequest, res: Response, next: NextFunc
     const userId= decode._id;
 
 
-    const user = await User.findOne({_id:userId});
+    const user = await User.findOne({ _id : userId });
     //console.log("user",user)
     if(user.roles === UserRole.Admin)
     {

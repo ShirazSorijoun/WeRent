@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../models/user_model';
+import bcrypt from 'bcrypt';
 //import AuthRequest from '../middlewares/auth_middleware';
 
 /*interface AuthRequest extends Request {
@@ -40,8 +41,9 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
 
 const getUserByEmail = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
     const user = await User.findOne({ email });
+    //console.log(user)
     res.status(200).json(user);
   } catch (err) {
     res.status(400).send('Something went wrong -> getUserByEmail');
@@ -59,9 +61,12 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { name, email, password },
+      { name, email, encryptedPassword },
       { new: true }
     );
 
@@ -82,7 +87,6 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-
     // Ensure that id is provided
     if (!id) {
       res.status(400).send('User ID is required for deletion');

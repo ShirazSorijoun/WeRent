@@ -67,20 +67,20 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield user_model_1.default.deleteMany();
-    user_model_1.default.deleteMany({ 'email': user1.email });
+    yield user_model_1.default.deleteMany({ 'email': user1.email });
     const res1 = yield (0, supertest_1.default)(app).post("/auth/register").send(user1);
     user1Id = res1.body._id;
     //console.log(user1Id)
     const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user1);
     accessTokenUser1 = response.body.accessToken;
     //console.log(accessToken)
-    user_model_1.default.deleteMany({ 'email': user2.email });
+    yield user_model_1.default.deleteMany({ 'email': user2.email });
     const res2 = yield (0, supertest_1.default)(app).post("/auth/register").send(user2);
     user2Id = res2.body._id;
     const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(user2);
     accessTokenUser2 = response2.body.accessToken;
     //console.log(accessToken2)
-    user_model_1.default.deleteMany({ 'email': user3.email });
+    yield user_model_1.default.deleteMany({ 'email': user3.email });
     const res3 = yield (0, supertest_1.default)(app).post("/auth/register").send(user3);
     user3Id = res3.body._id;
     yield (0, supertest_1.default)(app).post("/auth/login").send(user3);
@@ -104,6 +104,8 @@ describe('User Controller Tests', () => {
         const response = yield (0, supertest_1.default)(app).get(`/user/${userEmail}`)
             .set("Authorization", "JWT " + accessTokenUser1);
         expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(user2.name);
+        expect(response.body._id).toBe(user2Id);
     }));
     test("Test Update - Admin", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
@@ -135,6 +137,7 @@ describe('User Controller Tests', () => {
             .set("Authorization", "JWT " + accessTokenUser2)
             .send(updateData);
         expect(response.statusCode).toBe(401);
+        expect(response.text).toBe('Not Admin');
     }));
     test("Test Update User - User Not Found", () => __awaiter(void 0, void 0, void 0, function* () {
         const nonExistentUserId = "6592857c6341227f90e3fdd3";

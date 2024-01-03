@@ -39,7 +39,7 @@ beforeAll(async () => {
   console.log("beforeAll");
   await User.deleteMany();
 
-  User.deleteMany({ 'email': user1.email });
+  await User.deleteMany({ 'email': user1.email });
   const res1 = await request(app).post("/auth/register").send(user1);
   user1Id = res1.body._id;
   //console.log(user1Id)
@@ -47,14 +47,14 @@ beforeAll(async () => {
   accessTokenUser1 = response.body.accessToken;
   //console.log(accessToken)
 
-  User.deleteMany({ 'email': user2.email });
+  await User.deleteMany({ 'email': user2.email });
   const res2 = await request(app).post("/auth/register").send(user2);
   user2Id = res2.body._id;
   const response2 = await request(app).post("/auth/login").send(user2);
   accessTokenUser2 = response2.body.accessToken;
   //console.log(accessToken2)
 
-  User.deleteMany({ 'email': user3.email });
+  await User.deleteMany({ 'email': user3.email });
   const res3 = await request(app).post("/auth/register").send(user3);
   user3Id = res3.body._id;
   await request(app).post("/auth/login").send(user3);
@@ -84,6 +84,8 @@ beforeAll(async () => {
       const response = await request(app).get(`/user/${userEmail}`)
       .set("Authorization", "JWT " + accessTokenUser1);
       expect(response.statusCode).toBe(200);
+      expect(response.body.name).toBe(user2.name)
+      expect(response.body._id).toBe(user2Id)
     });
 
     test("Test Update - Admin", async () => {
@@ -121,6 +123,7 @@ beforeAll(async () => {
       .send(updateData);
 
       expect(response.statusCode).toBe(401);
+      expect(response.text).toBe('Not Admin');
     });
 
     test("Test Update User - User Not Found", async () => {

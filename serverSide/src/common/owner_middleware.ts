@@ -17,7 +17,7 @@ const ownerMiddleware = async (req: CustomRequest, res: Response, next: NextFunc
         return res.status(401).send("missing authorization token");
     }
 
-    const decode = jwt.decode(token);
+    const decode = jwt.decode(token) as {_id: string} | null;
     const userId= decode._id;
 
 

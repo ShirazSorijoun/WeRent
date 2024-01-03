@@ -13,12 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
-//import AuthRequest from '../middlewares/auth_middleware';
-/*interface AuthRequest extends Request {
-    locals: {
-      currentUserId?: string;
-    };
-  }*/
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_model_1.default.find();
@@ -49,7 +44,7 @@ const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { email } = req.params;
         const user = yield user_model_1.default.findOne({ email });
-        //console.log('Email:', email);
+        //console.log(user)
         res.status(200).json(user);
     }
     catch (err) {
@@ -65,7 +60,9 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(400).send('At least one field (name, email, or password) is required for update');
             return;
         }
-        const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, password }, { new: true });
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
+        const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, { name, email, encryptedPassword }, { new: true });
         if (!updatedUser) {
             res.status(404).send('User not found');
             return;
@@ -79,7 +76,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.query;
+        const { id } = req.params;
         // Ensure that id is provided
         if (!id) {
             res.status(400).send('User ID is required for deletion');
@@ -97,11 +94,38 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send('Internal Server Error -> deleteUser');
     }
 });
+const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { currentUserId } = req.locals;
+    if (!currentUserId) {
+        res.status(400).send('User ID is required for updating the profile');
+        return;
+    }
+    const { name, email, password } = req.body.user;
+    if (!name && !email && !password) {
+        res.status(400).send('At least one field (name, email, or password) is required for update');
+        return;
+    }
+    try {
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
+        const updatedUser = yield user_model_1.default.findByIdAndUpdate(currentUserId, { name, email, encryptedPassword }, { new: true });
+        if (!updatedUser) {
+            res.status(404).send('User not found');
+            return;
+        }
+        res.status(200).json(updatedUser);
+    }
+    catch (err) {
+        console.error('Error in updateOwnProfile:', err);
+        res.status(500).send('Internal Server Error -> updateOwnProfile');
+    }
+});
 exports.default = {
     getAllUsers,
     getUserById,
     getUserByEmail,
     updateUser,
     deleteUser,
+    updateOwnProfile,
 };
 //# sourceMappingURL=user_controller.js.map

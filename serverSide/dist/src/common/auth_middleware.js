@@ -22,14 +22,22 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     if (token == null) {
         return res.status(401).send("missing authorization token");
     }
-    jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, user) => {
-        console.log(err);
-        if (err) {
-            return res.status(401).send(err.message);
-        }
-        req.user = user;
-        next();
-    });
+    try {
+        jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, user) => {
+            if (err) {
+                //console.error('Token Verification Error:', err);
+                return res.status(401).json({ error: 'Token is not valid' });
+            }
+            req.user = user;
+            req.locals = req.locals || {};
+            req.locals.currentUserId = user._id;
+            next();
+        });
+    }
+    catch (err) {
+        console.error('Unexpected Error:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 exports.default = authMiddleware;
 //# sourceMappingURL=auth_middleware.js.map

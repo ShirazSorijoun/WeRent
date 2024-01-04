@@ -1,10 +1,9 @@
-import mongoose, { Document, Schema, Types } from 'mongoose';
+import mongoose, { Document, Schema} from 'mongoose';
 
 export interface IApartment extends Document {
   city: string;
   address: string;
-  owner: Types.ObjectId; 
-  picture: string;
+  owner: mongoose.Schema.Types.ObjectId; 
   floor: number;
   rooms: number;
   sizeInSqMeters: number;
@@ -20,12 +19,8 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-  },
-  picture: {
-    type: String,
     required: true,
   },
   floor: {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User from '../models/user_model';
+import User, { IUser } from '../models/user_model';
 import bcrypt from 'bcrypt';
 //import AuthRequest from '../middlewares/auth_middleware';
 
@@ -146,7 +146,28 @@ const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void
   }
 };
 
+const getMyApartments = async (req: CustomRequest, res: Response): Promise<void> => {
 
+try {
+    const currentUserId = req.locals.currentUserId;
+
+    // Find the user by ID and populate the advertisedApartments field
+    const user: IUser | null = await User.findById(currentUserId).populate('advertisedApartments');
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const myApartments = user.advertisedApartments || [];
+    //console.log("myApartments",myApartments)
+    
+    res.status(200).json({ myApartments });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 export default {
   getAllUsers,
@@ -155,6 +176,7 @@ export default {
   updateUser,
   deleteUser,
   updateOwnProfile,
+  getMyApartments
 };
 
 

@@ -32,8 +32,7 @@ const userSchema = new mongoose_1.default.Schema({
     },
     advertisedApartments: [
         {
-            type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: 'Apartment',
+            type: mongoose_1.default.Schema.Types.Mixed,
         },
     ],
     tokens: {

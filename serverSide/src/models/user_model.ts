@@ -37,8 +37,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     },
   advertisedApartments: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Apartment',
+      type: mongoose.Schema.Types.Mixed,
     },
   ],
   tokens: {

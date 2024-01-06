@@ -23,7 +23,7 @@ const user1= {
 const user2= {
     name: "John",
     email: "John@test.com",
-    password: "1111",
+    password: "111111",
     roles: UserRole.Tenant
   };
 
@@ -41,6 +41,7 @@ const apartment1={
     floor: 2,
     rooms: 4,
     sizeInSqMeters: 105,
+    entryDate: new Date("2023-02-01")
 };
 
 const apartment2={
@@ -50,6 +51,7 @@ const apartment2={
   floor: 6,
   rooms: 5,
   sizeInSqMeters: 120,
+  entryDate: new Date("2024-06-15")
 };
 
 beforeAll(async () => {
@@ -61,7 +63,6 @@ beforeAll(async () => {
     await User.deleteMany({ 'email': user1.email });
     const res1 = await request(app).post("/auth/register").send(user1);
     user1Id= res1.body._id;
-    apartment1.owner = res1.body._id;
     const response1 =await request(app).post("/auth/login").send(user1);
     accessTokenUser1 = response1.body.accessToken;
 

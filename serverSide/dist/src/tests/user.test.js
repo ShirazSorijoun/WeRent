@@ -60,7 +60,7 @@ const user2 = {
 const user3 = {
     name: "John",
     email: "John@test.com",
-    password: "1111",
+    password: "111111",
     roles: user_model_1.UserRole.Tenant
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {

@@ -2,7 +2,7 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../models/user_model";
+import User, { UserRole } from "../models/user_model";
 //import { UserRole } from "../models/user_model";
 
 
@@ -13,7 +13,7 @@ const user = {
     name: "testUser",
     email: "test@test.com",
     password: "test123",
-    roles: "admin"
+    roles: UserRole.Admin
 };
 
 
@@ -70,6 +70,16 @@ describe ("Auth test", () => {
             .post("/auth/register").send({
                 email: "test@test.com",
                 password: "test123"
+            });
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("Test Register short password", async () => {
+        const response = await request(app)
+            .post("/auth/register").send({
+                name: "Short",
+                email: "Short@test.com",
+                password: "11",
             });
         expect(response.statusCode).toBe(400);
     });

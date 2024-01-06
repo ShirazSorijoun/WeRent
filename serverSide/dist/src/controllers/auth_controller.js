@@ -24,6 +24,20 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!email || !password || !name || !role) {
         return res.status(400).send("missing email or password or name or role");
     }
+    // Name validation
+    const nameRegex = /^[a-zA-Z0-9\s]+$/;
+    if (!nameRegex.test(name)) {
+        return res.status(400).json({ error: "Invalid name format" });
+    }
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Invalid email format." });
+    }
+    // Password validation
+    if (password.length < 6) {
+        return res.status(400).json({ error: "Password must be at least 6 characters long." });
+    }
     try {
         const rs = yield user_model_1.default.findOne({ 'email': email });
         if (rs != null) {

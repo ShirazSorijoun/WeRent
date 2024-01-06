@@ -24,49 +24,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-//const userReviewSchema = new mongoose.Schema<IUserReview>({
 const userReviewSchema = new mongoose_1.default.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    name: {
+    ownerName: {
         type: String,
         required: true,
     },
-    message: {
+    description: {
         type: String,
         required: true,
     }
 });
 const UserReview = mongoose_1.default.model("UserReview", userReviewSchema);
 exports.default = UserReview;
-//export default mongoose.model<IUserReview>("UserReview", userReviewSchema);
-/*
-import mongoose from "mongoose";
-
-export interface IUserReview {
-  title: string;
-  message: string;
-  owner: string;
-}
-
-const userReviewSchema = new mongoose.Schema<IUserReview>({
-  title: {
-    type: String,
-    required: true,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  owner: {
-    type: String,
-    required: true,
-  },
-});
-
-export default mongoose.model<IUserReview>("UserReview", userReviewSchema);
-*/ 
 //# sourceMappingURL=user_review_model.js.map

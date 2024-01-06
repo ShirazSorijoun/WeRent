@@ -2,7 +2,7 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IUserReview extends Document{
   userId: Types.ObjectId;
-  name: string;
+  ownerName: string;
   description: string;
 }
 
@@ -12,7 +12,7 @@ const userReviewSchema: Schema<IUserReview> = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  name: {
+  ownerName: {
     type: String,
     required: true,
   },

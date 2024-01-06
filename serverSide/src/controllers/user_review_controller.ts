@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UserReview from '../models/user_review_model';
+import UserReview, { IUserReview } from '../models/user_review_model';
 import User from '../models/user_model';
 
 
@@ -35,8 +35,8 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { review } = req.body;
     // Set the owner based on the current user
-    review.owner = req.locals.currentUserId;
-    const createdReview = await UserReview.create(review);
+    review.userId = req.locals.currentUserId;
+    const createdReview: IUserReview = await UserReview.create(review);
     res.status(201).json(createdReview);
   } catch (err) {
     res.status(400).send('Something went wrong -> createdReview');
@@ -68,6 +68,34 @@ const adminDeleteReview = async (req: AuthRequest, res: Response): Promise<void>
     }
 };
 
+const deleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const reviewId = req.params.id;
+    
+    const review = await UserReview.findById(reviewId);
+    if (!review) {
+      res.status(404).send('Review not found');
+      return;
+    }
+
+    const user = await User.findById(req.locals.currentUserId);
+
+    const ownerOfReview = review.userId.toString();
+    const userId =user._id.toString();
+
+    if (userId !== ownerOfReview) {
+      res.status(403).send('Only owner can delete reviews');
+      return;
+    }
+
+    await UserReview.findByIdAndDelete(reviewId);
+    res.status(200).send('Review deleted successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+    }
+};
+
   
 
 
@@ -75,4 +103,5 @@ export default {
   getAllReview,
   createReview,
   adminDeleteReview,
+  deleteReview,
 };

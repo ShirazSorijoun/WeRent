@@ -42,16 +42,37 @@ const user_model_1 = __importStar(require("../models/user_model"));
 const user_review_model_1 = __importDefault(require("../models/user_review_model"));
 let app;
 let accessTokenUser;
+let accessTokenUser2;
+let accessTokenUser3;
+let reviewId;
+let review2Id;
 const user = {
     name: "Shiraz",
     email: "test@test.com",
     password: "test123",
+    roles: user_model_1.UserRole.Tenant,
+};
+const user2 = {
+    name: "John",
+    email: "John@gmail.com",
+    password: "11111111",
     roles: user_model_1.UserRole.Admin,
+};
+const user3 = {
+    name: "Shani",
+    email: "shani@gmail.com",
+    password: "123456",
+    roles: user_model_1.UserRole.Owner,
 };
 const userReview = {
     userId: "",
-    ownerName: user.name,
+    ownerName: "",
     description: "Great!",
+};
+const userReview2 = {
+    userId: "",
+    ownerName: "",
+    description: "Hello World!",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -59,50 +80,58 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield user_model_1.default.deleteMany();
     yield user_review_model_1.default.deleteMany();
     const res = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+    userReview.ownerName = res.body.name;
     userReview.userId = res.body._id;
-    console.log(user);
-    accessTokenUser = res.body.accessToken;
-    //const response =await request(app).post("/auth/login").send(user);
-    console.log(userReview);
+    userReview2.ownerName = res.body.name;
+    userReview2.userId = res.body._id;
+    const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
+    accessTokenUser = response.body.accessToken;
+    yield (0, supertest_1.default)(app).post("/auth/register").send(user2);
+    const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(user2);
+    accessTokenUser2 = response2.body.accessToken;
+    yield (0, supertest_1.default)(app).post("/auth/register").send(user3);
+    const response3 = yield (0, supertest_1.default)(app).post("/auth/login").send(user3);
+    accessTokenUser3 = response3.body.accessToken;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 describe('User review tests', () => {
-    /*
-    test("Test Get All User reviews - empty response", async () => {
-        const response = await request(app).get("/userReview");
+    test("Test Get All User reviews - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/userReview");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
-    });
-
-   
-    test("Test create User review", async () => {
-        const response = await request(app).post("/userReview").send(userReview);
-        console.log(response.body);
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toMatchObject(userReview);
-    });
-    */
+    }));
     test("Test create User review", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/userReview/create")
+        //console.log("User Review to Send:", userReview);
+        const response = yield (0, supertest_1.default)(app).post("/userReview/create")
             .set("Authorization", "JWT " + accessTokenUser)
-            .send({ userReview: userReview });
-        console.log(response.body);
+            .send({ review: userReview });
+        reviewId = response.body._id;
+        const response2 = yield (0, supertest_1.default)(app).post("/userReview/create")
+            .set("Authorization", "JWT " + accessTokenUser)
+            .send({ review: userReview2 });
+        review2Id = response2.body._id;
         expect(response.statusCode).toBe(201);
         expect(response.body).toMatchObject(userReview);
-        /*
-        expect(response.body.userId).toBe(userReview.userId);
-        expect(response.body.ownerName).toBe(userReview.ownerName);
-        expect(response.body.description).toBe(userReview.description);
-        */
     }));
-    test("Test delete User review", () => __awaiter(void 0, void 0, void 0, function* () {
-        //const reviewId = ; //id_of_the_review_to_delete
-        const response = yield (0, supertest_1.default)(app).delete(`/userReview/${reviewId}`);
+    test("Test delete User review By Admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/userReview/admin/${reviewId}`)
+            .set("Authorization", "JWT " + accessTokenUser2);
         expect(response.statusCode).toBe(200);
-        expect(response.body).toEqual({ message: 'Review deleted successfully' });
+        expect(response.text).toBe('Review deleted successfully');
+    }));
+    test("Test delete User review By not the owner of the review", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/userReview/${review2Id}`)
+            .set("Authorization", "JWT " + accessTokenUser3);
+        expect(response.statusCode).toBe(403);
+        expect(response.text).toBe('Only owner can delete reviews');
+    }));
+    test("Test delete User review By the owner of the review", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/userReview/${review2Id}`)
+            .set("Authorization", "JWT " + accessTokenUser);
+        expect(response.statusCode).toBe(200);
+        expect(response.text).toBe('Review deleted successfully');
     }));
 });
 //# sourceMappingURL=user_review.test.js.map

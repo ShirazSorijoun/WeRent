@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
 import apartmentRoute from "./routes/apartment_route";
+import userReviewRoute from "./routes/user_review_route";
 
 
 const initApp = (): Promise<Express> =>{
@@ -20,9 +21,11 @@ const initApp = (): Promise<Express> =>{
         app.use(bodyParser.urlencoded({ extended: true, limit: '1mb'}));
         app.use(bodyParser.json());
 
+
         app.use("/auth", authRoute);
-        app.use("/apartment", apartmentRoute);
         app.use("/user", userRoute);
+        app.use("/apartment", apartmentRoute);
+        app.use("/userReview", userReviewRoute);
     
         resolve(app);
        });

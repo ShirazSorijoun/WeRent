@@ -1,11 +1,25 @@
 import { Request, Response } from 'express';
 import UserReview from '../models/user_review_model';
+import User from '../models/user_model';
+
 
 interface AuthRequest extends Request {
   locals: {
     currentUserId?: string;
   };
 }
+
+/*
+const contactUser = async (currentUserId: string, message: string): Promise<void> => {
+  // Retrieve the user's information from the database
+  const user = await User.findById(currentUserId);
+  if (!user) {
+    console.error(`User with ID ${currentUserId} not found`);
+    return;
+  }
+};
+*/
+
 
 const getAllReview = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -30,10 +44,35 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
 };
 
 
+const adminDeleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const reviewId = req.params.id;
+    
+    const review = await UserReview.findById(reviewId);
+    if (!review) {
+      res.status(404).send('Review not found');
+      return;
+    }
+
+    const user = await User.findById(req.locals.currentUserId);
+    if (user.roles !== 'admin') {
+      res.status(403).send('Only admins can delete reviews');
+      return;
+    }
+
+    await UserReview.findByIdAndDelete(reviewId);
+    res.status(200).send('Review deleted successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+    }
+};
+
+  
+
 
 export default {
   getAllReview,
-  createReview
+  createReview,
+  adminDeleteReview,
 };
-
-

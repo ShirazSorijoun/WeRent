@@ -120,6 +120,24 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).send('Internal Server Error -> updateOwnProfile');
     }
 });
+const getMyApartments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const currentUserId = req.locals.currentUserId;
+        // Find the user by ID and populate the advertisedApartments field
+        const user = yield user_model_1.default.findById(currentUserId).populate('advertisedApartments');
+        if (!user) {
+            res.status(404).json({ error: 'User not found' });
+            return;
+        }
+        const myApartments = user.advertisedApartments || [];
+        //console.log("myApartments",myApartments)
+        res.status(200).json({ myApartments });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 exports.default = {
     getAllUsers,
     getUserById,
@@ -127,5 +145,6 @@ exports.default = {
     updateUser,
     deleteUser,
     updateOwnProfile,
+    getMyApartments
 };
 //# sourceMappingURL=user_controller.js.map

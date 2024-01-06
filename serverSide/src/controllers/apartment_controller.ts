@@ -7,18 +7,18 @@ interface AuthRequest extends Request {
     locals: {
       currentUserId?: string;
     };
-  }
+}
 
-  const getAllApartments = async (req: Request, res: Response): Promise<void> => {
+const getAllApartments = async (req: Request, res: Response): Promise<void> => {
     try {
       const apartments = await Apartment.find();
       res.status(200).json(apartments);
     } catch (error) {
       res.status(500).send({ message: 'Error fetching apartments' });
     }
-  };
+};
 
-  const getApartmentById = async (req: Request, res: Response): Promise<void> => {
+const getApartmentById = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const apartment = await Apartment.findById(id);
@@ -26,7 +26,7 @@ interface AuthRequest extends Request {
     } catch (err) {
       res.status(400).send('Something went wrong -> getApartmentById');
     }
-  };
+};
 
 const createApartment = async (req: AuthRequest, res: Response): Promise<void> => {
   try {

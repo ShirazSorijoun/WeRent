@@ -30,6 +30,10 @@ const apartmentSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true,
     },
+    entryDate: {
+        type: Date,
+        required: true,
+    },
 });
 const Apartment = mongoose_1.default.model('Apartment', apartmentSchema);
 exports.default = Apartment;

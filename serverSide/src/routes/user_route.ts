@@ -15,10 +15,9 @@ router.delete('/delete/:id',authMiddleware,adminMiddleware,UserController.delete
 
 // Routes for managing users by owner
 router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApartments);
-
-// Routes for managing users by owner
-
 router.patch('/updateOwnProfile', authMiddleware, verifyUserOwnership,UserController.updateOwnProfile);
+
+
 router.get('/:email',authMiddleware,UserController.getUserByEmail);
 
 export default router;

@@ -28,7 +28,7 @@ const user2= {
 const user3= {
   name: "John",
   email: "John@test.com",
-  password: "1111",
+  password: "111111",
   roles: UserRole.Tenant
 };
 

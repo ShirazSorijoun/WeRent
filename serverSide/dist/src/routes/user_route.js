@@ -17,7 +17,6 @@ router.patch('/update', auth_middleware_1.default, admin_middleware_1.default, u
 router.delete('/delete/:id', auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.deleteUser);
 // Routes for managing users by owner
 router.get('/apartments', auth_middleware_1.default, owner_middleware_1.default, user_controller_1.default.getMyApartments);
-// Routes for managing users by owner
 router.patch('/updateOwnProfile', auth_middleware_1.default, verify_user_ownership_1.default, user_controller_1.default.updateOwnProfile);
 router.get('/:email', auth_middleware_1.default, user_controller_1.default.getUserByEmail);
 exports.default = router;

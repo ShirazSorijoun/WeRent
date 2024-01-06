@@ -56,7 +56,7 @@ const user1 = {
 const user2 = {
     name: "John",
     email: "John@test.com",
-    password: "1111",
+    password: "111111",
     roles: user_model_1.UserRole.Tenant
 };
 const user3 = {
@@ -72,6 +72,7 @@ const apartment1 = {
     floor: 2,
     rooms: 4,
     sizeInSqMeters: 105,
+    entryDate: new Date("2023-02-01")
 };
 const apartment2 = {
     city: "Holon",
@@ -80,6 +81,7 @@ const apartment2 = {
     floor: 6,
     rooms: 5,
     sizeInSqMeters: 120,
+    entryDate: new Date("2024-06-15")
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
@@ -89,7 +91,6 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield user_model_1.default.deleteMany({ 'email': user1.email });
     const res1 = yield (0, supertest_1.default)(app).post("/auth/register").send(user1);
     user1Id = res1.body._id;
-    apartment1.owner = res1.body._id;
     const response1 = yield (0, supertest_1.default)(app).post("/auth/login").send(user1);
     accessTokenUser1 = response1.body.accessToken;
     yield user_model_1.default.deleteMany({ 'email': user2.email });

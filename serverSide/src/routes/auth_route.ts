@@ -98,7 +98,6 @@ import authController from "../controllers/auth_controller";
 *                           $ref: '#/components/schemas/User'
 *
 */
-
 router.post("/register", authController.register);
 
 
@@ -145,7 +144,6 @@ router.post("/register", authController.register);
 *                       schema:
 *                           $ref: '#/components/schemas/Tokens'
 */
-
 router.post("/login", authController.login);
 
 
@@ -163,7 +161,6 @@ router.post("/login", authController.login);
 *           200:
 *               description: logout completed successfully
 */
-
 router.get("/logout", authController.logout);
 
 
@@ -191,7 +188,6 @@ router.get("/logout", authController.logout);
 *                       schema:
 *                           $ref: '#/components/schemas/Tokens'
 */
-
 router.get("/refresh", authController.refresh);
 
 export default router;

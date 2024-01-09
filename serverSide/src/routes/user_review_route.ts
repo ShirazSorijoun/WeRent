@@ -108,7 +108,7 @@ router.post('/create', authMiddleware, UserReviewController.createReview);
 * @swagger
 * /userReview/admin/:id:
 *   delete:
-*       summary: delete a user review by admin
+*       summary: delete a user review by admin (admin only)
 *       tags: [UserReview]
 *       requestBody:
 *           required: false
@@ -135,7 +135,7 @@ router.delete('/admin/:id', authMiddleware, UserReviewController.adminDeleteRevi
 * @swagger
 * /userReview/:id:
 *   delete:
-*       summary: delete a user review by the owner of the review
+*       summary: delete a user review by the owner of the review (owner only)
 *       tags: [UserReview]
 *       requestBody:
 *           required: false

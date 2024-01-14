@@ -1,7 +1,9 @@
-# WeRent - Apartment Rental Platform
+# WeRent - Apartment Rental Platform (ServerSide)
 
 Welcome to WeRent, the apartment rental platform where owners can advertise their apartments, 
 and renters can explore reviews from previous tenants to make informed decisions.
+
+By : Shani Yaish , Shiraz Sorijoun
 
 ## Introduction
 
@@ -10,38 +12,23 @@ It focuses on transparency and trust by allowing renters to access reviews about
 
 ## Key Features
 
-- **Apartment Advertisement:**
-  - Owners can easily advertise their apartments by providing details such as location, size, amenities, and rental terms.
+- **User Authentication :**
+  - The server supports user authentication using industry-standard practices. It employs JSON Web Tokens (JWT) for secure authentication.
 
-- **Tenant Reviews:**
-  - Renters can view reviews from previous tenants about both the apartment and the owner. This helps in making informed decisions.
+- **User Registration:**
+  - A user registers with a unique email
+  - Possibility of registration by an external provider
 
-- **Matching System:**
-  - WeRent includes a matching system that connects owners with potential tenants based on their preferences and requirements.
+- **User Model:**
+  - A user has one of the following roles:
+     1. Admin (the creators of the site and those they give access to)
+     2. Owners (those who want to advertise apartments for rent must register as apartment owners)
+     3. Tenant
+  - Each user has a personal profile with all the details on it, including the option to upload a photo from the server.
 
-- **Feedback Forms:**
-  - WeRent provides a unique service by automatically sending a relationship feedback form to tenants once per quarter. This helps maintain a healthy landlord-tenant relationship and allows tenants to provide valuable feedback about their experience.
+- **Advertising apartments for owners:**
+  - You can advertise apartments and upload photos of the apartment from the server.
+  - All apartment owners have a page where all the apartments they posted appear, where they can also edit their posts.
 
-- **User Authentication:**
-  - Secure user authentication ensures a safe and personalized experience for both owners and renters.
-
-
-## Usage
-
--**Owner Dashboard:**
-Owners can log in, create apartment listings, manage advertisements, and receive quarterly feedback forms.
-
--**Renter Dashboard:**
-Renters can log in, browse available apartments, read reviews, express interest in renting, and provide feedback through quarterly forms.
-
--**Matching System:**
-The matching system offers potential matches between owners and tenants based on preferences and filters that the user can perform such as by city, number of rooms, etc.
-
--**Review System:**
-Renters can leave reviews about apartments and owners, enhancing transparency and trust.
-
--**Feedback Forms:**
-Owners receive quarterly feedback forms from tenants to improve the landlord-tenant relationship and gather insights for future rentals.
-
-## Feedback Forms
-WeRent's feedback forms play a crucial role in maintaining positive relationships between owners and tenants. These forms are automatically sent to tenants once per quarter, allowing them to share their experiences and suggestions.
+- **Testing:**
+  - Test files for the API

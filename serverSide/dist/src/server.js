@@ -6,14 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
+//import http from "http";
 (0, app_1.default)().then((app) => {
     const options = {
         definition: {
             openapi: "3.0.0",
             info: {
-                title: "Web Dev - 'WeRent' 2023 REST API",
-                version: "1.0.0",
-                description: "REST server including authentication using JWT",
+                title: "'WeRent' 2023 REST API",
+                version: "1.0.1",
+                description: "REST server including authentication using JWT and refresh token",
             },
             servers: [{ url: "http://localhost:3000", },],
         },

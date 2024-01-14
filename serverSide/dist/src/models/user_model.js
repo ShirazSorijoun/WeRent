@@ -30,6 +30,11 @@ const userSchema = new mongoose_1.default.Schema({
         enum: Object.values(UserRole),
         default: UserRole.Tenant,
     },
+    profile_image: {
+        type: String,
+        trim: true,
+        default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+    },
     advertisedApartments: [
         {
             type: mongoose_1.default.Schema.Types.Mixed,

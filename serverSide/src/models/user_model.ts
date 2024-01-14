@@ -7,10 +7,12 @@ export enum UserRole {
 }
 
 export interface IUser extends Document {
+
   name: string;
   email: string;
   password: string;
   roles?: UserRole;
+  profile_image?: string;
   advertisedApartments?: string[];
   tokens?: string[];
 }
@@ -23,6 +25,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    trim: true,
     unique: true,
   },
   password: {
@@ -34,6 +37,11 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
       type: String,
       enum: Object.values(UserRole),
       default: UserRole.Tenant,
+    },
+  profile_image: {
+      type: String,
+      trim: true,
+      default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
     },
   advertisedApartments: [
     {

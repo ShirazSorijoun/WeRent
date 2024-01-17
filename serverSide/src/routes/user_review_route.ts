@@ -46,9 +46,10 @@ const router = express.Router();
 *               - ownerName
 *               - description
 *           example:
-*               userId: 5f9f0c6c1c9d440000b1d5d0
-*               ownerName: Bob
-*               description: 'This is a review'
+*               review:
+*                   userId: 5f9f0c6c1c9d440000b1d5d0
+*                   ownerName: Bob
+*                   description: 'This is a review'
 */
 
 

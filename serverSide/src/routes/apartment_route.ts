@@ -64,13 +64,14 @@ const router = express.Router();
 *               - sizeInSqMeters
 *               - entryDate
 *           example:
+*             apartment:
 *               city: 'Rishon Lezion'
 *               address: 'Shlomo Levy 14'
 *               owner: '5f9f0c6c1c9d440000b1d5d0'
 *               floor: 5
 *               rooms: 3
 *               sizeInSqMeters: 85
-*               entryDate: '17/09/2024'
+*               entryDate: '2024-09-17' #YYYY-MM-DD
 */
 
 
@@ -111,12 +112,13 @@ router.get('/', ApartmentController.getAllApartments);
 *   get:
 *       summary: get apartment by ID
 *       tags: [Apartment]
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
+*       parameters:
+*           - in: path 
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: Apartment ID
 *       responses:
 *           200:
 *               description: Get apartment
@@ -130,6 +132,8 @@ router.get('/', ApartmentController.getAllApartments);
 *                   application/json:
 *                       schema:
 *                           $ref: '#/components/schemas/Apartment'
+*           500:
+*               description: Internal server error
 *
 */
 router.get('/:id', ApartmentController.getApartmentById);
@@ -144,6 +148,13 @@ router.get('/:id', ApartmentController.getApartmentById);
 *   patch:
 *       summary: update apartment (admin only)
 *       tags: [Apartment]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: Apartment ID
 *       requestBody:
 *           required: false
 *           content:
@@ -183,39 +194,24 @@ router.patch('/admin/update', AuthMiddleware,adminMiddleware, ApartmentControlle
 *   delete:
 *       summary: delete apartment (admin only)
 *       tags: [Apartment]
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: Apartment ID
 *       security:
 *           - bearerAuth: []
 *       responses:
 *           200:
 *               description: Apartment delete successful
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           403:
 *               description: Access denied
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           500:
 *               description: Internal Server Error
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           404:
 *               description: Apartment not found
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *
 */
 router.delete('/admin/delete/:id', AuthMiddleware, adminMiddleware,ApartmentController.deleteApartment);
@@ -263,6 +259,13 @@ router.post('/create', AuthMiddleware,ownerMiddleware, ApartmentController.creat
 *   patch:
 *       summary: update apartment (owner only)
 *       tags: [Apartment]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: Apartment ID
 *       requestBody:
 *           required: false
 *           content:
@@ -302,39 +305,24 @@ router.patch('/update', AuthMiddleware,verifyUserOwnership, ApartmentController.
 *   delete:
 *       summary: delete apartment (owner only)
 *       tags: [Apartment]
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: Apartment ID
 *       security:
 *           - bearerAuth: []
 *       responses:
 *           200:
 *               description: Apartment update successful
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           403:
 *               description: Access denied
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           404:
 *               description: Partment not found
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *           500:
 *               description: Internal Server Error
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
 *
 */
 router.delete('/delete/:id', AuthMiddleware, ApartmentController.deleteApartment);

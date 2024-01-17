@@ -70,6 +70,13 @@ router.get('/',authMiddleware,adminMiddleware,UserController.getAllUsers);
 *   get:
 *       summary: get user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -103,6 +110,13 @@ router.get('/id/:id',authMiddleware,adminMiddleware,UserController.getUserById);
 *   patch:
 *       summary: Update user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -142,6 +156,13 @@ router.patch('/update',authMiddleware,adminMiddleware,UserController.updateUser)
 *   delete:
 *       summary: delete user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -275,6 +296,13 @@ router.patch('/updateOwnProfile', authMiddleware, verifyUserOwnership,UserContro
 *   get:
 *       summary: get user by email
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: email
+*             schema:
+*               type: string
+*             required: true
+*             description: User's email
 *       requestBody:
 *           required: false
 *           content:

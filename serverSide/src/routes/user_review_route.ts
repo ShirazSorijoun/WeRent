@@ -111,6 +111,13 @@ router.post('/create', authMiddleware, UserReviewController.createReview);
 *   delete:
 *       summary: delete a user review by admin (admin only)
 *       tags: [UserReview]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: UserReview ID
 *       requestBody:
 *           required: false
 *           content:
@@ -138,6 +145,13 @@ router.delete('/admin/:id', authMiddleware, UserReviewController.adminDeleteRevi
 *   delete:
 *       summary: delete a user review by the owner of the review (owner only)
 *       tags: [UserReview]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: UserReview ID
 *       requestBody:
 *           required: false
 *           content:

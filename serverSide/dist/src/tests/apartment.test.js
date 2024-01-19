@@ -197,20 +197,18 @@ describe('Apartment post Controller Tests', () => {
             .send({ id: apartment2Id, apartment: updateData });
         expect(response.status).toBe(200);
     }));
-    /*test("Test Delete Apartment - Admin ", async () => {
-      const response = await request(app)
-      .delete(`/apartment/delete/${apartment2Id}`)
-      .set("Authorization", "JWT " + accessTokenUser3);
-      expect(response.statusCode).toBe(200);
-    });
-
-    test("Test The apartment has been deleted from the array of user1", async () => {
-      const response = await request(app)
-      .get(`/user/apartments/`)
-      .set("Authorization", "JWT " + accessTokenUser1);
-      
-      expect(response.statusCode).toBe(200);
-      expect(response.body.myApartments).toStrictEqual([]);
-    });*/
+    test("Test Delete Apartment - Admin ", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete(`/apartment/delete/${apartment2Id}`)
+            .set("Authorization", "JWT " + accessTokenUser3);
+        expect(response.statusCode).toBe(200);
+    }));
+    test("Test The apartment has been deleted from the array of user1", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get(`/user/apartments/`)
+            .set("Authorization", "JWT " + accessTokenUser1);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.myApartments).toStrictEqual([]);
+    }));
 });
 //# sourceMappingURL=apartment.test.js.map

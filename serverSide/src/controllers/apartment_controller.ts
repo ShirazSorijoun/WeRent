@@ -75,16 +75,15 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
         res.status(404).send('Apartment not found');
         return;
       }
-
-      const ownerOfApartment = await User.findById(existingApartment.owner.toString())
-      const user = await User.findById(req.locals.currentUserId)
-      const role = user.roles
-
-      if(role !== UserRole.Admin && ownerOfApartment._id.toString() !== req.locals.currentUserId){
+  
+      const ownerOfApartment = await User.findById(existingApartment.owner.toString());
+      const user = await User.findById(req.locals.currentUserId);
+      const role = user.roles;
+  
+      if (role !== UserRole.Admin && ownerOfApartment._id.toString() !== req.locals.currentUserId) {
         res.status(403).send('Access denied');
         return;
       }
-  
   
       // Update apartment fields except owner
       const updatedApartment = await Apartment.findByIdAndUpdate(
@@ -102,14 +101,35 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
   
       if (!updatedApartment) {
         res.status(400).send('Something went wrong -> updateApartment');
-      } else {
-        res.status(200).json(updatedApartment);
+        return;
       }
+  
+      // Update the corresponding user's advertisedApartments array
+      const userUpdate = await User.findByIdAndUpdate(
+        ownerOfApartment,
+        { $pull: { advertisedApartments: { _id: existingApartment._id } } },
+        { new: true }
+      );
+  
+      if (!userUpdate) {
+        res.status(500).send('Internal Server Error -> updateUser');
+        return;
+      }
+  
+      // Add the updated apartment to the user's advertisedApartments array
+      await User.findByIdAndUpdate(
+        ownerOfApartment,
+        { $addToSet: { advertisedApartments: updatedApartment} },
+        { new: true }
+      ).populate('advertisedApartments');
+  
+      res.status(200).json(updatedApartment);
     } catch (err) {
       console.error(err);
       res.status(400).send('Something went wrong -> updateApartment');
     }
   };
+  
   
 
 const deleteApartment = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -139,7 +159,7 @@ const deleteApartment = async (req: AuthRequest, res: Response): Promise<void> =
 
     await User.findByIdAndUpdate(
       ownerOfTheApartment,
-      { $pull: { advertisedApartments: apartment } },
+      { $pull: { advertisedApartments: { _id: apartment._id } } },
       { new: true }
     );
 

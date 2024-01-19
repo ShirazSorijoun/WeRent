@@ -196,7 +196,7 @@ describe('Apartment post Controller Tests', () => {
         expect(response.status).toBe(200);
       });
 
-      /*test("Test Delete Apartment - Admin ", async () => {
+      test("Test Delete Apartment - Admin ", async () => {
         const response = await request(app)
         .delete(`/apartment/delete/${apartment2Id}`)
         .set("Authorization", "JWT " + accessTokenUser3);
@@ -210,5 +210,5 @@ describe('Apartment post Controller Tests', () => {
         
         expect(response.statusCode).toBe(200);
         expect(response.body.myApartments).toStrictEqual([]);
-      });*/
+      });
 });

@@ -108,10 +108,17 @@ const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
         }, { new: true });
         if (!updatedApartment) {
             res.status(400).send('Something went wrong -> updateApartment');
+            return;
         }
-        else {
-            res.status(200).json(updatedApartment);
+        // Update the corresponding user's advertisedApartments array
+        const userUpdate = yield user_model_1.default.findByIdAndUpdate(ownerOfApartment, { $pull: { advertisedApartments: { _id: existingApartment._id } } }, { new: true });
+        if (!userUpdate) {
+            res.status(500).send('Internal Server Error -> updateUser');
+            return;
         }
+        // Add the updated apartment to the user's advertisedApartments array
+        yield user_model_1.default.findByIdAndUpdate(ownerOfApartment, { $addToSet: { advertisedApartments: updatedApartment } }, { new: true }).populate('advertisedApartments');
+        res.status(200).json(updatedApartment);
     }
     catch (err) {
         console.error(err);
@@ -135,7 +142,7 @@ const deleteApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
             return;
         }
         yield apartment_model_1.default.findByIdAndDelete(apartmentId);
-        yield user_model_1.default.findByIdAndUpdate(ownerOfTheApartment, { $pull: { advertisedApartments: apartment } }, { new: true });
+        yield user_model_1.default.findByIdAndUpdate(ownerOfTheApartment, { $pull: { advertisedApartments: { _id: apartment._id } } }, { new: true });
         res.status(200).send('Apartment deleted successfully');
     }
     catch (err) {

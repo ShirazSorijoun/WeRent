@@ -134,14 +134,14 @@ const deleteApartment = async (req: AuthRequest, res: Response): Promise<void> =
       return;
     }
 
+    await Apartment.findByIdAndDelete(apartmentId);
+
 
     await User.findByIdAndUpdate(
       ownerOfTheApartment,
       { $pull: { advertisedApartments: apartment } },
       { new: true }
     );
-
-    await Apartment.findByIdAndDelete(apartmentId);
 
     res.status(200).send('Apartment deleted successfully');
   } catch (err) {

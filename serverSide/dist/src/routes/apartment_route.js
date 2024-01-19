@@ -7,8 +7,6 @@ const express_1 = __importDefault(require("express"));
 const apartment_controller_1 = __importDefault(require("../controllers/apartment_controller"));
 const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
 const owner_middleware_1 = __importDefault(require("../common/owner_middleware"));
-//import adminMiddleware from '../common/admin_middleware';
-//import verifyUserOwnership  from '../common/verify_user_ownership';
 const router = express_1.default.Router();
 /**
 * @swagger

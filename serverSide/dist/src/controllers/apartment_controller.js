@@ -134,8 +134,8 @@ const deleteApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
             res.status(403).send('Access denied');
             return;
         }
-        yield user_model_1.default.findByIdAndUpdate(ownerOfTheApartment, { $pull: { advertisedApartments: apartment } }, { new: true });
         yield apartment_model_1.default.findByIdAndDelete(apartmentId);
+        yield user_model_1.default.findByIdAndUpdate(ownerOfTheApartment, { $pull: { advertisedApartments: apartment } }, { new: true });
         res.status(200).send('Apartment deleted successfully');
     }
     catch (err) {

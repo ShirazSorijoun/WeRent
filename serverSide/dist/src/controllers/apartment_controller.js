@@ -50,10 +50,17 @@ const getApartmentById = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { id } = req.params;
         const apartment = yield apartment_model_1.default.findById(id);
+        if (!apartment) {
+            // Apartment not found
+            res.status(404).json({ message: 'Apartment not found' });
+            return;
+        }
         res.status(200).json(apartment);
     }
     catch (err) {
-        res.status(400).send('Something went wrong -> getApartmentById');
+        // Internal Server Error
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
 const createApartment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -77,12 +84,28 @@ const createApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
 const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id, apartment } = req.body;
-        // Ensure the logged-in user is the owner of the apartment
-        if (!apartment.owner.equals(req.locals.currentUserId)) {
+        // Ensure the logged-in user is the owner of the apartment or an admin
+        const existingApartment = yield apartment_model_1.default.findById(id);
+        if (!existingApartment) {
+            res.status(404).send('Apartment not found');
+            return;
+        }
+        const ownerOfApartment = yield user_model_1.default.findById(existingApartment.owner.toString());
+        const user = yield user_model_1.default.findById(req.locals.currentUserId);
+        const role = user.roles;
+        if (role !== user_model_1.UserRole.Admin && ownerOfApartment._id.toString() !== req.locals.currentUserId) {
             res.status(403).send('Access denied');
             return;
         }
-        const updatedApartment = yield apartment_model_1.default.findByIdAndUpdate(id, apartment, { new: true });
+        // Update apartment fields except owner
+        const updatedApartment = yield apartment_model_1.default.findByIdAndUpdate(id, {
+            city: apartment.city,
+            address: apartment.address,
+            floor: apartment.floor,
+            rooms: apartment.rooms,
+            sizeInSqMeters: apartment.sizeInSqMeters,
+            entryDate: apartment.entryDate,
+        }, { new: true });
         if (!updatedApartment) {
             res.status(400).send('Something went wrong -> updateApartment');
         }
@@ -91,6 +114,7 @@ const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
     catch (err) {
+        console.error(err);
         res.status(400).send('Something went wrong -> updateApartment');
     }
 });

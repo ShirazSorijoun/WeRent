@@ -55,25 +55,28 @@ const router = express.Router();
 
 /**
 * @swagger
-* /userReview/:
+* /userReview:
 *   get:
-*       summary: get all reviews recorded on the site
+*       summary: Get all user reviews
 *       tags: [UserReview]
-*       requestBody:
-*           required: true
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/UserReview'
 *       responses:
 *           200:
-*               description: All reviews
+*               description: Successfully retrieved reviews
 *               content:
 *                   application/json:
 *                       schema:
-*                           $ref: '#/components/schemas/UserReview'
+*                           type: array
+*                           items:
+*                               $ref: '#/components/schemas/UserReview'
+*           500:
+*               description: Internal Server Error
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
 *
 */
+
 router.get('/', UserReviewController.getAllReview);
 
 
@@ -107,9 +110,9 @@ router.post('/create', authMiddleware, UserReviewController.createReview);
 
 /**
 * @swagger
-* /userReview/admin/:id:
+* /userReview/admin/{id}:
 *   delete:
-*       summary: delete a user review by admin (admin only)
+*       summary: Admin delete a user review
 *       tags: [UserReview]
 *       parameters:
 *           - in: path
@@ -118,46 +121,6 @@ router.post('/create', authMiddleware, UserReviewController.createReview);
 *               type: string
 *             required: true
 *             description: UserReview ID
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/UserReview'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: The review was successfully deleted
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/UserReview'
-*
-*/
-router.delete('/admin/:id', authMiddleware, UserReviewController.adminDeleteReview);
-
-
-
-/**
-* @swagger
-* /userReview/:id:
-*   delete:
-*       summary: delete a user review by the owner of the review (owner only)
-*       tags: [UserReview]
-*       parameters:
-*           - in: path
-*             name: id
-*             schema:
-*               type: string
-*             required: true
-*             description: UserReview ID
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/UserReview'
 *       security:
 *           - bearerAuth: []
 *       responses:
@@ -168,11 +131,58 @@ router.delete('/admin/:id', authMiddleware, UserReviewController.adminDeleteRevi
 *                       schema:
 *                           $ref: '#/components/schemas/UserReview'
 *           403:
-*               description: Only owner can delete reviews
+*               description: Only admins can delete reviews
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'  # Define an error schema
+*           404:
+*               description: Review not found
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
+*           500:
+*               description: Internal Server Error
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
+*
+*/
+
+router.delete('/admin/:id', authMiddleware, UserReviewController.adminDeleteReview);
+
+
+
+/**
+* @swagger
+* /userReview/{id}:
+*   delete:
+*       summary: Delete a user review by the owner of the review (owner only)
+*       tags: [UserReview]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: UserReview ID
+*       security:
+*           - bearerAuth: []
+*       responses:
+*           200:
+*               description: The review was successfully deleted
 *               content:
 *                   application/json:
 *                       schema:
 *                           $ref: '#/components/schemas/UserReview'
+*           403:
+*               description: Only the owner can delete reviews
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'  # Define an error schema
 *
 */
 router.delete('/:id', authMiddleware, UserReviewController.deleteReview);

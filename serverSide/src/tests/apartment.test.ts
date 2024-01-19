@@ -160,9 +160,45 @@ describe('Apartment post Controller Tests', () => {
         expect(rc.city).toBe(apartment2.city);
       });
 
+      test("Test Apdate Apartment - by admin", async () => {
+        const updateData = {
+          city: 'Updated City',
+          address: 'Updated Address',
+          floor: 3,
+          rooms: 3,
+          sizeInSqMeters: 110,
+          entryDate: '2024-08-01'
+        };
+    
+        const response = await request(app)
+          .patch(`/apartment/update`)
+          .set("Authorization", "JWT " + accessTokenUser3)
+          .send({ id: apartment2Id, apartment: updateData });
+    
+        expect(response.status).toBe(200);
+      });
+
+      test("Test Apdate Apartment - by owner", async () => {
+        const updateData = {
+          city: 'Updated City2',
+          address: 'Updated Address2',
+          floor: 3,
+          rooms: 3,
+          sizeInSqMeters: 100,
+          entryDate: '2024-08-01'
+        };
+    
+        const response = await request(app)
+          .patch(`/apartment/update`)
+          .set("Authorization", "JWT " + accessTokenUser1)
+          .send({ id: apartment2Id, apartment: updateData });
+    
+        expect(response.status).toBe(200);
+      });
+
       test("Test Delete Apartment - Admin ", async () => {
         const response = await request(app)
-        .delete(`/apartment/admin/delete/${apartment2Id}`)
+        .delete(`/apartment/delete/${apartment2Id}`)
         .set("Authorization", "JWT " + accessTokenUser3);
         expect(response.statusCode).toBe(200);
       });

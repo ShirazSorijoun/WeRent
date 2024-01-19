@@ -2,8 +2,6 @@ import express from 'express';
 import ApartmentController from '../controllers/apartment_controller';
 import AuthMiddleware from '../common/auth_middleware';
 import ownerMiddleware from '../common/owner_middleware';
-import adminMiddleware from '../common/admin_middleware';
-import verifyUserOwnership  from '../common/verify_user_ownership';
 
 const router = express.Router();
 
@@ -72,45 +70,92 @@ const router = express.Router();
 *               rooms: 3
 *               sizeInSqMeters: 85
 *               entryDate: '2024-09-17' #YYYY-MM-DD
+*       Error:
+*           type: object
+*           properties:
+*               message:
+*                   type: string
+*                   description: Error message
+*           required:
+*               - message
 */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ApartmentUpdate:
+ *       type: object
+ *       properties:
+ *         city:
+ *           type: string
+ *           description: The updated city where the apartment is located
+ *         address:
+ *           type: string
+ *           description: The updated address where the apartment is located
+ *         floor:
+ *           type: number
+ *           description: The updated floor where the apartment is located
+ *         rooms:
+ *           type: number
+ *           description: The updated number of rooms in the apartment
+ *         sizeInSqMeters:
+ *           type: number
+ *           description: The updated size of the apartment in meters
+ *         entryDate:
+ *           type: string
+ *           format: date
+ *           description: The updated date of entry of tenants to the apartment (YYYY-MM-DD)
+ *       required:
+ *         - city
+ *         - address
+ *         - floor
+ *         - rooms
+ *         - sizeInSqMeters
+ *         - entryDate
+ *     Error:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: Error message
+ *       required:
+ *         - message
+ */
 
 /**
 * @swagger
-* /apartment/:
+* /apartment:
 *   get:
-*       summary: get all apartment
+*       summary: Get all apartments
 *       tags: [Apartment]
-*       requestBody:
-*           required: true
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
 *       responses:
 *           200:
-*               description: Get all apartment
+*               description: Successfully retrieved apartments
 *               content:
 *                   application/json:
 *                       schema:
-*                           $ref: '#/components/schemas/Apartment'
+*                           type: array
+*                           items:
+*                               $ref: '#/components/schemas/Apartment'
 *           500:
-*               description: Error fetching apartments
+*               description: Internal Server Error
 *               content:
 *                   application/json:
 *                       schema:
-*                           $ref: '#/components/schemas/Apartment'
+*                           $ref: '#/components/schemas/Error'
 *
 */
+
 router.get('/', ApartmentController.getAllApartments);
 
 
 
 /**
 * @swagger
-* /apartment/:id:
+* /apartment/{id}:
 *   get:
-*       summary: get apartment by ID
+*       summary: Get apartment by ID
 *       tags: [Apartment]
 *       parameters:
 *           - in: path 
@@ -121,103 +166,27 @@ router.get('/', ApartmentController.getAllApartments);
 *             description: Apartment ID
 *       responses:
 *           200:
-*               description: Get apartment
+*               description: Successfully retrieved the apartment
 *               content:
 *                   application/json:
 *                       schema:
 *                           $ref: '#/components/schemas/Apartment'
-*           400:
-*               description: apartment ID is required for deletion
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*           500:
-*               description: Internal server error
-*
-*/
-router.get('/:id', ApartmentController.getApartmentById);
-
-
-// Allow admin to edit and delete any apartment
-
-
-/**
-* @swagger
-* /apartment/admin/update:
-*   patch:
-*       summary: update apartment (admin only)
-*       tags: [Apartment]
-*       parameters:
-*           - in: path
-*             name: id
-*             schema:
-*               type: string
-*             required: true
-*             description: Apartment ID
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Apartment update successful
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*           403:
-*               description: Access denied
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*           400:
-*               description: At least one field is required for updating
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*
-*/
-router.patch('/admin/update', AuthMiddleware,adminMiddleware, ApartmentController.updateApartment);
-
-
-
-/**
-* @swagger
-* /apartment/admin/delete/:id:
-*   delete:
-*       summary: delete apartment (admin only)
-*       tags: [Apartment]
-*       parameters:
-*           - in: path
-*             name: id
-*             schema:
-*               type: string
-*             required: true
-*             description: Apartment ID
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Apartment delete successful
-*           403:
-*               description: Access denied
-*           500:
-*               description: Internal Server Error
 *           404:
 *               description: Apartment not found
-*
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
+*           500:
+*               description: Internal Server Error
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
 */
-router.delete('/admin/delete/:id', AuthMiddleware, adminMiddleware,ApartmentController.deleteApartment);
 
+router.get('/:id', ApartmentController.getApartmentById);
 
-//Allow owner to create, edit, and delete their own apartments
 
 
 /**
@@ -254,56 +223,67 @@ router.post('/create', AuthMiddleware,ownerMiddleware, ApartmentController.creat
 
 
 /**
-* @swagger
-* /apartment/update:
-*   patch:
-*       summary: update apartment (owner only)
-*       tags: [Apartment]
-*       parameters:
-*           - in: path
-*             name: id
-*             schema:
-*               type: string
-*             required: true
-*             description: Apartment ID
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/Apartment'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Apartment update successful
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*           400:
-*               description: Apartment ID is required
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*           403:
-*               description: Access denied
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/Apartment'
-*
-*/
-router.patch('/update', AuthMiddleware,verifyUserOwnership, ApartmentController.updateApartment);
+ * @swagger
+ * /apartment/update:
+ *   patch:
+ *     summary: Update an apartment
+ *     tags: [Apartment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: The ID of the apartment to be updated
+ *               apartment:
+ *                 $ref: '#/components/schemas/ApartmentUpdate'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully updated the apartment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Apartment'
+ *       400:
+ *         description: Bad Request - Something went wrong
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Forbidden - Access denied
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Not Found - Apartment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+router.patch('/update', AuthMiddleware, ApartmentController.updateApartment);
 
 
 
 /**
 * @swagger
-* /apartment/delete/:id:
+* /apartment/delete/{id}:
 *   delete:
-*       summary: delete apartment (owner only)
+*       summary: Delete an apartment
 *       tags: [Apartment]
 *       parameters:
 *           - in: path
@@ -316,15 +296,35 @@ router.patch('/update', AuthMiddleware,verifyUserOwnership, ApartmentController.
 *           - bearerAuth: []
 *       responses:
 *           200:
-*               description: Apartment update successful
+*               description: Successfully deleted the apartment
+*               content:
+*                   application/json:
+*                       schema:
+*                           type: object
+*                           properties:
+*                               message:
+*                                   type: string
+*                                   description: Success message
 *           403:
-*               description: Access denied
+*               description: Forbidden - Access denied
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
 *           404:
-*               description: Partment not found
+*               description: Not Found - Apartment not found
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
 *           500:
 *               description: Internal Server Error
-*
+*               content:
+*                   application/json:
+*                       schema:
+*                           $ref: '#/components/schemas/Error'
 */
+
 router.delete('/delete/:id', AuthMiddleware, ApartmentController.deleteApartment);
 
 

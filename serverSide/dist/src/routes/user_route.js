@@ -62,6 +62,13 @@ router.get('/', auth_middleware_1.default, admin_middleware_1.default, user_cont
 *   get:
 *       summary: get user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -92,6 +99,13 @@ router.get('/id/:id', auth_middleware_1.default, admin_middleware_1.default, use
 *   patch:
 *       summary: Update user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -128,6 +142,13 @@ router.patch('/update', auth_middleware_1.default, admin_middleware_1.default, u
 *   delete:
 *       summary: delete user by id (admin only)
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: id
+*             schema:
+*               type: string
+*             required: true
+*             description: User ID
 *       requestBody:
 *           required: false
 *           content:
@@ -249,6 +270,13 @@ router.patch('/updateOwnProfile', auth_middleware_1.default, verify_user_ownersh
 *   get:
 *       summary: get user by email
 *       tags: [User]
+*       parameters:
+*           - in: path
+*             name: email
+*             schema:
+*               type: string
+*             required: true
+*             description: User's email
 *       requestBody:
 *           required: false
 *           content:

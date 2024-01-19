@@ -167,9 +167,39 @@ describe('Apartment post Controller Tests', () => {
         expect(response.statusCode).toBe(200);
         expect(rc.city).toBe(apartment2.city);
     }));
+    test("Test Apdate Apartment - by admin", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            city: 'Updated City',
+            address: 'Updated Address',
+            floor: 3,
+            rooms: 3,
+            sizeInSqMeters: 110,
+            entryDate: '2024-08-01'
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .patch(`/apartment/update`)
+            .set("Authorization", "JWT " + accessTokenUser3)
+            .send({ id: apartment2Id, apartment: updateData });
+        expect(response.status).toBe(200);
+    }));
+    test("Test Apdate Apartment - by owner", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updateData = {
+            city: 'Updated City2',
+            address: 'Updated Address2',
+            floor: 3,
+            rooms: 3,
+            sizeInSqMeters: 100,
+            entryDate: '2024-08-01'
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .patch(`/apartment/update`)
+            .set("Authorization", "JWT " + accessTokenUser1)
+            .send({ id: apartment2Id, apartment: updateData });
+        expect(response.status).toBe(200);
+    }));
     test("Test Delete Apartment - Admin ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .delete(`/apartment/admin/delete/${apartment2Id}`)
+            .delete(`/apartment/delete/${apartment2Id}`)
             .set("Authorization", "JWT " + accessTokenUser3);
         expect(response.statusCode).toBe(200);
     }));

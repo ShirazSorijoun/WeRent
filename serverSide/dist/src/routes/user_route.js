@@ -99,47 +99,63 @@ router.get('/', auth_middleware_1.default, admin_middleware_1.default, user_cont
  */
 router.get('/id/:id', auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.getUserById);
 /**
-* @swagger
-* /user/update:
-*   patch:
-*       summary: Update user by id (admin only)
-*       tags: [User]
-*       parameters:
-*           - in: path
-*             name: id
-*             schema:
-*               type: string
-*             required: true
-*             description: User ID
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/User'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Get user by id
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           404:
-*               description: User not found
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           500:
-*               description: Internal server error
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*
-*/
+ * @swagger
+ * /user/update:
+ *   patch:
+ *     summary: Update a user
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: The ID of the user to be updated
+ *               user:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The updated name of the user
+ *                   email:
+ *                     type: string
+ *                     description: The updated email of the user
+ *                   password:
+ *                     type: string
+ *                     description: The updated password of the user
+ *             required:
+ *               - id
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request - At least one field (name, email, or password) is required for update
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Not Found - User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.patch('/update', auth_middleware_1.default, admin_middleware_1.default, user_controller_1.default.updateUser);
 /**
  * @swagger
@@ -223,46 +239,70 @@ router.delete('/delete/:id', auth_middleware_1.default, admin_middleware_1.defau
  */
 router.get('/apartments', auth_middleware_1.default, owner_middleware_1.default, user_controller_1.default.getMyApartments);
 /**
-* @swagger
-* /user/updateOwnProfile:
-*   patch:
-*       summary: user profile update (owner only)
-*       tags: [User]
-*       requestBody:
-*           required: false
-*           content:
-*               application/json:
-*                   schema:
-*                       $ref: '#/components/schemas/User'
-*       security:
-*           - bearerAuth: []
-*       responses:
-*           200:
-*               description: Updated profile
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           404:
-*               description: User not found
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           400:
-*               description: At least one field (name, email, or password) is required for updating or user ID is required for updating the profile
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*           500:
-*               description: Internal server error
-*               content:
-*                   application/json:
-*                       schema:
-*                           $ref: '#/components/schemas/User'
-*
-*/
+ * @swagger
+ * /user/updateOwnProfile:
+ *   patch:
+ *     summary: Update own user profile
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: The ID of the user to be updated
+ *               user:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The updated name of the user
+ *                   email:
+ *                     type: string
+ *                     description: The updated email of the user
+ *                   password:
+ *                     type: string
+ *                     description: The updated password of the user
+ *             required:
+ *               - id
+ *               - user
+ *           example:
+ *             id: '65aa74fa3abd5e0482be3def'
+ *             user:
+ *               name: 'Updated Name'
+ *               email: 'updated.email@example.com'
+ *               password: '8888888'
+ *     responses:
+ *       200:
+ *         description: Successfully updated own user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request - At least one field (name, email, or password) is required for update
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Not Found - User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.patch('/updateOwnProfile', auth_middleware_1.default, verify_user_ownership_1.default, user_controller_1.default.updateOwnProfile);
 /**
  * @swagger

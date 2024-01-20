@@ -37,7 +37,9 @@ const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const { review } = req.body;
         // Set the owner based on the current user
-        review.userId = req.locals.currentUserId;
+        const userId = req.locals.currentUserId;
+        review.userId = userId;
+        review.ownerName = (yield user_model_1.default.findById(userId)).name;
         const createdReview = yield user_review_model_1.default.create(review);
         res.status(201).json(createdReview);
     }

@@ -39,13 +39,9 @@ const router = express_1.default.Router();
 *                   type: string
 *                   description: The review description
 *           required:
-*               - userId
-*               - ownerName
 *               - description
 *           example:
 *               review:
-*                   userId: 5f9f0c6c1c9d440000b1d5d0
-*                   ownerName: Bob
 *                   description: 'This is a review'
 */
 /**

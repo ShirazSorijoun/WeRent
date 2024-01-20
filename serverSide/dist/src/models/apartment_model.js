@@ -34,6 +34,11 @@ const apartmentSchema = new mongoose_1.default.Schema({
         type: Date,
         required: true,
     },
+    apartment_image: {
+        type: String,
+        trim: true,
+        default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+    },
 });
 const Apartment = mongoose_1.default.model('Apartment', apartmentSchema);
 exports.default = Apartment;

@@ -8,6 +8,7 @@ export interface IApartment extends Document {
   rooms: number;
   sizeInSqMeters: number;
   entryDate: Date;
+  apartment_image?:string;
 }
 
 const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
@@ -39,6 +40,11 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   entryDate: {
     type: Date,
     required: true,
+  },
+  apartment_image: {
+    type: String,
+    trim: true,
+    default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
   },
 });
 

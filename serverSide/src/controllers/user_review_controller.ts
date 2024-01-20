@@ -35,7 +35,9 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { review } = req.body;
     // Set the owner based on the current user
-    review.userId = req.locals.currentUserId;
+    const userId = req.locals.currentUserId;
+    review.userId = userId;
+    review.ownerName = (await User.findById(userId)).name;
     const createdReview: IUserReview = await UserReview.create(review);
     res.status(201).json(createdReview);
   } catch (err) {

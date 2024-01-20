@@ -39,11 +39,13 @@ const userSchema = new mongoose_1.default.Schema({
     advertisedApartments: [
         {
             type: mongoose_1.default.Schema.Types.Mixed,
+            default: []
         },
     ],
     tokens: {
         type: [String],
         required: false,
+        default: []
     },
 });
 const User = mongoose_1.default.model('User', userSchema);

@@ -46,11 +46,13 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   advertisedApartments: [
     {
       type: mongoose.Schema.Types.Mixed,
+      default: []
     },
   ],
   tokens: {
     type: [String],
     required: false,
+    default: []
   },
 });
 

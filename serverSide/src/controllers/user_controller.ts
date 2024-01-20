@@ -117,10 +117,11 @@ const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void
       return;
     }
 
-    const { name, email, password } = req.body.user;
+    const { name, email, password, profile_image } = req.body.user;
+
     
-    if (!name && !email && !password) {
-      res.status(400).send('At least one field (name, email, or password) is required for update');
+    if (!name && !email && !password && !profile_image) {
+      res.status(400).send('At least one field (name, email, password, or profile_image) is required for update');
       return;
     }
 
@@ -130,7 +131,7 @@ const updateOwnProfile = async (req: CustomRequest, res: Response): Promise<void
 
       const updatedUser = await User.findByIdAndUpdate(
         currentUserId,
-        { name, email, encryptedPassword },
+        { name, email, encryptedPassword , profile_image},
         { new: true }
       );
 

@@ -100,15 +100,15 @@ const updateOwnProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(400).send('User ID is required for updating the profile');
         return;
     }
-    const { name, email, password } = req.body.user;
-    if (!name && !email && !password) {
-        res.status(400).send('At least one field (name, email, or password) is required for update');
+    const { name, email, password, profile_image } = req.body.user;
+    if (!name && !email && !password && !profile_image) {
+        res.status(400).send('At least one field (name, email, password, or profile_image) is required for update');
         return;
     }
     try {
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const updatedUser = yield user_model_1.default.findByIdAndUpdate(currentUserId, { name, email, encryptedPassword }, { new: true });
+        const updatedUser = yield user_model_1.default.findByIdAndUpdate(currentUserId, { name, email, encryptedPassword, profile_image }, { new: true });
         if (!updatedUser) {
             res.status(404).send('User not found');
             return;

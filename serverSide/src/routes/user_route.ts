@@ -290,6 +290,9 @@ router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApar
  *                   password:
  *                     type: string
  *                     description: The updated password of the user
+ *                   profile_image:
+ *                     type: string
+ *                     description: The Profile image
  *             required:
  *               - id
  *               - user
@@ -299,6 +302,7 @@ router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApar
  *               name: 'Updated Name'
  *               email: 'updated.email@example.com'
  *               password: '8888888'
+ *               profile_image: 'https://www.freeiconspng.com/uploads/no-image-icon-4.png'
  *     responses:
  *       200:
  *         description: Successfully updated own user profile

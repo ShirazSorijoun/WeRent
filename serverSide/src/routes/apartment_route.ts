@@ -106,6 +106,9 @@ const router = express.Router();
  *           type: string
  *           format: date
  *           description: The updated date of entry of tenants to the apartment (YYYY-MM-DD)
+ *         apartment_image:
+ *           type: string
+ *           description: image of the apartment
  *       required:
  *         - city
  *         - address

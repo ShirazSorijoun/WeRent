@@ -59,8 +59,6 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
 *               email: 'bob@gmail.com'
 *               password: '123456'
 *               roles: 'tenant'
-*               advertisedApartments: []
-*               tokens: []
 */
 /**
 * @swagger
@@ -100,6 +98,44 @@ router.post("/register", auth_controller_1.default.register);
 * @swagger
 * components:
 *   schemas:
+*       UserLogin:
+*           type: object
+*           properties:
+*               name:
+*                   type: string
+*                   description: The user name
+*               email:
+*                   type: string
+*                   description: The user email
+*               password:
+*                   type: string
+*                   description: The user password
+*               roles:
+*                   type: string
+*                   description: The user roles (admin, owner, tenant), the default is tenant
+*               advertisedApartments:
+*                   type: array
+*                   description: The apartments that the "owner" user posted
+*                   items:
+*                       type: object
+*               tokens:
+*                   type: array
+*                   description: The tokens that the user has
+*                   items:
+*                       type: string
+*           required:
+*               - name
+*               - email
+*               - password
+*           example:
+*               name: Bob
+*               email: 'bob@gmail.com'
+*               password: '123456'
+*/
+/**
+* @swagger
+* components:
+*   schemas:
 *       Tokens:
 *           type: object
 *           required:
@@ -127,7 +163,7 @@ router.post("/register", auth_controller_1.default.register);
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: '#/components/schemas/User'
+*                       $ref: '#/components/schemas/UserLogin'
 *       responses:
 *           200:
 *               description: The acess & refresh tokens

@@ -60,8 +60,6 @@ import authController from "../controllers/auth_controller";
 *               email: 'bob@gmail.com'
 *               password: '123456'
 *               roles: 'tenant'
-*               advertisedApartments: []
-*               tokens: []
 */
 
 
@@ -100,7 +98,44 @@ import authController from "../controllers/auth_controller";
 */
 router.post("/register", authController.register);
 
-
+/**
+* @swagger
+* components:
+*   schemas:
+*       UserLogin:
+*           type: object
+*           properties:
+*               name:
+*                   type: string
+*                   description: The user name
+*               email:
+*                   type: string
+*                   description: The user email
+*               password:
+*                   type: string
+*                   description: The user password
+*               roles:
+*                   type: string
+*                   description: The user roles (admin, owner, tenant), the default is tenant
+*               advertisedApartments:
+*                   type: array
+*                   description: The apartments that the "owner" user posted
+*                   items:
+*                       type: object
+*               tokens:
+*                   type: array
+*                   description: The tokens that the user has
+*                   items:
+*                       type: string
+*           required:
+*               - name
+*               - email
+*               - password
+*           example:
+*               name: Bob
+*               email: 'bob@gmail.com'
+*               password: '123456'
+*/
 
 /**
 * @swagger
@@ -135,7 +170,7 @@ router.post("/register", authController.register);
 *           content:
 *               application/json:
 *                   schema:
-*                       $ref: '#/components/schemas/User'
+*                       $ref: '#/components/schemas/UserLogin'
 *       responses:
 *           200:
 *               description: The acess & refresh tokens

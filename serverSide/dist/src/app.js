@@ -8,6 +8,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
 const apartment_route_1 = __importDefault(require("./routes/apartment_route"));
@@ -22,6 +23,8 @@ const initApp = () => {
             const app = (0, express_1.default)();
             app.use(body_parser_1.default.urlencoded({ extended: true, limit: '1mb' }));
             app.use(body_parser_1.default.json());
+            // Enable CORS for all routes
+            app.use((0, cors_1.default)());
             app.use("/auth", auth_route_1.default);
             app.use("/user", user_route_1.default);
             app.use("/apartment", apartment_route_1.default);

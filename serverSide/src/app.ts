@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
+import cors from 'cors';
 import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
 import apartmentRoute from "./routes/apartment_route";
@@ -20,6 +21,9 @@ const initApp = (): Promise<Express> =>{
 
         app.use(bodyParser.urlencoded({ extended: true, limit: '1mb'}));
         app.use(bodyParser.json());
+
+        // Enable CORS for all routes
+        app.use(cors());
 
 
         app.use("/auth", authRoute);

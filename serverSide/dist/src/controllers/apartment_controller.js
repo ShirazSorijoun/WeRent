@@ -105,6 +105,7 @@ const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
             floor: apartment.floor,
             rooms: apartment.rooms,
             sizeInSqMeters: apartment.sizeInSqMeters,
+            price: apartment.price,
             entryDate: apartment.entryDate,
             furniture: apartment.furniture,
             features: {

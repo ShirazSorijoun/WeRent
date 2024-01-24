@@ -34,6 +34,10 @@ const apartmentSchema = new mongoose_1.default.Schema({
         type: Number,
         required: true,
     },
+    price: {
+        type: Number,
+        required: true,
+    },
     entryDate: {
         type: Date,
         required: true,

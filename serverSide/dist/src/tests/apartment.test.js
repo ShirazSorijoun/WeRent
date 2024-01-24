@@ -73,6 +73,7 @@ const apartment1 = {
     floor: 2,
     rooms: 4,
     sizeInSqMeters: 105,
+    price: 2500,
     entryDate: new Date("2023-02-01"),
     furniture: 'full',
     features: {
@@ -94,6 +95,7 @@ const apartment2 = {
     floor: 6,
     rooms: 5,
     sizeInSqMeters: 120,
+    price: 3000,
     entryDate: new Date("2024-06-15"),
     description: 'Apartment in an excellent location',
     features: {
@@ -200,6 +202,7 @@ describe("Apartment post Controller Tests", () => {
             floor: 3,
             rooms: 3,
             sizeInSqMeters: 110,
+            price: 3000,
             entryDate: "2024-08-01",
             features: {
                 parking: true,
@@ -225,6 +228,7 @@ describe("Apartment post Controller Tests", () => {
             floor: 3,
             rooms: 3,
             sizeInSqMeters: 100,
+            price: 2500,
             entryDate: "2024-08-01",
             features: {
                 parking: false,

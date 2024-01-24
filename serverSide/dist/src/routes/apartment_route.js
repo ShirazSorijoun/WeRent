@@ -101,6 +101,9 @@ const router = express_1.default.Router();
  *         sizeInSqMeters:
  *           type: number
  *           description: The size of the apartment in meters
+ *         price:
+ *           type: number
+ *           description: The rental price
  *         entryDate:
  *           type: string
  *           format: date
@@ -121,6 +124,7 @@ const router = express_1.default.Router();
  *         - floor
  *         - rooms
  *         - sizeInSqMeters
+ *         - price
  *         - entryDate
  *       example:
  *         city: 'Rishon Lezion'
@@ -129,6 +133,7 @@ const router = express_1.default.Router();
  *         floor: 5
  *         rooms: 3
  *         sizeInSqMeters: 85
+ *         price: 3000
  *         entryDate: '2024-09-17' #YYYY-MM-DD
  *         furniture: 'full'
  *         description: 'Great Apartment'
@@ -158,6 +163,9 @@ const router = express_1.default.Router();
  *         sizeInSqMeters:
  *           type: number
  *           description: The updated size of the apartment in meters
+ *         price:
+ *           type: number
+ *           description: The rental price
  *         entryDate:
  *           type: string
  *           format: date
@@ -180,6 +188,7 @@ const router = express_1.default.Router();
  *         - floor
  *         - rooms
  *         - sizeInSqMeters
+ *         - price
  *         - entryDate
  *     Error:
  *       type: object

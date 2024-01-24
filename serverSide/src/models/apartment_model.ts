@@ -8,6 +8,7 @@ export interface IApartment extends Document {
   floor: number;
   rooms: number;
   sizeInSqMeters: number;
+  price: number;
   entryDate: Date;
   apartment_image?: string;
   furniture?:string;
@@ -51,6 +52,10 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
     required: true,
   },
   sizeInSqMeters: {
+    type: Number,
+    required: true,
+  },
+  price: {
     type: Number,
     required: true,
   },

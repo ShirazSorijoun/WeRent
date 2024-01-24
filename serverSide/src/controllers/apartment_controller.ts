@@ -103,6 +103,7 @@ const updateApartment = async (
         floor: apartment.floor,
         rooms: apartment.rooms,
         sizeInSqMeters: apartment.sizeInSqMeters,
+        price: apartment.price,
         entryDate: apartment.entryDate,
         furniture: apartment.furniture,
         features: {

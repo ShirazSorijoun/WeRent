@@ -43,7 +43,7 @@ const getAllApartments = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(200).json(apartments);
     }
     catch (error) {
-        res.status(500).send({ message: 'Error fetching apartments' });
+        res.status(500).send({ message: "Error fetching apartments" });
     }
 });
 const getApartmentById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,7 +52,7 @@ const getApartmentById = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const apartment = yield apartment_model_1.default.findById(id);
         if (!apartment) {
             // Apartment not found
-            res.status(404).json({ message: 'Apartment not found' });
+            res.status(404).json({ message: "Apartment not found" });
             return;
         }
         res.status(200).json(apartment);
@@ -60,25 +60,25 @@ const getApartmentById = (req, res) => __awaiter(void 0, void 0, void 0, functio
     catch (err) {
         // Internal Server Error
         console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 const createApartment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { apartment } = req.body;
-        //console.log(apartment)
+        console.log(apartment);
         apartment.owner = req.locals.currentUserId;
         const createdApartment = yield apartment_model_1.default.create(apartment);
-        //console.log(createdApartment)
+        console.log(createdApartment);
         // Update owner's advertisedApartments array
         if (req.locals.currentUserId) {
-            yield user_model_1.default.findByIdAndUpdate(req.locals.currentUserId, { $addToSet: { advertisedApartments: createdApartment } }, { new: true }).populate('advertisedApartments');
+            yield user_model_1.default.findByIdAndUpdate(req.locals.currentUserId, { $addToSet: { advertisedApartments: createdApartment } }, { new: true }).populate("advertisedApartments");
             res.status(201).json(createdApartment);
         }
     }
     catch (err) {
         console.error(err);
-        res.status(400).send('Something went wrong -> createApartment');
+        res.status(400).send("Something went wrong -> createApartment");
     }
 });
 const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -87,42 +87,55 @@ const updateApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
         // Ensure the logged-in user is the owner of the apartment or an admin
         const existingApartment = yield apartment_model_1.default.findById(id);
         if (!existingApartment) {
-            res.status(404).send('Apartment not found');
+            res.status(404).send("Apartment not found");
             return;
         }
         const ownerOfApartment = yield user_model_1.default.findById(existingApartment.owner.toString());
         const user = yield user_model_1.default.findById(req.locals.currentUserId);
         const role = user.roles;
-        if (role !== user_model_1.UserRole.Admin && ownerOfApartment._id.toString() !== req.locals.currentUserId) {
-            res.status(403).send('Access denied');
+        if (role !== user_model_1.UserRole.Admin &&
+            ownerOfApartment._id.toString() !== req.locals.currentUserId) {
+            res.status(403).send("Access denied");
             return;
         }
-        // Update apartment fields except owner
         const updatedApartment = yield apartment_model_1.default.findByIdAndUpdate(id, {
             city: apartment.city,
             address: apartment.address,
+            type: apartment.type,
             floor: apartment.floor,
             rooms: apartment.rooms,
             sizeInSqMeters: apartment.sizeInSqMeters,
             entryDate: apartment.entryDate,
+            furniture: apartment.furniture,
+            features: {
+                parking: apartment.features.parking,
+                accessForDisabled: apartment.features.accessForDisabled,
+                storage: apartment.features.storage,
+                dimension: apartment.features.dimension,
+                terrace: apartment.features.terrace,
+                garden: apartment.features.garden,
+                elevators: apartment.features.elevators,
+                airConditioning: apartment.features.airConditioning,
+            },
+            description: apartment.description,
         }, { new: true });
         if (!updatedApartment) {
-            res.status(400).send('Something went wrong -> updateApartment');
+            res.status(400).send("Something went wrong -> updateApartment");
             return;
         }
         // Update the corresponding user's advertisedApartments array
         const userUpdate = yield user_model_1.default.findByIdAndUpdate(ownerOfApartment, { $pull: { advertisedApartments: { _id: existingApartment._id } } }, { new: true });
         if (!userUpdate) {
-            res.status(500).send('Internal Server Error -> updateUser');
+            res.status(500).send("Internal Server Error -> updateUser");
             return;
         }
         // Add the updated apartment to the user's advertisedApartments array
-        yield user_model_1.default.findByIdAndUpdate(ownerOfApartment, { $addToSet: { advertisedApartments: updatedApartment } }, { new: true }).populate('advertisedApartments');
+        yield user_model_1.default.findByIdAndUpdate(ownerOfApartment, { $addToSet: { advertisedApartments: updatedApartment } }, { new: true }).populate("advertisedApartments");
         res.status(200).json(updatedApartment);
     }
     catch (err) {
         console.error(err);
-        res.status(400).send('Something went wrong -> updateApartment');
+        res.status(400).send("Something went wrong -> updateApartment");
     }
 });
 const deleteApartment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -134,20 +147,20 @@ const deleteApartment = (req, res) => __awaiter(void 0, void 0, void 0, function
         const role = user.roles;
         const ownerOfTheApartment = apartment.owner.toString();
         if (!apartment) {
-            res.status(404).send('Apartment not found');
+            res.status(404).send("Apartment not found");
             return;
         }
         if (ownerOfTheApartment !== currentUserId && role !== user_model_1.UserRole.Admin) {
-            res.status(403).send('Access denied');
+            res.status(403).send("Access denied");
             return;
         }
         yield apartment_model_1.default.findByIdAndDelete(apartmentId);
         yield user_model_1.default.findByIdAndUpdate(ownerOfTheApartment, { $pull: { advertisedApartments: { _id: apartment._id } } }, { new: true });
-        res.status(200).send('Apartment deleted successfully');
+        res.status(200).send("Apartment deleted successfully");
     }
     catch (err) {
         console.error(err);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send("Internal Server Error");
     }
 });
 exports.default = {

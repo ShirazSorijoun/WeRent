@@ -1,14 +1,27 @@
-import mongoose, { Document, Schema} from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface IApartment extends Document {
   city: string;
   address: string;
-  owner: mongoose.Schema.Types.ObjectId; 
+  type: string;
+  owner: mongoose.Schema.Types.ObjectId;
   floor: number;
   rooms: number;
   sizeInSqMeters: number;
   entryDate: Date;
-  apartment_image?:string;
+  apartment_image?: string;
+  furniture?:string;
+  features?: {
+    parking: boolean;
+    accessForDisabled: boolean;
+    storage: boolean;
+    dimension: boolean;
+    terrace: boolean;
+    garden: boolean;
+    elevators: boolean;
+    airConditioning: boolean;
+  };
+  description?: string;
 }
 
 const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
@@ -20,9 +33,13 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   floor: {
@@ -46,8 +63,50 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
     trim: true,
     default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
   },
+  furniture: {
+    type: String,
+    default: 'none',
+  },
+  features: {
+    parking: {
+      type: Boolean,
+      default: false,
+    },
+    accessForDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    storage: {
+      type: Boolean,
+      default: false,
+    },
+    dimension: {
+      type: Boolean,
+      default: false,
+    },
+    terrace: {
+      type: Boolean,
+      default: false,
+    },
+    garden: {
+      type: Boolean,
+      default: false,
+    },
+    elevators: {
+      type: Boolean,
+      default: false,
+    },
+    airConditioning: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  description: {
+    type: String,
+    default: '',
+  },
 });
 
-const Apartment = mongoose.model<IApartment>('Apartment', apartmentSchema);
+const Apartment = mongoose.model<IApartment>("Apartment", apartmentSchema);
 
 export default Apartment;

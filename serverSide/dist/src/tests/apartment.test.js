@@ -57,47 +57,71 @@ const user2 = {
     name: "John",
     email: "John@test.com",
     password: "111111",
-    roles: user_model_1.UserRole.Tenant
+    roles: user_model_1.UserRole.Tenant,
 };
 const user3 = {
     name: "Shani Yaish",
     email: "Shani@gmail.com",
     password: "123456",
-    roles: user_model_1.UserRole.Admin
+    roles: user_model_1.UserRole.Admin,
 };
 const apartment1 = {
     city: "Lod",
     address: "Barak 4",
+    type: "Garden Apartment",
     owner: "",
     floor: 2,
     rooms: 4,
     sizeInSqMeters: 105,
-    entryDate: new Date("2023-02-01")
+    entryDate: new Date("2023-02-01"),
+    furniture: 'full',
+    features: {
+        parking: true,
+        accessForDisabled: false,
+        storage: true,
+        dimension: false,
+        terrace: true,
+        garden: true,
+        elevators: false,
+        airConditioning: true,
+    },
 };
 const apartment2 = {
     city: "Holon",
     address: "Harava 4",
+    type: "Apartment",
     owner: "",
     floor: 6,
     rooms: 5,
     sizeInSqMeters: 120,
-    entryDate: new Date("2024-06-15")
+    entryDate: new Date("2024-06-15"),
+    description: 'Apartment in an excellent location',
+    features: {
+        parking: false,
+        accessForDisabled: true,
+        storage: false,
+        dimension: true,
+        terrace: false,
+        garden: true,
+        elevators: true,
+        airConditioning: false,
+    },
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield user_model_1.default.deleteMany();
     yield apartment_model_1.default.deleteMany();
-    yield user_model_1.default.deleteMany({ 'email': user1.email });
+    yield user_model_1.default.deleteMany({ email: user1.email });
     const res1 = yield (0, supertest_1.default)(app).post("/auth/register").send(user1);
     user1Id = res1.body._id;
     const response1 = yield (0, supertest_1.default)(app).post("/auth/login").send(user1);
     accessTokenUser1 = response1.body.accessToken;
-    yield user_model_1.default.deleteMany({ 'email': user2.email });
+    yield user_model_1.default.deleteMany({ email: user2.email });
     yield (0, supertest_1.default)(app).post("/auth/register").send(user2);
     const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(user2);
     accessTokenUser2 = response2.body.accessToken;
-    yield user_model_1.default.deleteMany({ 'email': user3.email });
+    yield user_model_1.default.deleteMany({ email: user3.email });
     yield (0, supertest_1.default)(app).post("/auth/register").send(user3);
     const response3 = yield (0, supertest_1.default)(app).post("/auth/login").send(user3);
     accessTokenUser3 = response3.body.accessToken;
@@ -105,7 +129,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-describe('Apartment post Controller Tests', () => {
+describe("Apartment post Controller Tests", () => {
     test("Test Get All Apartments posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/apartment");
         expect(response.statusCode).toBe(200);
@@ -140,7 +164,8 @@ describe('Apartment post Controller Tests', () => {
         expect(response.statusCode).toBe(200);
     }));
     test("Test Get My Apartments - Success", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user/apartments/")
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user/apartments/")
             .set("Authorization", "JWT " + accessTokenUser1);
         const rc = response.body.myApartments[0];
         //console.log( response.body)
@@ -148,10 +173,11 @@ describe('Apartment post Controller Tests', () => {
         expect(rc.owner).toBe(user1Id);
     }));
     test("Test Get My Apartments - Not Success", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user/apartments/")
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user/apartments/")
             .set("Authorization", "JWT " + accessTokenUser2);
         expect(response.statusCode).toBe(401);
-        expect(response.text).toBe('Not Owner');
+        expect(response.text).toBe("Not Owner");
     }));
     test("Test Delete Apartment - Own Apartment ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -169,12 +195,22 @@ describe('Apartment post Controller Tests', () => {
     }));
     test("Test Apdate Apartment - by admin", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
-            city: 'Updated City',
-            address: 'Updated Address',
+            city: "Updated City",
+            address: "Updated Address",
             floor: 3,
             rooms: 3,
             sizeInSqMeters: 110,
-            entryDate: '2024-08-01'
+            entryDate: "2024-08-01",
+            features: {
+                parking: true,
+                accessForDisabled: false,
+                storage: true,
+                dimension: false,
+                terrace: true,
+                garden: true,
+                elevators: false,
+                airConditioning: true,
+            },
         };
         const response = yield (0, supertest_1.default)(app)
             .patch(`/apartment/update`)
@@ -184,12 +220,22 @@ describe('Apartment post Controller Tests', () => {
     }));
     test("Test Apdate Apartment - by owner", () => __awaiter(void 0, void 0, void 0, function* () {
         const updateData = {
-            city: 'Updated City2',
-            address: 'Updated Address2',
+            city: "Updated City2",
+            address: "Updated Address2",
             floor: 3,
             rooms: 3,
             sizeInSqMeters: 100,
-            entryDate: '2024-08-01'
+            entryDate: "2024-08-01",
+            features: {
+                parking: false,
+                accessForDisabled: true,
+                storage: false,
+                dimension: true,
+                terrace: false,
+                garden: true,
+                elevators: true,
+                airConditioning: false,
+            },
         };
         const response = yield (0, supertest_1.default)(app)
             .patch(`/apartment/update`)

@@ -30,7 +30,7 @@ describe("File Tests", () => {
         //app = await initApp();
         try {
             const response = yield (0, supertest_1.default)(app)
-                .post("/file/file?file=123.png").attach('file', filePath);
+                .post("/file?file=123.png").attach('file', filePath);
             if (!response.body) {
                 throw new Error('Response body is undefined');
             }

@@ -10,7 +10,8 @@
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
     "testApartment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/apartment.test.ts",
     "testUser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts",
-    "testUserReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user_review.test.ts"
+    "testUserReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user_review.test.ts",
+    "testFile": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/file.test.ts"
   },
   "author": "Shani and Shiraz",
   "license": "ISC",

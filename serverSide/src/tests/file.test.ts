@@ -26,7 +26,7 @@ describe("File Tests" , () => {
 
         try {
             const response = await request(app)
-                .post("/file/file?file=123.png").attach('file', filePath);
+                .post("/file?file=123.png").attach('file', filePath);
             
 
             if (!response.body) {

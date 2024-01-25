@@ -8,7 +8,7 @@ import authRoute from "./routes/auth_route";
 import userRoute from "./routes/user_route";
 import apartmentRoute from "./routes/apartment_route";
 import userReviewRoute from "./routes/user_review_route";
-
+import fileRoute from "./routes/file_route";
 
 const initApp = (): Promise<Express> =>{
    const promise = new Promise<Express>((resolve) =>{
@@ -30,6 +30,8 @@ const initApp = (): Promise<Express> =>{
         app.use("/user", userRoute);
         app.use("/apartment", apartmentRoute);
         app.use("/userReview", userReviewRoute);
+        app.use("/file", fileRoute);
+        app.use("/public", express.static("public"));
     
         resolve(app);
        });

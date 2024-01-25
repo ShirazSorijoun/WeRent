@@ -13,6 +13,7 @@ const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
 const apartment_route_1 = __importDefault(require("./routes/apartment_route"));
 const user_review_route_1 = __importDefault(require("./routes/user_review_route"));
+const file_route_1 = __importDefault(require("./routes/file_route"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -29,6 +30,8 @@ const initApp = () => {
             app.use("/user", user_route_1.default);
             app.use("/apartment", apartment_route_1.default);
             app.use("/userReview", user_review_route_1.default);
+            app.use("/file", file_route_1.default);
+            app.use("/public", express_1.default.static("public"));
             resolve(app);
         });
     });

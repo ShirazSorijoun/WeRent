@@ -21,6 +21,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.roles;
+    const profile_image = req.body.profile_image;
     if (!email || !password || !name || !role) {
         return res.status(400).send("missing email or password or name or role");
     }
@@ -49,7 +50,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             'name': name,
             'email': email,
             'password': encryptedPassword,
-            'roles': role
+            'roles': role,
+            'profile_image': profile_image,
         });
         return res.status(201).send(rs2);
     }

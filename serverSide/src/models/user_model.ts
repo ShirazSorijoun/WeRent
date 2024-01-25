@@ -42,6 +42,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
       type: String,
       trim: true,
       default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+      //default: `${__dirname}\\user_vector.png`,
     },
   advertisedApartments: [
     {

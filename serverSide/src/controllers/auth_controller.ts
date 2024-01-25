@@ -10,6 +10,7 @@ const register = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     const role = req.body.roles;
+    const profile_image = req.body.profile_image;
 
     if (!email || !password || !name || !role) {
         return res.status(400).send("missing email or password or name or role");
@@ -44,7 +45,8 @@ const register = async (req: Request, res: Response) => {
             'name': name,
             'email': email,
             'password': encryptedPassword,
-            'roles': role
+            'roles': role,
+            'profile_image': profile_image,
         });
         return res.status(201).send(rs2);
 

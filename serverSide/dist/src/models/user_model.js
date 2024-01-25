@@ -34,7 +34,8 @@ const userSchema = new mongoose_1.default.Schema({
     profile_image: {
         type: String,
         trim: true,
-        default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+        //default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+        default: `${__dirname}\\user_vector.png`,
     },
     advertisedApartments: [
         {

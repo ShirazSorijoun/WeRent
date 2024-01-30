@@ -101,6 +101,7 @@ const updateApartment = async (
         address: apartment.address,
         type: apartment.type,
         floor: apartment.floor,
+        numberOfFloors: apartment.numberOfFloors,
         rooms: apartment.rooms,
         sizeInSqMeters: apartment.sizeInSqMeters,
         price: apartment.price,

@@ -95,6 +95,9 @@ const router = express.Router();
  *         floor:
  *           type: number
  *           description: The floor where the apartment is located
+ *         numberOfFloors:
+ *           type: number
+ *           description: The number of floors in the bulding
  *         rooms:
  *           type: number
  *           description: The number of rooms in the apartment
@@ -122,6 +125,7 @@ const router = express.Router();
  *         - type
  *         - owner
  *         - floor
+ *         - numberOfFloors
  *         - rooms
  *         - sizeInSqMeters
  *         - price
@@ -131,6 +135,7 @@ const router = express.Router();
  *         address: 'Shlomo Levy 14'
  *         type: 'Private Apartment'
  *         floor: 5
+ *         numberOfFloors: 8
  *         rooms: 3
  *         sizeInSqMeters: 85
  *         price: 3000
@@ -158,6 +163,9 @@ const router = express.Router();
  *         floor:
  *           type: number
  *           description: The updated floor where the apartment is located
+ *         numberOfFloors:
+ *           type: number
+ *           description: The number of floors in the bulding
  *         rooms:
  *           type: number
  *           description: The updated number of rooms in the apartment
@@ -187,6 +195,7 @@ const router = express.Router();
  *         - address
  *         - type
  *         - floor
+ *         - numberOfFloors
  *         - rooms
  *         - sizeInSqMeters
  *         - price

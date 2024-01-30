@@ -6,6 +6,7 @@ export interface IApartment extends Document {
   type: string;
   owner: mongoose.Schema.Types.ObjectId;
   floor: number;
+  numberOfFloors: number;
   rooms: number;
   sizeInSqMeters: number;
   price: number;
@@ -44,6 +45,10 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
     required: true,
   },
   floor: {
+    type: Number,
+    required: true,
+  },
+  numberOfFloors: {
     type: Number,
     required: true,
   },

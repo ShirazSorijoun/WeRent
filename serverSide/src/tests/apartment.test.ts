@@ -80,6 +80,7 @@ const apartment2 = {
     elevators: true,
     airConditioning: false,
   },
+  phone:"0524717657"
 };
 
 beforeAll(async () => {

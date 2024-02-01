@@ -24,6 +24,7 @@ export interface IApartment extends Document {
     airConditioning: boolean;
   };
   description?: string;
+  phone?: string;
 }
 
 const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
@@ -114,6 +115,9 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   description: {
     type: String,
     default: '',
+  },
+  phone: {
+    type: String,
   },
 });
 

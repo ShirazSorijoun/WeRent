@@ -103,7 +103,7 @@ router.get('/',authMiddleware,adminMiddleware,UserController.getAllUsers);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/id/:id',authMiddleware,adminMiddleware,UserController.getUserById);
+router.get('/id/:id',authMiddleware,UserController.getUserById);
 
 
 

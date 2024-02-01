@@ -118,7 +118,10 @@ const router = express.Router();
  *           $ref: '#/components/schemas/Features'
  *         description:
  *           type: string
- *           description: Additional details that will help market the apartment 
+ *           description: Additional details that will help market the apartment
+ *         phone:
+ *           type: string
+ *           description: Phone number 
  *       required:
  *         - city
  *         - address
@@ -142,6 +145,7 @@ const router = express.Router();
  *         entryDate: '2024-09-17' #YYYY-MM-DD
  *         furniture: 'full'
  *         description: 'Great Apartment'
+ *         phone: '0524717657'
  */
 
 /**
@@ -189,7 +193,10 @@ const router = express.Router();
  *           $ref: '#/components/schemas/Features'
  *         description:
  *           type: string
- *           description: Additional details that will help market the apartment 
+ *           description: Additional details that will help market the apartment
+ *         phone:
+ *           type: string
+ *           description: Phone number 
  *       required:
  *         - city
  *         - address

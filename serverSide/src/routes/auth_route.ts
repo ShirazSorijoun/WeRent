@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import authController from "../controllers/auth_controller";
+import AuthMiddleware from "../common/auth_middleware";
 
 
 /**
@@ -224,5 +225,7 @@ router.get("/logout", authController.logout);
 *                           $ref: '#/components/schemas/Tokens'
 */
 router.get("/refresh", authController.refresh);
+
+router.post("/check-token", AuthMiddleware, authController.checkToken);
 
 export default router;

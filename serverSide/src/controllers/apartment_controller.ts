@@ -118,6 +118,7 @@ const updateApartment = async (
           airConditioning: apartment.features.airConditioning,
         },
         description: apartment.description,
+        phone: apartment.phone,
       },
       { new: true }
     );

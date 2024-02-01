@@ -94,7 +94,7 @@ const login = async (req: Request, res: Response) => {
         }
         await user.save();
 
-        return res.status(200).send({'accessToken': accessToken, 'refreshToken': refreshToken});
+        return res.status(200).send({'accessToken': accessToken, 'refreshToken': refreshToken , 'userId': user._id,});
 
     } catch (error) {
         res.status(400).send("error");
@@ -174,9 +174,14 @@ const refresh = async (req: Request, res: Response) => {
     });
 }
 
+const checkToken = (req:Request, res:Response) => {
+    return res.status(200).json({ isValidToken: true });
+  };
+
 export default {
     register,
     login,
     logout,
     refresh,
+    checkToken
 }

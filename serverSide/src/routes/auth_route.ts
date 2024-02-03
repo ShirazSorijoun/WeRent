@@ -98,6 +98,8 @@ import AuthMiddleware from "../common/auth_middleware";
 *
 */
 router.post("/register", authController.register);
+router.post("/google", authController.googleSignin);
+
 
 /**
 * @swagger

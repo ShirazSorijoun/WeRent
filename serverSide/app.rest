@@ -1,6 +1,15 @@
 
 ###
 
+POST http://localhost:3000/auth/google
+Content-Type: application/json
+{
+  "credential": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg1ZTU1MTA3NDY2YjdlMj…NMcxQ2mFSXj2BMhtGfzQ-tdIbG1e2zw1iR4OKMuR6p_VbBq_w"
+}
+
+
+###
+
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 

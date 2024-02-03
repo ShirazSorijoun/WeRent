@@ -115,7 +115,7 @@ const generateTokens = async (user: IUser) => {
     await user.save();
     return {
         'accessToken': accessToken,
-        'refreshToken': refreshToken
+        'refreshToken': refreshToken,
     };
 }
 
@@ -141,7 +141,7 @@ const login = async (req: Request, res: Response) => {
 
 
         const tokens = await generateTokens(user)
-        return res.status(200).send(tokens);
+        return res.status(200).send({tokens , "userId" : user.id});
     } catch (error) {
         res.status(400).send("error");
     }

@@ -230,5 +230,6 @@ export default {
     login,
     logout,
     refresh,
-    checkToken
+    checkToken,
+    generateTokens
 }

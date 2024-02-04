@@ -44,14 +44,14 @@ beforeAll(async () => {
   user1Id = res1.body._id;
   //console.log(user1Id)
   const response = await request(app).post("/auth/login").send(user1);
-  accessTokenUser1 = response.body.accessToken;
+  accessTokenUser1 = response.body.tokens.accessToken;
   //console.log(accessToken)
 
   await User.deleteMany({ 'email': user2.email });
   const res2 = await request(app).post("/auth/register").send(user2);
   user2Id = res2.body._id;
   const response2 = await request(app).post("/auth/login").send(user2);
-  accessTokenUser2 = response2.body.accessToken;
+  accessTokenUser2 = response2.body.tokens.accessToken;
   //console.log(accessToken2)
 
   await User.deleteMany({ 'email': user3.email });

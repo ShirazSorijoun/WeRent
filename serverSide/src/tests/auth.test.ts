@@ -88,8 +88,8 @@ describe ("Auth test", () => {
         const response = await request(app)
             .post("/auth/login").send(user);
         expect(response.statusCode).toBe(200);
-        accessToken = response.body.accessToken;
-        refreshToken = response.body.refreshToken;
+        accessToken = response.body.tokens.accessToken;
+        refreshToken = response.body.tokens.refreshToken;
         expect(accessToken).toBeDefined();
     });
 

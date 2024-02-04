@@ -93,17 +93,17 @@ beforeAll(async () => {
   const res1 = await request(app).post("/auth/register").send(user1);
   user1Id = res1.body._id;
   const response1 = await request(app).post("/auth/login").send(user1);
-  accessTokenUser1 = response1.body.accessToken;
+  accessTokenUser1 = response1.body.tokens.accessToken;
 
   await User.deleteMany({ email: user2.email });
   await request(app).post("/auth/register").send(user2);
   const response2 = await request(app).post("/auth/login").send(user2);
-  accessTokenUser2 = response2.body.accessToken;
+  accessTokenUser2 = response2.body.tokens.accessToken;
 
   await User.deleteMany({ email: user3.email });
   await request(app).post("/auth/register").send(user3);
   const response3 = await request(app).post("/auth/login").send(user3);
-  accessTokenUser3 = response3.body.accessToken;
+  accessTokenUser3 = response3.body.tokens.accessToken;
 });
 
 afterAll(async () => {

@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
 import authController from "../controllers/auth_controller";
-import AuthMiddleware from "../common/auth_middleware";
+//import authMiddleware from "../common/auth_middleware";
+
 
 
 /**
@@ -228,6 +229,8 @@ router.get("/logout", authController.logout);
 */
 router.get("/refresh", authController.refresh);
 
-router.post("/check-token", AuthMiddleware, authController.checkToken);
+router.post("/checkToken", authController.checkToken);
+
+router.post("/refreshToken", authController.generateTokens);
 
 export default router;

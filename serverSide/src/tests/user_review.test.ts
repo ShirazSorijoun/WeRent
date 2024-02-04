@@ -59,15 +59,15 @@ beforeAll(async () => {
     userReview2.ownerName=res.body.name;
     userReview2.userId = res.body._id;
     const response = await request(app).post("/auth/login").send(user);
-    accessTokenUser = response.body.accessToken;
+    accessTokenUser = response.body.tokens.accessToken;
 
     await request(app).post("/auth/register").send(user2);
     const response2 = await request(app).post("/auth/login").send(user2);
-    accessTokenUser2 = response2.body.accessToken;
+    accessTokenUser2 = response2.body.tokens.accessToken;
 
     await request(app).post("/auth/register").send(user3);
     const response3 = await request(app).post("/auth/login").send(user3);
-    accessTokenUser3 = response3.body.accessToken;
+    accessTokenUser3 = response3.body.tokens.accessToken;
     
 });
 

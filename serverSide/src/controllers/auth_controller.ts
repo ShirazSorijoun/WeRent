@@ -220,16 +220,11 @@ const refresh = async (req: Request, res: Response) => {
     });
 }
 
-const checkToken = (req:Request, res:Response) => {
-    return res.status(200).json({ isValidToken: true });
-  };
-
 export default {
     googleSignin,
     register,
     login,
     logout,
     refresh,
-    checkToken,
     generateTokens
 }

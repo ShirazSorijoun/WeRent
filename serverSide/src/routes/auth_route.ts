@@ -229,8 +229,4 @@ router.get("/logout", authController.logout);
 */
 router.get("/refresh", authController.refresh);
 
-router.post("/checkToken", authController.checkToken);
-
-router.post("/refreshToken", authController.generateTokens);
-
 export default router;

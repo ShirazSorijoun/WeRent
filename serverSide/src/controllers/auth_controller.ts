@@ -178,14 +178,15 @@ const logout = async (req: Request, res: Response) => {
 
 
 const refresh = async (req: Request, res: Response) => {
+
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1];
+    //console.log(refreshToken)
     if (refreshToken == null) {
         return res.sendStatus(401);
     }
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: {'_id': string}) => {
         if (err) {
-            console.log(err);
             return res.sendStatus(401);
         }
         try{
@@ -193,7 +194,7 @@ const refresh = async (req: Request, res: Response) => {
             if (!userFromDb.tokens || !userFromDb.tokens.includes(refreshToken)) {
                 userFromDb.tokens = []; //invalidates all user tokens
                 await userFromDb.save();
-                return res.sendStatus(401);
+                //return res.sendStatus(401)
             }
 
             //in case everything is fine
@@ -210,9 +211,10 @@ const refresh = async (req: Request, res: Response) => {
             userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
             userFromDb.tokens.push(newRefreshToken);
             await userFromDb.save();
+            console.log(userFromDb)
             return res.status(200).send({
                 'accessToken': accessToken,
-                'refreshToken': refreshToken
+                'refreshToken': newRefreshToken  
             });
         }catch (err) {
             res.sendStatus(401).send(err.message);

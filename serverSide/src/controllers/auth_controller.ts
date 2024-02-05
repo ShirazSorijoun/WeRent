@@ -211,7 +211,7 @@ const refresh = async (req: Request, res: Response) => {
             userFromDb.tokens = userFromDb.tokens.filter((token) => token !== refreshToken);
             userFromDb.tokens.push(newRefreshToken);
             await userFromDb.save();
-            console.log(userFromDb)
+            //console.log(userFromDb)
             return res.status(200).send({
                 'accessToken': accessToken,
                 'refreshToken': newRefreshToken  
@@ -222,11 +222,27 @@ const refresh = async (req: Request, res: Response) => {
     });
 }
 
+const checkToken = (req:Request, res:Response) => { 
+    const {token} = req.body;
+    //console.log("from check",token);
+    if (!token) {
+        return res.status(401).json({message: "No token provided"});
+    }
+    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+        if (err) {
+            return res.status(403).json({message: "Invalid token"});
+        }
+
+        return res.status(200).json({ isValidToken: true });
+    });   
+}
+
 export default {
     googleSignin,
     register,
     login,
     logout,
     refresh,
-    generateTokens
+    generateTokens,
+    checkToken
 }

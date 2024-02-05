@@ -228,5 +228,6 @@ router.get("/logout", authController.logout);
 *                           $ref: '#/components/schemas/Tokens'
 */
 router.get("/refresh", authController.refresh);
+router.post("/checkToken", authController.checkToken);
 
 export default router;

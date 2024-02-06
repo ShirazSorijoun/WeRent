@@ -3,7 +3,7 @@ import UserController from '../controllers/user_controller';
 import authMiddleware from '../common/auth_middleware';
 import adminMiddleware from '../common/admin_middleware';
 import ownerMiddleware from '../common/owner_middleware';
-import verifyUserOwnership  from '../common/verify_user_ownership';
+//import verifyUserOwnership  from '../common/verify_user_ownership';
 
 const router = express.Router();
 
@@ -329,7 +329,7 @@ router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApar
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.patch('/updateOwnProfile', authMiddleware,verifyUserOwnership,UserController.updateOwnProfile);
+router.patch('/updateOwnProfile', authMiddleware,UserController.updateOwnProfile);
 
 
 

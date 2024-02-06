@@ -133,10 +133,10 @@ const updateOwnProfile = async (
   try {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
-    //console.log(encryptedPassword);
+
     const updatedUser = await User.findByIdAndUpdate(
       currentUserId,
-      { name, email, password : encryptedPassword, profile_image },
+      { name, email, password: encryptedPassword, profile_image },
       { new: true }
     );
     console.log(updatedUser);
@@ -179,6 +179,30 @@ const getMyApartments = async (
   }
 };
 
+const checkOldPassword = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { oldPassword } = req.body;
+    const currentUserId = req.locals.currentUserId;
+
+    const user = await User.findById(currentUserId);
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const isValid = await bcrypt.compare(oldPassword, user.password);
+    console.log(isValid);
+    res.json({ isValid });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 export default {
   getAllUsers,
   getUserById,
@@ -187,4 +211,5 @@ export default {
   deleteUser,
   updateOwnProfile,
   getMyApartments,
+  checkOldPassword,
 };

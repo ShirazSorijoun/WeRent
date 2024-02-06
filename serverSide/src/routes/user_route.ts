@@ -363,5 +363,6 @@ router.patch('/updateOwnProfile', authMiddleware,UserController.updateOwnProfile
  *               $ref: '#/components/schemas/Error'
  */
 router.get('/:email',authMiddleware,UserController.getUserByEmail);
+router.post('/checkOldPassword',authMiddleware,UserController.checkOldPassword);
 
 export default router;

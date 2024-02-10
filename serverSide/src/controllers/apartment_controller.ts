@@ -71,8 +71,7 @@ const updateApartment = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id, apartment } = req.body;
-
+  const { id, updatedApartment } = req.body;
     // Ensure the logged-in user is the owner of the apartment or an admin
     const existingApartment = await Apartment.findById(id);
     if (!existingApartment) {
@@ -94,36 +93,36 @@ const updateApartment = async (
       return;
     }
 
-    const updatedApartment = await Apartment.findByIdAndUpdate(
+    const apartmentToApdate = await Apartment.findByIdAndUpdate(
       id,
       {
-        city: apartment.city,
-        address: apartment.address,
-        type: apartment.type,
-        floor: apartment.floor,
-        numberOfFloors: apartment.numberOfFloors,
-        rooms: apartment.rooms,
-        sizeInSqMeters: apartment.sizeInSqMeters,
-        price: apartment.price,
-        entryDate: apartment.entryDate,
-        furniture: apartment.furniture,
+        city: updatedApartment.city,
+        address: updatedApartment.address,
+        type: updatedApartment.type,
+        floor: updatedApartment.floor,
+        numberOfFloors: updatedApartment.numberOfFloors,
+        rooms: updatedApartment.rooms,
+        sizeInSqMeters: updatedApartment.sizeInSqMeters,
+        price: updatedApartment.price,
+        entryDate: updatedApartment.entryDate,
+        furniture: updatedApartment.furniture,
         features: {
-          parking: apartment.features.parking,
-          accessForDisabled: apartment.features.accessForDisabled,
-          storage: apartment.features.storage,
-          dimension: apartment.features.dimension,
-          terrace: apartment.features.terrace,
-          garden: apartment.features.garden,
-          elevators: apartment.features.elevators,
-          airConditioning: apartment.features.airConditioning,
+          parking: updatedApartment.features.parking,
+          accessForDisabled: updatedApartment.features.accessForDisabled,
+          storage: updatedApartment.features.storage,
+          dimension: updatedApartment.features.dimension,
+          terrace: updatedApartment.features.terrace,
+          garden: updatedApartment.features.garden,
+          elevators: updatedApartment.features.elevators,
+          airConditioning: updatedApartment.features.airConditioning,
         },
-        description: apartment.description,
-        phone: apartment.phone,
+        description: updatedApartment.description,
+        phone: updatedApartment.phone,
       },
       { new: true }
     );
 
-    if (!updatedApartment) {
+    if (!apartmentToApdate) {
       res.status(400).send("Something went wrong -> updateApartment");
       return;
     }
@@ -131,7 +130,7 @@ const updateApartment = async (
     // Update the corresponding user's advertisedApartments array
     const userUpdate = await User.findByIdAndUpdate(
       ownerOfApartment,
-      { $pull: { advertisedApartments: { _id: existingApartment._id } } },
+      { $pull: { advertisedApartments: { _id: apartmentToApdate._id } } },
       { new: true }
     );
 
@@ -143,11 +142,11 @@ const updateApartment = async (
     // Add the updated apartment to the user's advertisedApartments array
     await User.findByIdAndUpdate(
       ownerOfApartment,
-      { $addToSet: { advertisedApartments: updatedApartment } },
+      { $addToSet: { advertisedApartments: apartmentToApdate } },
       { new: true }
     ).populate("advertisedApartments");
 
-    res.status(200).json(updatedApartment);
+    res.status(200).json(apartmentToApdate);
   } catch (err) {
     console.error(err);
     res.status(400).send("Something went wrong -> updateApartment");

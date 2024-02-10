@@ -6,6 +6,8 @@ import { OAuth2Client } from 'google-auth-library';
 
 
 const client = new OAuth2Client();
+
+// Handle Google sign-in
 const googleSignin = async (req: Request, res: Response) => {
     console.log(req.body);
     try {
@@ -43,6 +45,7 @@ const googleSignin = async (req: Request, res: Response) => {
 }
 
 
+// Register a new user
 const register = async (req: Request, res: Response) => {
     const name = req.body.name;
     const email = req.body.email;
@@ -133,6 +136,8 @@ const login = async (req: Request, res: Response) => {
         if (user == null) {
             return res.status(401).send("email or password incorrect");
         }
+        //const userRole = user.roles;
+        //console.log(userRole);
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
@@ -141,7 +146,7 @@ const login = async (req: Request, res: Response) => {
 
 
         const tokens = await generateTokens(user)
-        return res.status(200).send({tokens , "userId" : user.id});
+        return res.status(200).send({tokens , "userId" : user.id,}); //"userRole" : userRole});
     } catch (error) {
         res.status(400).send("error");
     }

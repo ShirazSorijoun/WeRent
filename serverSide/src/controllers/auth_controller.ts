@@ -136,8 +136,8 @@ const login = async (req: Request, res: Response) => {
         if (user == null) {
             return res.status(401).send("email or password incorrect");
         }
-        //const userRole = user.roles;
-        //console.log(userRole);
+        const userRole = user.roles;
+        console.log(userRole);
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
@@ -146,7 +146,7 @@ const login = async (req: Request, res: Response) => {
 
 
         const tokens = await generateTokens(user)
-        return res.status(200).send({tokens , "userId" : user.id,}); //"userRole" : userRole});
+        return res.status(200).send({tokens , "userId" : user.id, "userRole" : userRole});
     } catch (error) {
         res.status(400).send("error");
     }

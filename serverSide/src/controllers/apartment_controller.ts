@@ -72,6 +72,7 @@ const updateApartment = async (
 ): Promise<void> => {
   try {
   const { id, updatedApartment } = req.body;
+  console.log(req.body)
     // Ensure the logged-in user is the owner of the apartment or an admin
     const existingApartment = await Apartment.findById(id);
     if (!existingApartment) {
@@ -126,6 +127,7 @@ const updateApartment = async (
       res.status(400).send("Something went wrong -> updateApartment");
       return;
     }
+    console.log(apartmentToApdate._id)
 
     // Update the corresponding user's advertisedApartments array
     const userUpdate = await User.findByIdAndUpdate(

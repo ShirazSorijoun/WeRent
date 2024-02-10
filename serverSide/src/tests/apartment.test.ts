@@ -197,6 +197,7 @@ describe("Apartment post Controller Tests", () => {
       sizeInSqMeters: 110,
       price: 3000,
       entryDate: "2024-08-01",
+      furniture: "full",
       features: {
         parking: true,
         accessForDisabled: false,
@@ -207,12 +208,14 @@ describe("Apartment post Controller Tests", () => {
         elevators: false,
         airConditioning: true,
       },
+      description: "wow",
+      phone: "0524717657"
     };
 
     const response = await request(app)
       .patch(`/apartment/update`)
       .set("Authorization", "JWT " + accessTokenUser3)
-      .send({ id: apartment2Id, apartment: updateData });
+      .send({ id: apartment2Id, updatedApartment: updateData });
 
     expect(response.status).toBe(200);
   });
@@ -237,12 +240,14 @@ describe("Apartment post Controller Tests", () => {
         elevators: true,
         airConditioning: false,
       },
+      description: "wow",
+      phone: "0524717657"
     };
 
     const response = await request(app)
       .patch(`/apartment/update`)
       .set("Authorization", "JWT " + accessTokenUser1)
-      .send({ id: apartment2Id, apartment: updateData });
+      .send({ id: apartment2Id, updatedApartment: updateData });
 
     expect(response.status).toBe(200);
   });

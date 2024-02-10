@@ -54,7 +54,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.body;
     const { name, email, password } = req.body.user;
 
-    // Ensure that at least one field is provided for update
+    console.log("here:" , req.body.user)
     if (!name && !email && !password) {
       res
         .status(400)
@@ -119,8 +119,8 @@ const updateOwnProfile = async (
     return;
   }
 
-  const { name, email, password, profile_image } = req.body;
-  console.log(password);
+  const { name, email, password, profile_image } = req.body.user;
+  console.log(req.body.user);
   if (!name && !email && !password && !profile_image) {
     res
       .status(400)

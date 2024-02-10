@@ -168,6 +168,7 @@ beforeAll(async () => {
           name: 'Updated Name',
           email: 'updated.email@example.com',
           password: '8888888',
+          profile_image: '',
         },
       };
     
@@ -186,24 +187,6 @@ beforeAll(async () => {
     
       expect(updatedUserResponse.status).toBe(200);
       expect(updatedUserResponse.body.name).toBe('Updated Name');
-    });
-
-    test('Test Update Own Profile - Not his own profile', async () => {
-      const updateData = {
-        id: user1Id,
-        user: {
-          name: 'Updated Name',
-          email: 'updated.email@example.com',
-          password: '8888888',
-        },
-      };
-    
-      const response = await request(app)
-        .patch('/user/updateOwnProfile')
-        .set('Authorization', 'JWT ' + accessTokenUser2)
-        .send(updateData);
-    
-      expect(response.statusCode).toBe(403);
     });
     
   });

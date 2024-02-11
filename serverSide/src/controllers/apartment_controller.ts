@@ -103,6 +103,7 @@ const updateApartment = async (
         floor: updatedApartment.floor,
         numberOfFloors: updatedApartment.numberOfFloors,
         rooms: updatedApartment.rooms,
+        apartment_image: updatedApartment.apartment_image,
         sizeInSqMeters: updatedApartment.sizeInSqMeters,
         price: updatedApartment.price,
         entryDate: updatedApartment.entryDate,

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
+import Apartment from "../models/apartment_model";
 //import AuthRequest from '../middlewares/auth_middleware';
 
 interface CustomRequest extends Request {
@@ -54,7 +55,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.body;
     const { name, email, password } = req.body.user;
 
-    console.log("here:" , req.body.user)
+    console.log("here:", req.body.user);
     if (!name && !email && !password) {
       res
         .status(400)
@@ -101,6 +102,9 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Delete all apartments associated with the user
+    await Apartment.deleteMany({ owner: id });
+
     res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     console.error("Error in deleteUser:", err);
@@ -131,6 +135,7 @@ const updateOwnProfile = async (
   }
 
   try {
+    console.log(password);
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
 
@@ -203,6 +208,40 @@ const checkOldPassword = async (
   }
 };
 
+const changeRole = async (req: CustomRequest, res: Response): Promise<void> => {
+  try {
+    const { currentUserId } = req.locals;
+
+    if (!currentUserId) {
+      res.status(400).send("User ID is required for updating the profile");
+      return;
+    }
+
+    const { role } = req.body;
+    console.log(req.body);
+    if (!role) {
+      res.status(400);
+      return;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      currentUserId,
+      { roles: role },
+      { new: true }
+    );
+    console.log(updatedUser);
+    if (!updatedUser) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error in updateOwnProfile:", err);
+    res.status(500).send("Internal Server Error -> updateOwnProfile");
+  }
+};
+
 export default {
   getAllUsers,
   getUserById,
@@ -212,4 +251,5 @@ export default {
   updateOwnProfile,
   getMyApartments,
   checkOldPassword,
+  changeRole,
 };

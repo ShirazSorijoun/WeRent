@@ -364,5 +364,7 @@ router.patch('/updateOwnProfile', authMiddleware,UserController.updateOwnProfile
  */
 router.get('/:email',authMiddleware,UserController.getUserByEmail);
 router.post('/checkOldPassword',authMiddleware,UserController.checkOldPassword);
+router.patch('/changeRole', authMiddleware,UserController.changeRole);
+
 
 export default router;

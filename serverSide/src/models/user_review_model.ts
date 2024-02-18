@@ -3,6 +3,8 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 export interface IUserReview extends Document{
   userId: Types.ObjectId;
   ownerName: string;
+  ownerImage: string;
+  date: string;
   description: string;
 }
 
@@ -15,6 +17,14 @@ const userReviewSchema: Schema<IUserReview> = new mongoose.Schema({
   ownerName: {
     type: String,
     required: true,
+  },
+  ownerImage: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    default: new Date().toLocaleDateString()
   },
   description: {
     type: String,

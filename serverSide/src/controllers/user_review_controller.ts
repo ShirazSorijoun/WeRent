@@ -38,6 +38,8 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
     const userId = req.locals.currentUserId;
     review.userId = userId;
     review.ownerName = (await User.findById(userId)).name;
+    review.ownerImage = (await User.findById(userId)).profile_image;
+    review.date = new Date().toLocaleDateString();
     const createdReview: IUserReview = await UserReview.create(review);
     res.status(201).json(createdReview);
   } catch (err) {

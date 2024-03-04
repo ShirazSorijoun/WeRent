@@ -15,7 +15,7 @@ const initApp = (): Promise<Express> =>{
       const db = mongoose.connection;
       db.on('error', error=>{console.error(error)});
       db.once('open', ()=>console.log('connected to the database'));
-      const url = process.env.DATABASE_URL;
+      const url = "mongodb://127.0.0.1/WeRent";
       mongoose.connect(url!).then(() =>{
         const app=express();
 

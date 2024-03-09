@@ -7,6 +7,7 @@
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts",
     "prod": "cp .envprod .env && tsc -p tsconfig_prod.json && pm2 restartecosystem.config.js --env production",
+    "prod1": "cp .envprod .env && tsc -p tsconfig_prod.json && node ./dist/src/server.js",
     "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
     "testAuth": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/auth.test.ts",
     "testApartment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/apartment.test.ts",

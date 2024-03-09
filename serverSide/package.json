@@ -37,7 +37,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "supertest": "^6.3.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

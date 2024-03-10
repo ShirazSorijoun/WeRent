@@ -40,13 +40,13 @@ const apartment1 = {
   type: "Garden Apartment",
   owner: "",
   floor: 2,
-  apartment_image:"",
+  apartment_image: "",
   numberOfFloors: 4,
   rooms: 4,
   sizeInSqMeters: 105,
-  price:2500,
+  price: 2500,
   entryDate: new Date("2023-02-01"),
-  furniture:'full',
+  furniture: "full",
   features: {
     parking: true,
     accessForDisabled: false,
@@ -70,7 +70,7 @@ const apartment2 = {
   sizeInSqMeters: 120,
   price: 3000,
   entryDate: new Date("2024-06-15"),
-  description:'Apartment in an excellent location',
+  description: "Apartment in an excellent location",
   features: {
     parking: false,
     accessForDisabled: true,
@@ -81,7 +81,7 @@ const apartment2 = {
     elevators: true,
     airConditioning: false,
   },
-  phone:"0524717657"
+  phone: "0524717657",
 };
 
 beforeAll(async () => {
@@ -171,11 +171,38 @@ describe("Apartment post Controller Tests", () => {
     expect(response.text).toBe("Not Owner");
   });
 
+  test("Get Apartment by ID - Found (status 200)", async () => {
+    const response = await request(app)
+      .get(`/apartment/${apartment1Id}`)
+      .set("Authorization", "JWT " + accessTokenUser1);
+
+    expect(response.status).toBe(200);
+  });
+
+  test('Get Apartment by ID - Internal Server Error (status 500)', async () => {
+    const invalidApartmentId = 'invalidApartmentId';
+    const response = await request(app)
+      .get(`/apartment/${invalidApartmentId}`)
+      .set('Authorization', 'JWT ' + accessTokenUser1);
+
+    expect(response.status).toBe(500);
+    expect(response.body.message).toBe('Internal Server Error');
+  });
+
   test("Test Delete Apartment - Own Apartment ", async () => {
     const response = await request(app)
       .delete(`/apartment/delete/${apartment1Id}`)
       .set("Authorization", "JWT " + accessTokenUser1);
     expect(response.statusCode).toBe(200);
+  });
+
+  test("Get Apartment by ID - Not Found (status 404)", async () => {
+    const response = await request(app)
+      .get(`/apartment/${apartment1Id}`)
+      .set("Authorization", "JWT " + accessTokenUser1);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("Apartment not found");
   });
 
   test("Test The apartment has been deleted from the array of user1", async () => {
@@ -196,7 +223,7 @@ describe("Apartment post Controller Tests", () => {
       numberOfFloors: 4,
       rooms: 3,
       sizeInSqMeters: 110,
-      apartment_image:"",
+      apartment_image: "",
       price: 3000,
       entryDate: "2024-08-01",
       furniture: "full",
@@ -211,7 +238,7 @@ describe("Apartment post Controller Tests", () => {
         airConditioning: true,
       },
       description: "wow",
-      phone: "0524717657"
+      phone: "0524717657",
     };
 
     const response = await request(app)
@@ -243,7 +270,7 @@ describe("Apartment post Controller Tests", () => {
         airConditioning: false,
       },
       description: "wow",
-      phone: "0524717657"
+      phone: "0524717657",
     };
 
     const response = await request(app)
@@ -268,5 +295,54 @@ describe("Apartment post Controller Tests", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body.myApartments).toStrictEqual([]);
+  });
+
+  test("Test Post Apartment - didnt fill in data for a new apartment ", async () => {
+    const response = await request(app)
+      .post("/apartment/create")
+      .set("Authorization", "JWT " + accessTokenUser1)
+      .send();
+
+    apartment1Id = response.body._id;
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Apdate Apartment - not found", async () => {
+    const updateData = {
+      city: "Updated City2",
+      address: "Updated Address2",
+      floor: 3,
+      numberOfFloors: 8,
+      rooms: 3,
+      sizeInSqMeters: 100,
+      price: 2500,
+      entryDate: "2024-08-01",
+      features: {
+        parking: false,
+        accessForDisabled: true,
+        storage: false,
+        dimension: true,
+        terrace: false,
+        garden: true,
+        elevators: true,
+        airConditioning: false,
+      },
+      description: "wow",
+      phone: "0524717657",
+    };
+
+    const response = await request(app)
+      .patch(`/apartment/update`)
+      .set("Authorization", "JWT " + accessTokenUser1)
+      .send({ id: apartment2Id, updatedApartment: updateData });
+
+    expect(response.status).toBe(404);
+  });
+
+  test("Test Delete Apartment - apartment not found ", async () => {
+    const response = await request(app)
+      .delete(`/apartment/delete/11111111`)
+      .set("Authorization", "JWT " + accessTokenUser1);
+    expect(response.statusCode).toBe(500);
   });
 });

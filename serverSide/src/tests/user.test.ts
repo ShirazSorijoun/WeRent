@@ -88,13 +88,31 @@ beforeAll(async () => {
       expect(response.body._id).toBe(user2Id)
     });
 
+    test('Get User by ID - Found (status 200)', async () => {
+      const response = await request(app)
+        .get(`/user/id/${user1Id}`)
+        .set('Authorization', 'JWT ' + accessTokenUser1);
+  
+      expect(response.statusCode).toBe(200);
+    });
+
+    test('Get User by ID - Internal Server Error (status 500)', async () => {
+      const invalidUserId = 'invalidUserId';
+      const response = await request(app)
+        .get(`/user/id/${invalidUserId}`)
+        .set('Authorization', 'JWT ' + accessTokenUser1);
+  
+      expect(response.statusCode).toBe(500);
+      expect(response.text).toBe('Internal Server Error -> getUserById');
+    });
+
     test("Test Update - Admin", async () => {
       const updateData = {
         id: user2Id,
         user: {
           name : "Shani Yaish",
           email: "update@gmail.com",
-          password: "55555",
+          password: "555555",
         }
       }
 
@@ -105,6 +123,34 @@ beforeAll(async () => {
 
       expect(response.statusCode).toBe(200);
       expect(response.body.name).toBe("Shani Yaish");
+    });
+
+    
+    test("Test Update -without fields", async () => {
+      const updateData = {
+        id: user2Id,
+        user: {
+          name :"",
+          email: "",
+          password: "",
+        }
+      }
+
+      const response = await request(app)
+      .patch("/user/update")
+      .set("Authorization", "JWT " + accessTokenUser1)
+      .send(updateData);
+
+      expect(response.statusCode).toBe(400);
+    });
+
+    test("Test Update -without data", async () => {
+      const response = await request(app)
+      .patch("/user/update")
+      .set("Authorization", "JWT " + accessTokenUser1)
+      .send();
+
+      expect(response.statusCode).toBe(500);
     });
 
     test("Test Update - Not Admin", async () => {
@@ -161,6 +207,15 @@ beforeAll(async () => {
       expect(getUserResponse.status).toBe(404);
     });
 
+    test('Test Delete User by ID - Admin User Not Found', async () => {
+      const deleteResponse = await request(app)
+        .delete(`/user/delete/${user3Id}`)
+        .set('Authorization', 'JWT ' + accessTokenUser1);
+    
+      expect(deleteResponse.status).toBe(404);
+    });
+
+
     test('Test Update Own Profile - Success', async () => {
       const updateData = {
         id: user2Id,
@@ -188,5 +243,63 @@ beforeAll(async () => {
       expect(updatedUserResponse.status).toBe(200);
       expect(updatedUserResponse.body.name).toBe('Updated Name');
     });
+
+    test('Test Update Own Profile - without data', async () => {
+      const updateData = {
+        id: user2Id,
+        user: {
+          name: '',
+          email: '',
+          password: '',
+          profile_image: '',
+        },
+      };
     
+      const response = await request(app)
+        .patch('/user/updateOwnProfile')
+        .set('Authorization', 'JWT ' + accessTokenUser2)
+        .send(updateData);
+    
+      expect(response.statusCode).toBe(400);
+    });
+    
+    test('Test Check Old Password - Valid Password', async () => {
+      const validOldPassword = 'test123';
+      const response = await request(app)
+        .post('/user/checkOldPassword')
+        .set('Authorization', 'JWT ' + accessTokenUser1)
+        .send({ oldPassword: validOldPassword });
+    
+      expect(response.body.isValid).toBe(true);
+    });
+
+    test('Test Check Old Password - Not Valid Password', async () => {
+      const validOldPassword = '1'; 
+      const response = await request(app)
+        .post('/user/checkOldPassword')
+        .set('Authorization', 'JWT ' + accessTokenUser1)
+        .send({ oldPassword: validOldPassword });
+    
+      expect(response.body.isValid).toBe(false);
+    });
+
+    test('Test Check Old Password - Internal Server Error (status 500)', async () => {
+      // Simulate an internal server error by not providing the old password
+      const response = await request(app)
+        .post('/user/checkOldPassword')
+        .set('Authorization', 'JWT ' + accessTokenUser1)
+        .send({});
+    
+      expect(response.status).toBe(500);
+    });
+
+    test('Test update role - success', async () => {
+      const response = await request(app)
+        .patch('/user/changeRole')
+        .set('Authorization', 'JWT ' + accessTokenUser2)
+        .send({ role : "tenant" });
+    
+      expect(response.status).toBe(200);
+    });
+
   });

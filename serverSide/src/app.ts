@@ -32,9 +32,9 @@ const initApp = (): Promise<Express> =>{
         app.use("/userReview", userReviewRoute);
         app.use("/file", fileRoute);
         app.use("/public", express.static("public"));
-        app.use("/assets", express.static("static/client/assets"));
+        app.use("/assets", express.static("static/assets"));
         app.use("*", (req, res) => {
-          res.sendFile("index.html", {root: "static/client"})
+          res.sendFile("index.html", {root: "static/"})
         });
         resolve(app);
        });

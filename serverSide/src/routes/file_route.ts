@@ -4,7 +4,7 @@ import multer from "multer";
 
 
 //const base = "http://" + process.env.DOMAIN_BASE + ":" + process.env.PORT + "/";
-const base = "https://193.106.55.166/";
+const base = "https://10.10.248.166/";
 
 const storage = multer.diskStorage ({
 

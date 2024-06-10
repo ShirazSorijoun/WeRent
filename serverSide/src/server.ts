@@ -16,7 +16,7 @@ initApp().then((app)=>{
     version: "1.0.1",
     description: "REST server including authentication using JWT and refresh token",
     },
-    servers: [{url: `https://10.10.248.166:443`,},],
+    servers: [{url: `http://localhost:3000`,},],
     },
     apis: ["./src/routes/*.ts"],
     };

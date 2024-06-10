@@ -41,7 +41,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   profile_image: {
       type: String,
       trim: true,
-      default: "https://193.106.55.166/public/user_vector.png",
+      default: "http://localhost:3000/public/user_vector.png",
     },
   advertisedApartments: [
     {

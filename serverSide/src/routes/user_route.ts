@@ -3,30 +3,26 @@ import UserController from '../controllers/user_controller';
 import authMiddleware from '../common/auth_middleware';
 import adminMiddleware from '../common/admin_middleware';
 import ownerMiddleware from '../common/owner_middleware';
-//import verifyUserOwnership  from '../common/verify_user_ownership';
+// import verifyUserOwnership  from '../common/verify_user_ownership';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: User
+ *   description: The user API
+ */
 
 /**
-* @swagger
-* tags:
-*   name: User
-*   description: The user API
-*/
-
-
-/**
-* @swagger
-* components:
-*   securitySchemes:
-*       bearerAuth:
-*           type: http
-*           scheme: bearer
-*           bearerFormat: JWT
-*/
-
-
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *       bearerAuth:
+ *           type: http
+ *           scheme: bearer
+ *           bearerFormat: JWT
+ */
 
 /**
  * @swagger
@@ -58,9 +54,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/',authMiddleware,adminMiddleware,UserController.getAllUsers);
-
-
+router.get('/', authMiddleware, adminMiddleware, UserController.getAllUsers);
 
 /**
  * @swagger
@@ -103,9 +97,7 @@ router.get('/',authMiddleware,adminMiddleware,UserController.getAllUsers);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/id/:id',authMiddleware,UserController.getUserById);
-
-
+router.get('/id/:id', authMiddleware, UserController.getUserById);
 
 /**
  * @swagger
@@ -165,9 +157,12 @@ router.get('/id/:id',authMiddleware,UserController.getUserById);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.patch('/update',authMiddleware,adminMiddleware,UserController.updateUser);
-
-
+router.patch(
+  '/update',
+  authMiddleware,
+  adminMiddleware,
+  UserController.updateUser,
+);
 
 /**
  * @swagger
@@ -214,13 +209,14 @@ router.patch('/update',authMiddleware,adminMiddleware,UserController.updateUser)
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/delete/:id',authMiddleware,adminMiddleware,UserController.deleteUser);
-
-
+router.delete(
+  '/delete/:id',
+  authMiddleware,
+  adminMiddleware,
+  UserController.deleteUser,
+);
 
 // Routes for managing users by owner
-
-
 
 /**
  * @swagger
@@ -256,9 +252,12 @@ router.delete('/delete/:id',authMiddleware,adminMiddleware,UserController.delete
  *               $ref: '#/components/schemas/Error'
  */
 
-router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApartments);
-
-
+router.get(
+  '/apartments',
+  authMiddleware,
+  ownerMiddleware,
+  UserController.getMyApartments,
+);
 
 /**
  * @swagger
@@ -329,9 +328,11 @@ router.get('/apartments',authMiddleware,ownerMiddleware,UserController.getMyApar
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.patch('/updateOwnProfile', authMiddleware,UserController.updateOwnProfile);
-
-
+router.patch(
+  '/updateOwnProfile',
+  authMiddleware,
+  UserController.updateOwnProfile,
+);
 
 /**
  * @swagger
@@ -362,9 +363,12 @@ router.patch('/updateOwnProfile', authMiddleware,UserController.updateOwnProfile
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:email',authMiddleware,UserController.getUserByEmail);
-router.post('/checkOldPassword',authMiddleware,UserController.checkOldPassword);
-router.patch('/changeRole', authMiddleware,UserController.changeRole);
-
+router.get('/:email', authMiddleware, UserController.getUserByEmail);
+router.post(
+  '/checkOldPassword',
+  authMiddleware,
+  UserController.checkOldPassword,
+);
+router.patch('/changeRole', authMiddleware, UserController.changeRole);
 
 export default router;

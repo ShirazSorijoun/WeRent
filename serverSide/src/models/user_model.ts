@@ -7,7 +7,6 @@ export enum UserRole {
 }
 
 export interface IUser extends Document {
-
   name: string;
   email: string;
   password: string;
@@ -32,27 +31,26 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roles:
-    {
-      type: String,
-      enum: Object.values(UserRole),
-      default: UserRole.Tenant,
-    },
+  roles: {
+    type: String,
+    enum: Object.values(UserRole),
+    default: UserRole.Tenant,
+  },
   profile_image: {
-      type: String,
-      trim: true,
-      default: "http://localhost:3000/public/user_vector.png",
-    },
+    type: String,
+    trim: true,
+    default: 'http://localhost:3000/public/user_vector.png',
+  },
   advertisedApartments: [
     {
       type: mongoose.Schema.Types.Mixed,
-      default: []
+      default: [],
     },
   ],
   tokens: {
     type: [String],
     required: false,
-    default: []
+    default: [],
   },
 });
 

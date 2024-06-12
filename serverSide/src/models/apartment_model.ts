@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IApartment extends Document {
   city: string;
@@ -12,7 +12,7 @@ export interface IApartment extends Document {
   price: number;
   entryDate: Date;
   apartment_image?: string;
-  furniture?:string;
+  furniture?: string;
   features?: {
     parking: boolean;
     accessForDisabled: boolean;
@@ -42,7 +42,7 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   floor: {
@@ -72,7 +72,7 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   apartment_image: {
     type: String,
     trim: true,
-    default: "https://www.freeiconspng.com/uploads/no-image-icon-4.png",
+    default: 'https://www.freeiconspng.com/uploads/no-image-icon-4.png',
   },
   furniture: {
     type: String,
@@ -121,6 +121,6 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   },
 });
 
-const Apartment = mongoose.model<IApartment>("Apartment", apartmentSchema);
+const Apartment = mongoose.model<IApartment>('Apartment', apartmentSchema);
 
 export default Apartment;

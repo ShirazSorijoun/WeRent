@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import Apartment from "../models/apartment_model";
-import User, { UserRole } from "../models/user_model";
-import AuthRequest from "../common/auth_middleware";
+import { Request, Response } from 'express';
+import Apartment from '../models/apartment_model';
+import User, { UserRole } from '../models/user_model';
+import AuthRequest from '../common/auth_middleware';
 
 interface AuthRequest extends Request {
   locals?: {
@@ -15,7 +15,7 @@ const getAllApartments = async (req: Request, res: Response): Promise<void> => {
     const apartments = await Apartment.find();
     res.status(200).json(apartments);
   } catch (error) {
-    res.status(500).send({ message: "Error fetching apartments" });
+    res.status(500).send({ message: 'Error fetching apartments' });
   }
 };
 
@@ -26,7 +26,7 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
 
     if (!apartment) {
       // Apartment not found
-      res.status(404).json({ message: "Apartment not found" });
+      res.status(404).json({ message: 'Apartment not found' });
       return;
     }
 
@@ -34,13 +34,13 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
   } catch (err) {
     // Internal Server Error
     console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const createApartment = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { apartment } = req.body;
@@ -55,33 +55,33 @@ const createApartment = async (
       await User.findByIdAndUpdate(
         req.locals.currentUserId,
         { $addToSet: { advertisedApartments: createdApartment } },
-        { new: true }
-      ).populate("advertisedApartments");
+        { new: true },
+      ).populate('advertisedApartments');
 
       res.status(201).json(createdApartment);
     }
   } catch (err) {
     console.error(err);
-    res.status(400).send("Something went wrong -> createApartment");
+    res.status(400).send('Something went wrong -> createApartment');
   }
 };
 
 const updateApartment = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
-  const { id, updatedApartment } = req.body;
-  console.log(req.body)
+    const { id, updatedApartment } = req.body;
+    console.log(req.body);
     // Ensure the logged-in user is the owner of the apartment or an admin
     const existingApartment = await Apartment.findById(id);
     if (!existingApartment) {
-      res.status(404).send("Apartment not found");
+      res.status(404).send('Apartment not found');
       return;
     }
 
     const ownerOfApartment = await User.findById(
-      existingApartment.owner.toString()
+      existingApartment.owner.toString(),
     );
     const user = await User.findById(req.locals.currentUserId);
     const role = user.roles;
@@ -90,7 +90,7 @@ const updateApartment = async (
       role !== UserRole.Admin &&
       ownerOfApartment._id.toString() !== req.locals.currentUserId
     ) {
-      res.status(403).send("Access denied");
+      res.status(403).send('Access denied');
       return;
     }
 
@@ -121,24 +121,24 @@ const updateApartment = async (
         description: updatedApartment.description,
         phone: updatedApartment.phone,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!apartmentToApdate) {
-      res.status(400).send("Something went wrong -> updateApartment");
+      res.status(400).send('Something went wrong -> updateApartment');
       return;
     }
-    console.log(apartmentToApdate._id)
+    console.log(apartmentToApdate._id);
 
     // Update the corresponding user's advertisedApartments array
     const userUpdate = await User.findByIdAndUpdate(
       ownerOfApartment,
       { $pull: { advertisedApartments: { _id: apartmentToApdate._id } } },
-      { new: true }
+      { new: true },
     );
 
     if (!userUpdate) {
-      res.status(500).send("Internal Server Error -> updateUser");
+      res.status(500).send('Internal Server Error -> updateUser');
       return;
     }
 
@@ -146,37 +146,37 @@ const updateApartment = async (
     await User.findByIdAndUpdate(
       ownerOfApartment,
       { $addToSet: { advertisedApartments: apartmentToApdate } },
-      { new: true }
-    ).populate("advertisedApartments");
+      { new: true },
+    ).populate('advertisedApartments');
 
     res.status(200).json(apartmentToApdate);
   } catch (err) {
     console.error(err);
-    res.status(400).send("Something went wrong -> updateApartment");
+    res.status(400).send('Something went wrong -> updateApartment');
   }
 };
 
 const deleteApartment = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const apartmentId = req.params.id;
     const apartment = await Apartment.findById(apartmentId);
 
-    const currentUserId = req.locals.currentUserId;
+    const { currentUserId } = req.locals;
     const user = await User.findById(currentUserId);
     const role = user.roles;
 
     const ownerOfTheApartment = apartment.owner.toString();
 
     if (!apartment) {
-      res.status(404).send("Apartment not found");
+      res.status(404).send('Apartment not found');
       return;
     }
 
     if (ownerOfTheApartment !== currentUserId && role !== UserRole.Admin) {
-      res.status(403).send("Access denied");
+      res.status(403).send('Access denied');
       return;
     }
 
@@ -185,13 +185,13 @@ const deleteApartment = async (
     await User.findByIdAndUpdate(
       ownerOfTheApartment,
       { $pull: { advertisedApartments: { _id: apartment._id } } },
-      { new: true }
+      { new: true },
     );
 
-    res.status(200).send("Apartment deleted successfully");
+    res.status(200).send('Apartment deleted successfully');
   } catch (err) {
     console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send('Internal Server Error');
   }
 };
 

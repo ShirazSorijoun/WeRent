@@ -30,6 +30,9 @@ module.exports = {
   },
   plugins: ['unused-imports', 'import'],
   rules: {
+    'no-restricted-syntax': 0,
+    'no-use-before-define': 0,
+    'lines-between-class-members': 0,
     'prettier/prettier': 1,
     'unused-imports/no-unused-imports': 'error',
     'import/prefer-default-export': 'off',

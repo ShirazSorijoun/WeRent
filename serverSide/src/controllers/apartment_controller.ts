@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import Apartment from '../models/apartment_model';
 import User, { UserRole } from '../models/user_model';
 import AuthRequest from '../common/auth_middleware';
+import { CircularBoundary } from '../models/circular_boundry';
+import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
 
 interface AuthRequest extends Request {
   locals?: {
@@ -9,6 +11,29 @@ interface AuthRequest extends Request {
     currentUserRole?: UserRole;
   };
 }
+
+export const searchPointsWithinRadius = (req: Request, res: Response) => {
+  const { lat, lng, radius } = req.body;
+
+  if (
+    typeof lat !== 'number' ||
+    typeof lng !== 'number' ||
+    typeof radius !== 'number' ||
+    radius <= 0
+  ) {
+    return res.status(400).send('Invalid input');
+  }
+
+  // Get the singleton instance of the QuadTree
+  const quadTreeInstance = QuadTreeSingleton.getInstance();
+  const { quadTree } = quadTreeInstance;
+
+  // Create a circular boundary using the provided radius in meters
+  const range = new CircularBoundary(lng, lat, radius);
+  const foundPoints = quadTree.query(range);
+
+  res.json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
+};
 
 const getAllApartments = async (req: Request, res: Response): Promise<void> => {
   try {

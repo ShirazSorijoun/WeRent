@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Apartment from "../models/apartment_model";
 import User, { UserRole } from "../models/user_model";
-import AuthRequest from "../common/auth_middleware";
 
 interface AuthRequest extends Request {
   locals?: {
@@ -54,7 +53,7 @@ const createApartment = async (
     if (req.locals.currentUserId) {
       await User.findByIdAndUpdate(
         req.locals.currentUserId,
-        { $addToSet: { advertisedApartments: createdApartment } },
+        { $addToSet: { advertisedApartments: createdApartment._id } },
         { new: true }
       ).populate("advertisedApartments");
 
@@ -71,8 +70,8 @@ const updateApartment = async (
   res: Response
 ): Promise<void> => {
   try {
-  const { id, updatedApartment } = req.body;
-  console.log(req.body)
+    const { id, updatedApartment } = req.body;
+    console.log(req.body);
     // Ensure the logged-in user is the owner of the apartment or an admin
     const existingApartment = await Apartment.findById(id);
     if (!existingApartment) {
@@ -94,62 +93,9 @@ const updateApartment = async (
       return;
     }
 
-    const apartmentToApdate = await Apartment.findByIdAndUpdate(
-      id,
-      {
-        city: updatedApartment.city,
-        address: updatedApartment.address,
-        type: updatedApartment.type,
-        floor: updatedApartment.floor,
-        numberOfFloors: updatedApartment.numberOfFloors,
-        rooms: updatedApartment.rooms,
-        apartment_image: updatedApartment.apartment_image,
-        sizeInSqMeters: updatedApartment.sizeInSqMeters,
-        price: updatedApartment.price,
-        entryDate: updatedApartment.entryDate,
-        furniture: updatedApartment.furniture,
-        features: {
-          parking: updatedApartment.features.parking,
-          accessForDisabled: updatedApartment.features.accessForDisabled,
-          storage: updatedApartment.features.storage,
-          dimension: updatedApartment.features.dimension,
-          terrace: updatedApartment.features.terrace,
-          garden: updatedApartment.features.garden,
-          elevators: updatedApartment.features.elevators,
-          airConditioning: updatedApartment.features.airConditioning,
-        },
-        description: updatedApartment.description,
-        phone: updatedApartment.phone,
-      },
-      { new: true }
-    );
+    await existingApartment.updateOne(updatedApartment);
 
-    if (!apartmentToApdate) {
-      res.status(400).send("Something went wrong -> updateApartment");
-      return;
-    }
-    console.log(apartmentToApdate._id)
-
-    // Update the corresponding user's advertisedApartments array
-    const userUpdate = await User.findByIdAndUpdate(
-      ownerOfApartment,
-      { $pull: { advertisedApartments: { _id: apartmentToApdate._id } } },
-      { new: true }
-    );
-
-    if (!userUpdate) {
-      res.status(500).send("Internal Server Error -> updateUser");
-      return;
-    }
-
-    // Add the updated apartment to the user's advertisedApartments array
-    await User.findByIdAndUpdate(
-      ownerOfApartment,
-      { $addToSet: { advertisedApartments: apartmentToApdate } },
-      { new: true }
-    ).populate("advertisedApartments");
-
-    res.status(200).json(apartmentToApdate);
+    res.status(200).json(existingApartment.toJSON);
   } catch (err) {
     console.error(err);
     res.status(400).send("Something went wrong -> updateApartment");

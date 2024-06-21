@@ -1,13 +1,12 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
 export enum UserRole {
-  Admin = 'admin',
-  Owner = 'owner',
-  Tenant = 'tenant',
+  Admin = "admin",
+  Owner = "owner",
+  Tenant = "tenant",
 }
 
 export interface IUser extends Document {
-
   name: string;
   email: string;
   password: string;
@@ -32,30 +31,29 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roles:
-    {
-      type: String,
-      enum: Object.values(UserRole),
-      default: UserRole.Tenant,
-    },
+  roles: {
+    type: String,
+    enum: Object.values(UserRole),
+    default: UserRole.Tenant,
+  },
   profile_image: {
-      type: String,
-      trim: true,
-      default: "http://localhost:3000/public/user_vector.png",
-    },
+    type: String,
+    trim: true,
+    default: "http://localhost:3000/public/user_vector.png",
+  },
   advertisedApartments: [
     {
       type: mongoose.Schema.Types.Mixed,
-      default: []
+      default: [],
     },
   ],
   tokens: {
     type: [String],
     required: false,
-    default: []
+    default: [],
   },
 });
 
-const User = mongoose.model<IUser>('User', userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;

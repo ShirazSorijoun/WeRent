@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/user_model";
 import bcrypt from "bcrypt";
 import Apartment from "../models/apartment_model";
+import mongoose from "mongoose";
 //import AuthRequest from '../middlewares/auth_middleware';
 
 interface CustomRequest extends Request {
@@ -174,10 +175,16 @@ const getMyApartments = async (
       return;
     }
 
-    const myApartments = user.advertisedApartments || [];
-    //console.log("myApartments",myApartments)
+    const apartmentIds =
+      user.advertisedApartments?.map(
+        (apartmentId) => new mongoose.Types.ObjectId(apartmentId)
+      ) ?? [];
 
-    res.status(200).json({ myApartments });
+    const apartments = await Apartment.find({
+      _id: { $in: apartmentIds },
+    }).exec();
+
+    res.status(200).json(apartments);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

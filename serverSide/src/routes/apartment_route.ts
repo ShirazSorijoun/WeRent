@@ -1,7 +1,7 @@
-import express from "express";
-import ApartmentController from "../controllers/apartment_controller";
-import AuthMiddleware from "../common/auth_middleware";
-import ownerMiddleware from "../common/owner_middleware";
+import express from 'express';
+import ApartmentController from '../controllers/apartment_controller';
+import AuthMiddleware from '../common/auth_middleware';
+import ownerMiddleware from '../common/owner_middleware';
 
 const router = express.Router();
 
@@ -113,7 +113,7 @@ const router = express.Router();
  *           description: Date of entry of tenants to the apartment (YYYY-MM-DD)
  *         furniture:
  *           type: string
- *           description: If the apartment with furniture 
+ *           description: If the apartment with furniture
  *         features:
  *           $ref: '#/components/schemas/Features'
  *         description:
@@ -121,7 +121,7 @@ const router = express.Router();
  *           description: Additional details that will help market the apartment
  *         phone:
  *           type: string
- *           description: Phone number 
+ *           description: Phone number
  *       required:
  *         - city
  *         - address
@@ -188,7 +188,7 @@ const router = express.Router();
  *           description: image of the apartment
  *         furniture:
  *           type: string
- *           description: If the apartment with furniture 
+ *           description: If the apartment with furniture
  *         features:
  *           $ref: '#/components/schemas/Features'
  *         description:
@@ -196,7 +196,7 @@ const router = express.Router();
  *           description: Additional details that will help market the apartment
  *         phone:
  *           type: string
- *           description: Phone number 
+ *           description: Phone number
  *       required:
  *         - city
  *         - address
@@ -241,7 +241,7 @@ const router = express.Router();
  *
  */
 
-router.get("/", ApartmentController.getAllApartments);
+router.get('/', ApartmentController.getAllApartments);
 
 /**
  * @swagger
@@ -277,7 +277,7 @@ router.get("/", ApartmentController.getAllApartments);
  *                           $ref: '#/components/schemas/Error'
  */
 
-router.get("/:id", ApartmentController.getApartmentById);
+router.get('/:id', ApartmentController.getApartmentById);
 
 /**
  * @swagger
@@ -333,10 +333,10 @@ router.get("/:id", ApartmentController.getApartmentById);
  *               $ref: '#/components/schemas/Error'
  */
 router.post(
-  "/create",
+  '/create',
   AuthMiddleware,
   ownerMiddleware,
-  ApartmentController.createApartment
+  ApartmentController.createApartment,
 );
 
 /**
@@ -392,7 +392,7 @@ router.post(
  *               $ref: '#/components/schemas/Error'
  */
 
-router.patch("/update", AuthMiddleware, ApartmentController.updateApartment);
+router.patch('/update', AuthMiddleware, ApartmentController.updateApartment);
 
 /**
  * @swagger
@@ -441,9 +441,9 @@ router.patch("/update", AuthMiddleware, ApartmentController.updateApartment);
  */
 
 router.delete(
-  "/delete/:id",
+  '/delete/:id',
   AuthMiddleware,
-  ApartmentController.deleteApartment
+  ApartmentController.deleteApartment,
 );
 
 export default router;

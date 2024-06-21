@@ -1,33 +1,49 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2021": true
+  root: true,
+  parser: '@typescript-eslint/parser',
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'airbnb-typescript/base',
+    'airbnb-base',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+  ],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.js',
+    'coverage',
+    'static',
+    'jest.config.ts',
+  ],
+  parserOptions: {
+    project: './tsconfig.json',
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  settings: {
+    'import/extensions': ['.js', '.ts'],
+    'import/resolver': {
+      typescript: {},
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "overrides": [
-        {
-            "env": {
-                "node": true
-            },
-            "files": [
-                ".eslintrc.{js,cjs}"
-            ],
-            "parserOptions": {
-                "sourceType": "script"
-            }
-        }
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-    }
-}
+  },
+  plugins: ['unused-imports', 'import'],
+  rules: {
+    'no-restricted-syntax': 0,
+    'no-use-before-define': 0,
+    'lines-between-class-members': 0,
+    'prettier/prettier': 1,
+    'unused-imports/no-unused-imports': 'error',
+    'import/prefer-default-export': 'off',
+    '@typescript-eslint/no-unused-vars': 1,
+    'import/extensions': ['error', 'never'],
+    'import/no-extraneous-dependencies': ['error'],
+    '@typescript-eslint/no-explicit-any': 1,
+    '@typescript-eslint/naming-convention': 0,
+    'no-underscore-dangle': 0,
+    'consistent-return': 0,
+    'no-param-reassign': 0,
+    camelcase: 0,
+  },
+};

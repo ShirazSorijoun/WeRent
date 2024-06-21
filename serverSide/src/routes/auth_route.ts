@@ -1,7 +1,7 @@
-import express from "express";
+import express from 'express';
+import authController from '../controllers/auth_controller';
+
 const router = express.Router();
-import authController from "../controllers/auth_controller";
-//import authMiddleware from "../common/auth_middleware";
 
 /**
  * @swagger
@@ -93,8 +93,8 @@ import authController from "../controllers/auth_controller";
  *                           $ref: '#/components/schemas/User'
  *
  */
-router.post("/register", authController.register);
-router.post("/google", authController.googleSignin);
+router.post('/register', authController.register);
+router.post('/google', authController.googleSignin);
 
 /**
  * @swagger
@@ -176,7 +176,7 @@ router.post("/google", authController.googleSignin);
  *                       schema:
  *                           $ref: '#/components/schemas/Tokens'
  */
-router.post("/login", authController.login);
+router.post('/login', authController.login);
 
 /**
  * @swagger
@@ -191,7 +191,7 @@ router.post("/login", authController.login);
  *           200:
  *               description: logout completed successfully
  */
-router.get("/logout", authController.logout);
+router.get('/logout', authController.logout);
 
 /**
  * @swagger
@@ -216,7 +216,7 @@ router.get("/logout", authController.logout);
  *                       schema:
  *                           $ref: '#/components/schemas/Tokens'
  */
-router.get("/refresh", authController.refresh);
-router.post("/checkToken", authController.checkToken);
+router.get('/refresh', authController.refresh);
+router.post('/checkToken', authController.checkToken);
 
 export default router;

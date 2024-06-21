@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import UserReview, { IUserReview } from '../models/user_review_model';
 import User from '../models/user_model';
 
-
 interface AuthRequest extends Request {
   locals: {
     currentUserId?: string;
@@ -20,7 +19,6 @@ const contactUser = async (currentUserId: string, message: string): Promise<void
 };
 */
 
-
 const getAllReview = async (req: Request, res: Response): Promise<void> => {
   try {
     const reviews = await UserReview.find();
@@ -29,7 +27,6 @@ const getAllReview = async (req: Request, res: Response): Promise<void> => {
     res.status(500).send({ message: 'Error fetching reviews' });
   }
 };
-
 
 const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -47,11 +44,13 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
-
-const adminDeleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
+const adminDeleteReview = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   try {
     const reviewId = req.params.id;
-    
+
     const review = await UserReview.findById(reviewId);
     if (!review) {
       res.status(404).send('Review not found');
@@ -69,13 +68,13 @@ const adminDeleteReview = async (req: AuthRequest, res: Response): Promise<void>
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
-    }
+  }
 };
 
 const deleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const reviewId = req.params.id;
-    
+
     const review = await UserReview.findById(reviewId);
     if (!review) {
       res.status(404).send('Review not found');
@@ -85,7 +84,7 @@ const deleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
     const user = await User.findById(req.locals.currentUserId);
 
     const ownerOfReview = review.userId.toString();
-    const userId =user._id.toString();
+    const userId = user._id.toString();
 
     if (userId !== ownerOfReview) {
       res.status(403).send('Only owner can delete reviews');
@@ -97,11 +96,8 @@ const deleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
-    }
+  }
 };
-
-  
-
 
 export default {
   getAllReview,

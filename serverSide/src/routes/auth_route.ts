@@ -2,7 +2,6 @@ import express from 'express';
 import authController from '../controllers/auth_controller';
 
 const router = express.Router();
-// import authMiddleware from "../common/auth_middleware";
 
 /**
  * @swagger
@@ -41,10 +40,10 @@ const router = express.Router();
  *                   type: string
  *                   description: The user roles (admin, owner, tenant), the default is tenant
  *               advertisedApartments:
- *                   type: array
- *                   description: The apartments that the "owner" user posted
+ *                 type: array
+ *                   description: The apartments ids that the "owner" user posted
  *                   items:
- *                       type: object
+ *                       type: string
  *               tokens:
  *                   type: array
  *                   description: The tokens that the user has
@@ -118,9 +117,9 @@ router.post('/google', authController.googleSignin);
  *                   description: The user roles (admin, owner, tenant), the default is tenant
  *               advertisedApartments:
  *                   type: array
- *                   description: The apartments that the "owner" user posted
+ *                   description: The apartments ids that the "owner" user posted
  *                   items:
- *                       type: object
+ *                       type: string
  *               tokens:
  *                   type: array
  *                   description: The tokens that the user has

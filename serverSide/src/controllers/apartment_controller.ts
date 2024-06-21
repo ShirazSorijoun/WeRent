@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import Apartment from '../models/apartment_model';
 import User, { UserRole } from '../models/user_model';
+import { CircularBoundary } from '../models/circular_boundry';
+import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
 
 interface AuthRequest extends Request {
   locals?: {
@@ -118,7 +120,7 @@ const updateApartment = async (
 
     await existingApartment.updateOne(updatedApartment);
 
-    res.status(200).json(existingApartment.toJSON);
+    res.status(200).json(existingApartment.toJSON());
   } catch (err) {
     console.error(err);
     res.status(400).send('Something went wrong -> updateApartment');

@@ -15,13 +15,10 @@ const authMiddleware = async (
   next: NextFunction,
 ) => {
   const authHeader = req.headers.authorization;
-  if (authHeader == null) {
-    return res.status(401).send('missing authorization header');
-  }
-  const token = /* authHeader && */ authHeader.split(' ')[1];
-  if (token == null) {
-    return res.status(401).send('missing authorization token');
-  }
+  if (!authHeader) return res.status(401).send('missing authorization header');
+
+  const token = authHeader.split(' ')[1];
+  if (!token) return res.status(401).send('missing authorization token');
 
   try {
     jwt.verify(token, process.env.JWT_SECRET, (err, user: IUser) => {

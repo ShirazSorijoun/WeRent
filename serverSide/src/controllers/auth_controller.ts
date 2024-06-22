@@ -6,24 +6,47 @@ import User, { IUser } from '../models/user_model';
 
 const client = new OAuth2Client();
 
+const generateTokens = async (user: IUser) => {
+  const { _id } = user;
+
+  const accessToken = jwt.sign({ _id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION,
+  });
+
+  const refreshToken = jwt.sign({ _id }, process.env.JWT_REFRESH_SECRET);
+
+  if (user.tokens == null) {
+    user.tokens = [refreshToken];
+  } else {
+    user.tokens.push(refreshToken);
+  }
+
+  await user.save();
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
 // Handle Google sign-in
 const googleSignin = async (req: Request, res: Response) => {
-  console.log(req.body);
   try {
     const ticket = await client.verifyIdToken({
       idToken: req.body.credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
     const payload = ticket.getPayload();
-    const email = payload?.email;
-    if (email != null) {
+    const { email, name, picture } = payload;
+
+    if (email) {
       let user = await User.findOne({ email });
-      if (user == null) {
+      if (!user) {
         user = await User.create({
-          name: payload?.name,
+          name,
           email,
           password: '*Signed up with a Google account*',
-          profile_image: payload?.picture,
+          profile_image: picture,
         });
       }
       const tokens = await generateTokens(user);
@@ -92,30 +115,6 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-const generateTokens = async (user: IUser) => {
-  const accessToken = await jwt.sign(
-    { _id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRATION },
-  );
-
-  const refreshToken = await jwt.sign(
-    { _id: user._id },
-    process.env.JWT_REFRESH_SECRET,
-  );
-
-  if (user.tokens == null) {
-    user.tokens = [refreshToken];
-  } else {
-    user.tokens.push(refreshToken);
-  }
-  await user.save();
-  return {
-    accessToken,
-    refreshToken,
-  };
-};
-
 const login = async (req: Request, res: Response) => {
   console.log('login');
   const { name } = req.body;
@@ -170,8 +169,8 @@ const logout = async (req: Request, res: Response) => {
         );
         await userFromDb.save();
         return res.status(200);
-      } catch (err) {
-        res.sendStatus(401).send(err.message);
+      } catch (error) {
+        res.sendStatus(401).send(error.message);
       }
     },
   );
@@ -220,8 +219,8 @@ const refresh = async (req: Request, res: Response) => {
           accessToken,
           refreshToken: newRefreshToken,
         });
-      } catch (err) {
-        res.sendStatus(401).send(err.message);
+      } catch (error) {
+        res.sendStatus(401).send(error.message);
       }
     },
   );
@@ -248,6 +247,5 @@ export default {
   login,
   logout,
   refresh,
-  generateTokens,
   checkToken,
 };

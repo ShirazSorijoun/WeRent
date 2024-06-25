@@ -29,7 +29,7 @@ const authMiddleware = async (
 
       req.user = user as { _id: string };
       req.locals = req.locals || {};
-      req.locals.currentUserId = user._id;
+      req.locals.currentUserId = user._id as string;
       next();
     });
   } catch (err) {

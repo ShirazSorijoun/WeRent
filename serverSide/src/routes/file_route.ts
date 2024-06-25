@@ -51,7 +51,7 @@ router.post('/upload', upload.single('file'), function (req, res) {
   res.status(200).send({ url: base + req.file.path });
 });
 
-router.post('/upload-valuable1', authMiddleware, upload.single('file'), async function (req: any, res) {
+router.post('/upload-valuable', authMiddleware, upload.single('file'), async function (req: any, res) {
   const filePath = req.file.path;
   const userId = req.locals?.currentUserId; // Retrieved from the authMiddleware
   const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -78,7 +78,7 @@ router.post('/upload-valuable1', authMiddleware, upload.single('file'), async fu
   });
 });
 
-router.post('/upload-valuable', authMiddleware, upload.single('file'), async function (req: any, res) {
+router.post('/verify-document', authMiddleware, upload.single('file'), async function (req: any, res) {
   const userId = req.locals?.currentUserId; // Retrieved from the authMiddleware
   const filePath = req.file.path;
   const fileContent = fs.readFileSync(filePath, 'utf8');

@@ -24,40 +24,40 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
- *       User:
- *           type: object
- *           properties:
- *               name:
- *                   type: string
- *                   description: The user name
- *               email:
- *                   type: string
- *                   description: The user email
- *               password:
- *                   type: string
- *                   description: The user password
- *               roles:
- *                   type: string
- *                   description: The user roles (admin, owner, tenant), the default is tenant
- *               advertisedApartments:
- *                 type: array
- *                   description: The apartments ids that the "owner" user posted
- *                   items:
- *                       type: string
- *               tokens:
- *                   type: array
- *                   description: The tokens that the user has
- *                   items:
- *                       type: string
- *           required:
- *               - name
- *               - email
- *               - password
- *           example:
- *               name: Bob
- *               email: 'bob@gmail.com'
- *               password: '123456'
- *               roles: 'tenant'
+ *     User:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The user name
+ *         email:
+ *           type: string
+ *           description: The user email
+ *         password:
+ *           type: string
+ *           description: The user password
+ *         roles:
+ *           type: string
+ *           description: The user roles (admin, owner, tenant), the default is tenant
+ *         advertisedApartments:
+ *           type: array
+ *           description: The apartments ids that the "owner" user posted
+ *           items:
+ *             type: string
+ *         tokens:
+ *           type: array
+ *           description: The tokens that the user has
+ *           items:
+ *             type: string
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       example:
+ *         name: Bob
+ *         email: 'bob@gmail.com'
+ *         password: '123456'
+ *         roles: 'tenant'
  */
 
 /**
@@ -100,39 +100,39 @@ router.post('/google', authController.googleSignin);
  * @swagger
  * components:
  *   schemas:
- *       UserLogin:
- *           type: object
- *           properties:
- *               name:
- *                   type: string
- *                   description: The user name
- *               email:
- *                   type: string
- *                   description: The user email
- *               password:
- *                   type: string
- *                   description: The user password
- *               roles:
- *                   type: string
- *                   description: The user roles (admin, owner, tenant), the default is tenant
- *               advertisedApartments:
- *                   type: array
- *                   description: The apartments ids that the "owner" user posted
- *                   items:
- *                       type: string
- *               tokens:
- *                   type: array
- *                   description: The tokens that the user has
- *                   items:
- *                       type: string
- *           required:
- *               - name
- *               - email
- *               - password
- *           example:
- *               name: Bob
- *               email: 'bob@gmail.com'
- *               password: '123456'
+ *     UserLogin:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The user name
+ *         email:
+ *           type: string
+ *           description: The user email
+ *         password:
+ *           type: string
+ *           description: The user password
+ *         roles:
+ *           type: string
+ *           description: The user roles (admin, owner, tenant), the default is tenant
+ *         advertisedApartments:
+ *           type: array
+ *           description: The apartments ids that the "owner" user posted
+ *           items:
+ *             type: string
+ *         tokens:
+ *           type: array
+ *           description: The tokens that the user has
+ *           items:
+ *             type: string
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *       example:
+ *         name: Bob
+ *         email: 'bob@gmail.com'
+ *         password: '123456'
  */
 
 /**

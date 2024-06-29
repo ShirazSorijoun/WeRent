@@ -49,14 +49,8 @@ const googleSignin = async (req: Request, res: Response) => {
           profile_image: picture,
         });
       }
-      const tokens = await generateTokens(user);
-      res.status(200).send({
-        name: user.name,
-        email: user.email,
-        _id: user._id,
-        profile_image: user.profile_image,
-        ...tokens,
-      });
+      const token = await generateTokens(user);
+      res.status(200).send({ token, userId: user.id, userRole: user.roles });
     }
   } catch (err) {
     return res.status(400).send(err.message);
@@ -117,11 +111,9 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   console.log('login');
-  const { name } = req.body;
-  const { email } = req.body;
-  const { password } = req.body;
-  if (!email || !password || !name) {
-    return res.status(400).send('missing email or password or name');
+  const { password, email } = req.body;
+  if (!email || !password) {
+    return res.status(400).send('missing email or password');
   }
   try {
     const user = await User.findOne({ email });
@@ -136,8 +128,8 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).send('email or password incorrect');
     }
 
-    const tokens = await generateTokens(user);
-    return res.status(200).send({ tokens, userId: user.id, userRole });
+    const token = await generateTokens(user);
+    return res.status(200).send({ token, userId: user.id, userRole });
   } catch (error) {
     res.status(400).send('error');
   }

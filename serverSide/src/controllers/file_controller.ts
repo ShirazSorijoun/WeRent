@@ -3,6 +3,7 @@ import forge from 'node-forge';
 import { Request, Response } from 'express';
 import ValuableDocumentModel from '../models/valuable_document';
 import { CustomRequest } from '../common/auth_middleware';
+import { deleteImage } from '../common/imageHandler';
 
 const base = 'http://localhost:3000/';
 
@@ -28,8 +29,15 @@ const hashFileContent = (fileContent: string) => {
 };
 
 const uploadImage = (req: Request, res: Response): void => {
-  console.log(`router.post(/upload: ${base}${req.file.path}`);
-  res.status(200).send({ url: base + req.file.path });
+  if (!req.file) {
+    res.status(400).send('No Image uploaded.');
+    return;
+  }
+
+  const { fileName } = req.params;
+  if (fileName) deleteImage(fileName);
+
+  res.status(200).send(req?.file.filename);
 };
 
 const uploadValuable = async (

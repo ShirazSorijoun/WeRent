@@ -34,7 +34,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   roles: {
     type: String,
     enum: Object.values(UserRole),
-    default: UserRole.Tenant,
   },
   profile_image: {
     type: String,

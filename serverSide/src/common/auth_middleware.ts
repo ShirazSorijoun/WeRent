@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models/user_model';
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
   user?: { _id: string };
   locals?: {
     currentUserId?: string;

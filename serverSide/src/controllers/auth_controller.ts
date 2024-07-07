@@ -180,7 +180,7 @@ const refresh = async (req: Request, res: Response) => {
     process.env.JWT_REFRESH_SECRET,
     async (err, user: { _id: string }) => {
       if (err) {
-        return res.sendStatus(401);
+        return res.sendStatus(403);
       }
       try {
         const userFromDb = await User.findOne({ _id: user._id });
@@ -225,11 +225,7 @@ const checkToken = (req: Request, res: Response) => {
     return res.status(401).json({ message: 'No token provided' });
   }
   jwt.verify(token, process.env.JWT_SECRET, (err) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
-    }
-
-    return res.status(200).json({ isValidToken: true });
+    return res.status(200).send(!err);
   });
 };
 

@@ -16,6 +16,7 @@ const createTenantForm =async (
   ): Promise<void> => {
     try {
       const { tenantForm } = req.body;
+      console.log('tenantForm', tenantForm);
       tenantForm.owner = req.locals.currentUserId;
       const createdForm = await TenantForm.create(tenantForm);
 

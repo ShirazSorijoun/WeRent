@@ -2,6 +2,7 @@ import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import initApp from './app';
+import { QuadTreeSingleton } from './models/quadtree_apartment_list';
 
 initApp().then((app) => {
   // const port = process.env.PORT;
@@ -21,4 +22,6 @@ initApp().then((app) => {
     };
     https.createServer(options2, app).listen(process.env.HTTPS_PORT);
   }
+  
+  QuadTreeSingleton.getInstance();
 });

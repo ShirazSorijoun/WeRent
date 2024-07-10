@@ -339,6 +339,10 @@ router.post(
   ApartmentController.createApartment,
 );
 
+router.get('/harelush/shay/king',
+  ApartmentController.searchPointsWithinRadius,
+)
+
 /**
  * @swagger
  * /apartment/update:

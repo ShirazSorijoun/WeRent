@@ -1,6 +1,7 @@
 import { QuadTree } from './quadtree';
 import { CircularBoundary } from './circular_boundry';
 import { Point } from './point';
+import Tama, { ITama } from './tama';
 
 export class QuadTreeSingleton {
   private static instance: QuadTreeSingleton;
@@ -10,12 +11,21 @@ export class QuadTreeSingleton {
   private constructor() {
     const quadTreeBoundary = new CircularBoundary(0, 0, 100000); // Example boundary covering a large area
     this.quadTree = new QuadTree(quadTreeBoundary, 4); // Adjust capacity based on your expected data density
+    this.initTama();
+  }
 
-    // Initialize with example points (replace with your actual data)
-    this.quadTree.insert(new Point(40.7128, -74.006)); // Example: New York City
-    this.quadTree.insert(new Point(34.0522, -118.2437)); // Example: Los Angeles
-    this.quadTree.insert(new Point(51.5074, -0.1278)); // Example: London
-    this.quadTree.insert(new Point(35.6895, 139.6917)); // Example: Tokyo
+  private async initTama(){
+    const tamaList: ITama[] = await Tama.find({
+    });
+
+    if(tamaList.length) {
+      console.log('Tama data cache loaded');
+    }
+
+    for(const tama of tamaList) {
+      const {lat, lng} = tama;
+      this.quadTree.insert(new Point(lat, lng));
+    }
   }
 
   public static getInstance(): QuadTreeSingleton {

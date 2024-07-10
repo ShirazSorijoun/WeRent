@@ -10,6 +10,7 @@ import userRoute from './routes/user_route';
 import apartmentRoute from './routes/apartment_route';
 import userReviewRoute from './routes/user_review_route';
 import fileRoute from './routes/file_route';
+import LeaseAgreementRoute from './routes/LeaseAgreement_route';
 
 const options = {
   definition: {
@@ -53,6 +54,7 @@ const initApp = (): Promise<Express> => {
       app.use('/apartment', apartmentRoute);
       app.use('/userReview', userReviewRoute);
       app.use('/file', fileRoute);
+      app.use('/leaseAgreement', LeaseAgreementRoute);
       app.use('/public', express.static('public'));
 
       app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));

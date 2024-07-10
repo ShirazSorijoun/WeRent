@@ -139,7 +139,6 @@ Here are the latitude and longitude coordinates for the given addresses in Jerus
 ניסן ב"ק 26
 הרב פרנק 36
 חרלפ 18, 20
-![image](https://github.com/ShirazSorijoun/WeRent/assets/61940002/ee1b2484-df77-47ca-a766-aa27e6301c35)
 
 
 These coordinates were derived from various real estate and mapping services【6†source】【7†source】【8†source】【9†source】.

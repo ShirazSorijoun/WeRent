@@ -56,6 +56,7 @@ const initApp = (): Promise<Express> => {
       app.use('/apartment', apartmentRoute);
       app.use('/userReview', userReviewRoute);
       app.use('/file', fileRoute);
+      app.use('/tenantForm', tenantFormRoute);
       app.use('/leaseAgreement', LeaseAgreementRoute);
       app.use('/public', express.static('public'));
 

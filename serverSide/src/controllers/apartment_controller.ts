@@ -12,10 +12,7 @@ interface AuthRequest extends Request {
 }
 
 export const searchPointsWithinRadius = (req: Request, res: Response) => {
-  // const { lat, lng, radius } = req.body;
-  const lat = 31.758731;
-  const lng = 35.211525;
-  const radius = 3;
+  const { lat, lng, radius } = req.params;
 
   if (
     typeof lat !== 'number' ||

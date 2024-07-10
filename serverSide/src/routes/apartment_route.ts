@@ -339,7 +339,52 @@ router.post(
   ApartmentController.createApartment,
 );
 
-router.get('/harelush/shay/king',
+/**
+ * @swagger
+ * /apartment/{id}:
+ *   get:
+ *       summary: Get apartment by ID
+ *       tags: [Apartment]
+ *       parameters:
+ *           - in: path
+ *             name: lat
+ *             schema:
+ *               type: number
+ *             required: true
+ *             description: Latitude
+ *           - in: path
+ *             name: lng
+ *             schema:
+ *               type: number
+ *             required: true
+ *             description: Longitude
+ *           - in: path
+ *             name: radius
+ *             schema:
+ *               type: number
+ *             required: true
+ *             description: Radius
+ *       responses:
+ *           200:
+ *               description: Successfully retrieved the Tamas
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           $ref: '#/components/schemas/Tama'
+ *           404:
+ *               description: Tamas not found
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           $ref: '#/components/schemas/Error'
+ *           500:
+ *               description: Internal Server Error
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           $ref: '#/components/schemas/Error'
+ */
+router.get('/searchPointsWithinRadius/:lat/:lng/:radius',
   ApartmentController.searchPointsWithinRadius,
 )
 

@@ -12,7 +12,7 @@ interface AuthRequest extends Request {
 }
 
 export const searchPointsWithinRadius = (req: Request, res: Response) => {
-  const { lat, lng, radius } = req.body;
+  const { lat, lng, radius } = req.params;
 
   if (
     typeof lat !== 'number' ||
@@ -28,7 +28,7 @@ export const searchPointsWithinRadius = (req: Request, res: Response) => {
   const { quadTree } = quadTreeInstance;
 
   // Create a circular boundary using the provided radius in meters
-  const range = new CircularBoundary(lng, lat, radius);
+  const range = new CircularBoundary(lat, lng, radius);
   const foundPoints = quadTree.query(range);
 
   res.json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
@@ -172,4 +172,5 @@ export default {
   createApartment,
   updateApartment,
   deleteApartment,
+  searchPointsWithinRadius,
 };

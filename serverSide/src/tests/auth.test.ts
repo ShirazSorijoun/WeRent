@@ -2,8 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { Express } from 'express';
 import initApp from '../app';
-import User, { UserRole } from '../models/user_model';
-// import { UserRole } from "../models/user_model";
+import { User } from '../models/user_model';
 
 let app: Express;
 
@@ -11,7 +10,6 @@ const user = {
   name: 'testUser',
   email: 'test@test.com',
   password: 'test123',
-  roles: UserRole.Admin,
 };
 
 beforeAll(async () => {
@@ -37,7 +35,7 @@ describe('Auth test', () => {
     const response = await request(app).post('/auth/register').send({});
 
     expect(response.status).toBe(400);
-    expect(response.text).toBe('missing email or password or name or role');
+    expect(response.text).toBe('missing email or password or name');
   });
 
   test('Test Register - Invalid Name Format (status 400)', async () => {
@@ -45,7 +43,6 @@ describe('Auth test', () => {
       name: 'Invalid@Name',
       email: 'test@example.com',
       password: 'password',
-      roles: 'user',
     });
 
     expect(response.status).toBe(400);
@@ -57,7 +54,6 @@ describe('Auth test', () => {
       name: 'TestUser',
       email: 'invalidemail',
       password: 'password',
-      roles: 'user',
     });
 
     expect(response.status).toBe(400);

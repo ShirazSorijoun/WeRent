@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import UserReview, { IUserReview } from '../models/user_review_model';
-import User from '../models/user_model';
+import { User } from '../models/user_model';
 
 interface AuthRequest extends Request {
   locals: {
@@ -34,8 +34,9 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
     // Set the owner based on the current user
     const userId = req.locals.currentUserId;
     review.userId = userId;
-    review.ownerName = (await User.findById(userId)).name;
-    review.ownerImage = (await User.findById(userId)).profile_image;
+    const userFromDb = await User.findById(userId);
+    review.ownerName = userFromDb.name;
+    review.ownerImage = userFromDb.profile_image;
     review.date = new Date().toLocaleDateString();
     const createdReview: IUserReview = await UserReview.create(review);
     res.status(201).json(createdReview);
@@ -58,7 +59,7 @@ const adminDeleteReview = async (
     }
 
     const user = await User.findById(req.locals.currentUserId);
-    if (user.roles !== 'admin') {
+    if (!user.isAdmin) {
       res.status(403).send('Only admins can delete reviews');
       return;
     }

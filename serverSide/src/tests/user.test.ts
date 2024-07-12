@@ -2,7 +2,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { Express } from 'express';
 import initApp from '../app';
-import User, { UserRole } from '../models/user_model';
+import { User } from '../models/user_model';
 
 let app: Express;
 let accessTokenUser1: string;
@@ -15,21 +15,18 @@ const user1 = {
   name: 'testUser',
   email: 'test@test.com',
   password: 'test123',
-  roles: UserRole.Admin,
 };
 
 const user2 = {
   name: 'Shani',
   email: 'shani@test.com',
   password: '123456',
-  roles: UserRole.Owner,
 };
 
 const user3 = {
   name: 'John',
   email: 'John@test.com',
   password: '111111',
-  roles: UserRole.Tenant,
 };
 
 beforeAll(async () => {
@@ -289,14 +286,5 @@ describe('User Controller Tests', () => {
       .send({});
 
     expect(response.status).toBe(500);
-  });
-
-  test('Test update role - success', async () => {
-    const response = await request(app)
-      .patch('/user/changeRole')
-      .set('Authorization', `JWT ${accessTokenUser2}`)
-      .send({ role: 'tenant' });
-
-    expect(response.status).toBe(200);
   });
 });

@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import Apartment from '../models/apartment_model';
-import User, { UserRole } from '../models/user_model';
 import { CircularBoundary } from '../models/circular_boundry';
 import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
+import { User } from '../models/user_model';
 
 interface AuthRequest extends Request {
   locals?: {
     currentUserId?: string;
-    currentUserRole?: UserRole;
   };
 }
 
@@ -108,10 +107,9 @@ const updateApartment = async (
       existingApartment.owner.toString(),
     );
     const user = await User.findById(req.locals.currentUserId);
-    const role = user.roles;
 
     if (
-      role !== UserRole.Admin &&
+      !user.isAdmin &&
       ownerOfApartment._id.toString() !== req.locals.currentUserId
     ) {
       res.status(403).send('Access denied');
@@ -137,7 +135,6 @@ const deleteApartment = async (
 
     const { currentUserId } = req.locals;
     const user = await User.findById(currentUserId);
-    const role = user.roles;
 
     const ownerOfTheApartment = apartment.owner.toString();
 
@@ -146,7 +143,7 @@ const deleteApartment = async (
       return;
     }
 
-    if (ownerOfTheApartment !== currentUserId && role !== UserRole.Admin) {
+    if (ownerOfTheApartment !== currentUserId && !user.isAdmin) {
       res.status(403).send('Access denied');
       return;
     }

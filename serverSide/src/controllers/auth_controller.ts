@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
-import User, { IUser } from '../models/user_model';
+import { IUser, User, googleDefaultPass } from '../models/user_model';
 
 const client = new OAuth2Client();
 
@@ -29,7 +29,7 @@ const generateTokens = async (user: IUser) => {
 };
 
 // Handle Google sign-in
-const googleSignin = async (req: Request, res: Response) => {
+const googleSignIn = async (req: Request, res: Response) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: req.body.credential,
@@ -45,12 +45,16 @@ const googleSignin = async (req: Request, res: Response) => {
         user = await User.create({
           name,
           email,
-          password: '*Signed up with a Google account*',
+          password: googleDefaultPass,
           profile_image: picture,
         });
       }
       const token = await generateTokens(user);
-      res.status(200).send({ token, userId: user.id, userRole: user.roles });
+      res.status(200).send({
+        token,
+        userId: user.id,
+        isNeedPass: user.password === googleDefaultPass,
+      });
     }
   } catch (err) {
     return res.status(400).send(err.message);
@@ -59,14 +63,10 @@ const googleSignin = async (req: Request, res: Response) => {
 
 // Register a new user
 const register = async (req: Request, res: Response) => {
-  const { name } = req.body;
-  const { email } = req.body;
-  const { password } = req.body;
-  const role = req.body.roles;
-  const { profile_image } = req.body;
+  const { name, email, password, profile_image } = req.body;
 
-  if (!email || !password || !name || !role) {
-    return res.status(400).send('missing email or password or name or role');
+  if (!email || !password || !name) {
+    return res.status(400).send('missing email or password or name');
   }
 
   // Name validation
@@ -100,7 +100,6 @@ const register = async (req: Request, res: Response) => {
       name,
       email,
       password: encryptedPassword,
-      roles: role,
       profile_image,
     });
     return res.status(201).send(rs2);
@@ -120,8 +119,6 @@ const login = async (req: Request, res: Response) => {
     if (user == null) {
       return res.status(401).send('email or password incorrect');
     }
-    const userRole = user.roles;
-    console.log(userRole);
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -129,7 +126,11 @@ const login = async (req: Request, res: Response) => {
     }
 
     const token = await generateTokens(user);
-    return res.status(200).send({ token, userId: user.id, userRole });
+    return res.status(200).send({
+      token,
+      userId: user.id,
+      isNeedPass: password === googleDefaultPass,
+    });
   } catch (error) {
     res.status(400).send('error');
   }
@@ -230,7 +231,7 @@ const checkToken = (req: Request, res: Response) => {
 };
 
 export default {
-  googleSignin,
+  googleSignIn,
   register,
   login,
   logout,

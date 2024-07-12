@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user_model';
+import { User } from '../models/user_model';
 
 interface CustomRequest extends Request {
   locals: {

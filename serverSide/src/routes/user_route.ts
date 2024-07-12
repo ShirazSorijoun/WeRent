@@ -2,7 +2,6 @@ import express from 'express';
 import UserController from '../controllers/user_controller';
 import authMiddleware from '../common/auth_middleware';
 import adminMiddleware from '../common/admin_middleware';
-import ownerMiddleware from '../common/owner_middleware';
 // import verifyUserOwnership  from '../common/verify_user_ownership';
 
 const router = express.Router();
@@ -252,12 +251,7 @@ router.delete(
  *               $ref: '#/components/schemas/Error'
  */
 
-router.get(
-  '/apartments',
-  authMiddleware,
-  ownerMiddleware,
-  UserController.getMyApartments,
-);
+router.get('/apartments', authMiddleware, UserController.getMyApartments);
 
 /**
  * @swagger
@@ -369,6 +363,5 @@ router.post(
   authMiddleware,
   UserController.checkOldPassword,
 );
-router.patch('/changeRole', authMiddleware, UserController.changeRole);
 
 export default router;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { UserRole } from '../models/user_model';
+import { User } from '../models/user_model';
 
 interface CustomRequest extends Request {
   user?: { _id: string };
@@ -25,7 +25,7 @@ const adminMiddleware = async (
 
   const user = await User.findOne({ _id: userId });
   // console.log("user",user)
-  if (user.roles === UserRole.Admin) {
+  if (user.isAdmin) {
     next();
   } else {
     return res.status(401).send('Not Admin');

@@ -1,9 +1,9 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface ILeaseAgreement extends Document {
-    date_dayOfTheMonth: string;
-    date_month: string;
-    date_year: string;
+    date_dayOfTheMonth: number;
+    date_month: number;
+    date_year: number;
 
     ownerId: Types.ObjectId;
     ownerName: string;
@@ -52,16 +52,16 @@ export interface ILeaseAgreement extends Document {
 
 const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     date_dayOfTheMonth: {
-        type: String,
-        default: new Date().getDate().toString()
+        type: Number,
+        default: new Date().getDate()
     }, 
     date_month: {
-        type: String,
-        default: new Date().getMonth().toString()
+        type: Number,
+        default: new Date().getMonth()
     },
     date_year: {
-        type: String,
-        default: new Date().getFullYear().toString()
+        type: Number,
+        default: new Date().getFullYear()
     },
     ownerId: {
         type: Schema.Types.ObjectId,

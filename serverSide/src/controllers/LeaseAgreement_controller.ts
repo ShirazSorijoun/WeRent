@@ -24,6 +24,7 @@ const createLeaseAgreement = async (req: AuthRequest, res: Response): Promise<vo
       leaseAgreement.date_month = new Date().getMonth();
       leaseAgreement.date_year = new Date().getFullYear();
 
+      // Set the owner based on the current user
       const ownerId = req.locals.currentUserId;
       const owner = await User.findById(ownerId);
       if (!owner){
@@ -65,6 +66,29 @@ const createLeaseAgreement = async (req: AuthRequest, res: Response): Promise<vo
       res.status(400).send('Something went wrong -> createdReview');
     }
 };
+
+
+
+/*
+const createLeaseAgreement =async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { leaseAgreement } = req.body;
+    console.log('LeaseAgreement', leaseAgreement);
+    leaseAgreement.owner = req.locals.currentUserId;
+    const createdForm = await LeaseAgreement.create(leaseAgreement);
+
+    res.status(201).json(createdForm);
+
+  } catch (error) {
+    console.error(error);
+    res.status(400).send('Something went wrong -> createTenantForm');
+  }
+};
+*/
+
 
 
 

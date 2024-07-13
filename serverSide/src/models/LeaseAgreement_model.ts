@@ -24,8 +24,8 @@ export interface ILeaseAgreement extends Document {
     apartmentCity: string;
 
     numOfRentalMonths: number;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     rentalPricePerMonth: number;
     dayOfTheMonthForPayment: number;
     paymentMethod: string;
@@ -34,20 +34,20 @@ export interface ILeaseAgreement extends Document {
     bankAccountNumber?: string;
     bankBranch?: string;
 
-    optionPeriod: boolean;
+    optionPeriod: string;
     optionPeriodLength?: number;
     maxPercentageIncrease?: number;
     maxNumOfMonthsIncludeOptionPeriod?: number;
     numOfDaysForRepair: number;
-    subtenant: boolean;
+    subtenant: string;
     numOfDaysPaymentDelay: number;
 
-    promissoryNote: boolean;
+    promissoryNote: string;
     promissoryNoteAmount?: number;
-    letterOfGuarantee: boolean;
+    letterOfGuarantee: string;
     guarantee?: string;
     guaranteeAmount?: number;
-    animal: boolean;
+    animal: string;
 }
 
 const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
@@ -131,11 +131,11 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: true,
     },
     startDate: {
-        type: Date,
+        type: String,
         required: true,
     },
     endDate: {
-        type: Date,
+        type: String,
         required: true,
     },
     rentalPricePerMonth: {
@@ -164,7 +164,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: false,
     },
     optionPeriod: {
-        type: Boolean,
+        type: String,
         required: true,
     },
     optionPeriodLength: { //amount of months
@@ -184,7 +184,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: true,
     },
     subtenant: { //12.2
-        type: Boolean,
+        type: String,
         required: true,
     },
     numOfDaysPaymentDelay: {
@@ -192,7 +192,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: true,
     },
     promissoryNote: { //Appendix D - שטר חוב
-        type: Boolean,
+        type: String,
         required: true,
     },
     promissoryNoteAmount: {
@@ -200,7 +200,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: false,
     },
     letterOfGuarantee: { //Appendix C - כתב ערבות
-        type: Boolean,
+        type: String,
         required: true,
     },
     guarantee: {
@@ -213,7 +213,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         required: false,
     },
     animal: { //17.2
-        type: Boolean,
+        type: String,
         required: true,
     }
 });

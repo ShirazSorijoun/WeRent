@@ -100,71 +100,6 @@ router.get('/id/:id', authMiddleware, UserController.getUserById);
 
 /**
  * @swagger
- * /user/update:
- *   patch:
- *     summary: Update a user
- *     tags: [User]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *                 description: The ID of the user to be updated
- *               user:
- *                 type: object
- *                 properties:
- *                   name:
- *                     type: string
- *                     description: The updated name of the user
- *                   email:
- *                     type: string
- *                     description: The updated email of the user
- *                   password:
- *                     type: string
- *                     description: The updated password of the user
- *             required:
- *               - id
- *     responses:
- *       200:
- *         description: Successfully updated the user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       400:
- *         description: Bad Request - At least one field (name, email, or password) is required for update
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: Not Found - User not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.patch(
-  '/update',
-  authMiddleware,
-  adminMiddleware,
-  UserController.updateUser,
-);
-
-/**
- * @swagger
  * /user/delete/{id}:
  *   delete:
  *     summary: Delete a user by ID
@@ -280,9 +215,6 @@ router.get('/apartments', authMiddleware, UserController.getMyApartments);
  *                   email:
  *                     type: string
  *                     description: The updated email of the user
- *                   password:
- *                     type: string
- *                     description: The updated password of the user
  *                   profile_image:
  *                     type: string
  *                     description: The Profile image
@@ -294,7 +226,6 @@ router.get('/apartments', authMiddleware, UserController.getMyApartments);
  *             user:
  *               name: 'Updated Name'
  *               email: 'updated.email@example.com'
- *               password: '8888888'
  *               profile_image: 'https://www.freeiconspng.com/uploads/no-image-icon-4.png'
  *     responses:
  *       200:
@@ -358,10 +289,6 @@ router.patch(
  *               $ref: '#/components/schemas/Error'
  */
 router.get('/:email', authMiddleware, UserController.getUserByEmail);
-router.post(
-  '/checkOldPassword',
-  authMiddleware,
-  UserController.checkOldPassword,
-);
+router.post('/updateUserPass', authMiddleware, UserController.updateUserPass);
 
 export default router;

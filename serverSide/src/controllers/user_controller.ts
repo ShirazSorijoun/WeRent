@@ -80,7 +80,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json(updatedUser);
+    res.status(200).send(updatedUser._id);
   } catch (err) {
     console.error('Error in updateUser:', err);
     res.status(500).send('Internal Server Error -> updateUser');

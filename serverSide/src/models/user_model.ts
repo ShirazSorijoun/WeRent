@@ -1,19 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export enum UserRole {
-  Admin = 'admin',
-  Owner = 'owner',
-  Tenant = 'tenant',
-}
-
+export const googleDefaultPass = 'sign by google';
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  roles?: UserRole;
   profile_image?: string;
   advertisedApartments?: string[];
   tokens?: string[];
+  isAdmin?: boolean;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -31,14 +26,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roles: {
-    type: String,
-    enum: Object.values(UserRole),
-  },
   profile_image: {
     type: String,
     trim: true,
-    default: 'http://localhost:3000/public/user_vector.png',
+    default: 'user_vector.png',
   },
   advertisedApartments: [
     {
@@ -51,8 +42,11 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     required: false,
     default: [],
   },
+  isAdmin: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
-const User = mongoose.model<IUser>('User', userSchema);
-
-export default User;
+export const User = mongoose.model<IUser>('User', userSchema);

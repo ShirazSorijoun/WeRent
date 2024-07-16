@@ -2,8 +2,8 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { Express } from 'express';
 import initApp from '../app';
-import User, { UserRole } from '../models/user_model';
 import UserReview from '../models/user_review_model';
+import { User } from '../models/user_model';
 
 let app: Express;
 let accessTokenUser: string;
@@ -16,21 +16,18 @@ const user = {
   name: 'Shiraz',
   email: 'test@test.com',
   password: 'test123',
-  roles: UserRole.Tenant,
 };
 
 const user2 = {
   name: 'John',
   email: 'John@gmail.com',
   password: '11111111',
-  roles: UserRole.Admin,
 };
 
 const user3 = {
   name: 'Shani',
   email: 'shani@gmail.com',
   password: '123456',
-  roles: UserRole.Owner,
 };
 
 const userReview = {

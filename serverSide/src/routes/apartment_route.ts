@@ -1,7 +1,6 @@
 import express from 'express';
 import ApartmentController from '../controllers/apartment_controller';
 import AuthMiddleware from '../common/auth_middleware';
-import ownerMiddleware from '../common/owner_middleware';
 
 const router = express.Router();
 
@@ -332,12 +331,7 @@ router.get('/:id', ApartmentController.getApartmentById);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  '/create',
-  AuthMiddleware,
-  ownerMiddleware,
-  ApartmentController.createApartment,
-);
+router.post('/create', AuthMiddleware, ApartmentController.createApartment);
 
 /**
  * @swagger
@@ -384,9 +378,10 @@ router.post(
  *                       schema:
  *                           $ref: '#/components/schemas/Error'
  */
-router.get('/searchPointsWithinRadius/:lat/:lng/:radius',
+router.get(
+  '/searchPointsWithinRadius/:lat/:lng/:radius',
   ApartmentController.searchPointsWithinRadius,
-)
+);
 
 /**
  * @swagger

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
-import User, { IUser } from '../models/user_model';
 import Apartment from '../models/apartment_model';
+import { User, IUser } from '../models/user_model';
 // import AuthRequest from '../middlewares/auth_middleware';
 
 interface CustomRequest extends Request {
@@ -80,7 +80,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json(updatedUser);
+    res.status(200).send(updatedUser._id);
   } catch (err) {
     console.error('Error in updateUser:', err);
     res.status(500).send('Internal Server Error -> updateUser');
@@ -215,40 +215,6 @@ const checkOldPassword = async (
   }
 };
 
-const changeRole = async (req: CustomRequest, res: Response): Promise<void> => {
-  try {
-    const { currentUserId } = req.locals;
-
-    if (!currentUserId) {
-      res.status(400).send('User ID is required for updating the profile');
-      return;
-    }
-
-    const { role } = req.body;
-    console.log(req.body);
-    if (!role) {
-      res.status(400);
-      return;
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      currentUserId,
-      { roles: role },
-      { new: true },
-    );
-    console.log(updatedUser);
-    if (!updatedUser) {
-      res.status(404).send('User not found');
-      return;
-    }
-
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.error('Error in updateOwnProfile:', err);
-    res.status(500).send('Internal Server Error -> updateOwnProfile');
-  }
-};
-
 export default {
   getAllUsers,
   getUserById,
@@ -258,5 +224,4 @@ export default {
   updateOwnProfile,
   getMyApartments,
   checkOldPassword,
-  changeRole,
 };

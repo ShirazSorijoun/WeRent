@@ -36,9 +36,6 @@ const router = express.Router();
  *         password:
  *           type: string
  *           description: The user password
- *         roles:
- *           type: string
- *           description: The user roles (admin, owner, tenant), the default is tenant
  *         advertisedApartments:
  *           type: array
  *           description: The apartments ids that the "owner" user posted
@@ -57,7 +54,6 @@ const router = express.Router();
  *         name: Bob
  *         email: 'bob@gmail.com'
  *         password: '123456'
- *         roles: 'tenant'
  */
 
 /**
@@ -94,7 +90,7 @@ const router = express.Router();
  *
  */
 router.post('/register', authController.register);
-router.post('/google', authController.googleSignin);
+router.post('/google', authController.googleSignIn);
 
 /**
  * @swagger
@@ -112,9 +108,6 @@ router.post('/google', authController.googleSignin);
  *         password:
  *           type: string
  *           description: The user password
- *         roles:
- *           type: string
- *           description: The user roles (admin, owner, tenant), the default is tenant
  *         advertisedApartments:
  *           type: array
  *           description: The apartments ids that the "owner" user posted

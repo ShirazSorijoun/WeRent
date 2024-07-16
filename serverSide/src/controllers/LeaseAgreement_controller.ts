@@ -20,10 +20,11 @@ const createLeaseAgreement = async (
     console.log(leaseAgreement);
 
     // Set the date based on the current date
-    leaseAgreement.date_dayOfTheMonth = new Date().getDate().toString();
-    leaseAgreement.date_month = new Date().getMonth().toString();
-    leaseAgreement.date_year = new Date().getFullYear().toString();
+    leaseAgreement.date_dayOfTheMonth = new Date().getDate();
+    leaseAgreement.date_month = new Date().getMonth();
+    leaseAgreement.date_year = new Date().getFullYear();
 
+    // Set the owner based on the current user
     const ownerId = req.locals.currentUserId;
     const owner = await User.findById(ownerId);
     if (!owner) {

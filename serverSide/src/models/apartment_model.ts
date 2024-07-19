@@ -25,6 +25,10 @@ export interface IApartment extends Document {
   };
   description?: string;
   phone?: string;
+  coordinate?: {
+    lng: number;
+    lat: number;
+  };
 }
 
 const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
@@ -118,6 +122,16 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   },
   phone: {
     type: String,
+  },
+  coordinate: {
+    lng: {
+      type: Number,
+      required: false,
+    },
+    lat: {
+      type: Number,
+      required: false,
+    },
   },
 });
 

@@ -17,51 +17,69 @@ const createLeaseAgreement = async (
 ): Promise<void> => {
   try {
     const { leaseAgreement } = req.body;
-    console.log(leaseAgreement);
 
+    console.log('leaseAgreement', leaseAgreement);
     // Set the date based on the current date
-    leaseAgreement.date_dayOfTheMonth = new Date().getDate();
-    leaseAgreement.date_month = new Date().getMonth();
-    leaseAgreement.date_year = new Date().getFullYear();
+    const currentDate = new Date();
+    leaseAgreement.date_dayOfTheMonth = currentDate.getDate();
+    leaseAgreement.date_month = currentDate.getMonth() + 1; // Months are 0-indexed in JavaScript
+    leaseAgreement.date_year = currentDate.getFullYear();
 
     // Set the owner based on the current user
-    const ownerId = req.locals.currentUserId;
+    const ownerId = req.locals?.currentUserId;
+    if (!ownerId) {
+      res.status(400).json({ message: 'Owner ID is missing' });
+      console.log('Owner ID is missing');
+      return;
+    }
+
     const owner = await User.findById(ownerId);
     if (!owner) {
       res.status(404).json({ message: 'Owner not found' });
+      console.log('Owner not found');
       return;
     }
-    leaseAgreement.ownerName = owner.name;
-    leaseAgreement.ownerId = ownerId;
-    // leaseAgreement.ownerIDNumber = owner.IDNumber
-    // leaseAgreement.ownerStreet = owner.street
-    // leaseAgreement.ownerCity = owner.city
 
-    const tenant = await User.findById(leaseAgreement.tenantId);
+    leaseAgreement.ownerId = ownerId;
+    leaseAgreement.ownerName = owner.name;
+    leaseAgreement.ownerIDNumber = "owner.number"; // Assuming owner model has these fields
+    leaseAgreement.ownerStreet = "owner.street";
+    leaseAgreement.ownerCity = "owner.city";
+
+    // Fetch tenant details
+    const tenantId = "669b684ba664f3944e6810af"; // Assuming tenant ID is provided in the request or context
+    const tenant = await User.findById(tenantId);
     if (!tenant) {
       res.status(404).json({ message: 'Tenant not found' });
       return;
     }
-    leaseAgreement.tenantName = tenant.name;
-    // leaseAgreement.tenantIDNumber = tenant.IDNumber
-    // leaseAgreement.tenantStreet = tenant.street
-    // leaseAgreement.tenantCity = tenant.city
 
-    const apartment = await Apartment.findById(leaseAgreement.apartmentId);
+    leaseAgreement.tenantId = tenantId;
+    leaseAgreement.tenantName = tenant.name;
+    leaseAgreement.tenantIDNumber = "tenant.number"; 
+    leaseAgreement.tenantStreet = "tenant.street";
+    leaseAgreement.tenantCity = "tenant.city";
+
+    // Fetch apartment details
+    const apartmentId = "669b68bda664f3944e6810c9"; // Assuming apartment ID is provided in the request or context
+    const apartment = await Apartment.findById(apartmentId);
     if (!apartment) {
       res.status(404).json({ message: 'Apartment not found' });
       return;
     }
+
+    leaseAgreement.apartmentId = apartmentId;
     leaseAgreement.apartmentNumberOfRooms = apartment.rooms;
     leaseAgreement.apartmentFloorNumber = apartment.floor;
     leaseAgreement.apartmentStreet = apartment.address;
     leaseAgreement.apartmentCity = apartment.city;
 
-    const createdLeaseAgreement: ILeaseAgreement =
-      await LeaseAgreement.create(leaseAgreement);
+    console.log('leaseAgreement2', leaseAgreement);
+    const createdLeaseAgreement = await LeaseAgreement.create(leaseAgreement);
     res.status(201).json(createdLeaseAgreement);
   } catch (err) {
-    res.status(400).send('Something went wrong -> createdReview');
+    console.error(err);
+    res.status(400).send('Something went wrong -> createLeaseAgreement');
   }
 };
 

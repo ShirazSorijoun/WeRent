@@ -229,6 +229,12 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { matchId } = req.params;
     const { currentUserId } = req.locals;
+    const { apartmentId } = req.params;
+
+    if (!apartmentId) {
+      res.status(400).send('Apartment ID is required');
+      return;
+    }
 
     if (!matchId) {
       res.status(400).send('Match ID is required');
@@ -242,24 +248,6 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
 
     // Fetch the match and populate the apartment field
     const match = await Match.findById(matchId).populate('apartment');
-
-    if (!match) {
-      res.status(404).send('Match not found');
-      return;
-    }
-
-    const apartment = match.apartment as unknown as Apartment;
-
-    if (!apartment) {
-      res.status(404).send('Apartment not found');
-      return;
-    }
-
-    // Check if the current user is the owner of the apartment
-    if (apartment.owner.toString() !== currentUserId) {
-      res.status(403).send('Access denied');
-      return;
-    }
 
     // Update the match to be accepted
     match.accepted = true;

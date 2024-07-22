@@ -199,6 +199,29 @@ const createMatch = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
+const getMatchesByUserId = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { currentUserId } = req.locals;
+
+    if (!currentUserId) {
+      res.status(400).send('User ID is required');
+      return;
+    }
+
+    const matches = await Match.find({ user: currentUserId }).populate('apartment');
+
+    if (!matches) {
+      res.status(404).send('No matches found');
+      return;
+    }
+
+    res.status(200).json(matches);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 export default {
   getAllApartments,
@@ -207,5 +230,6 @@ export default {
   updateApartment,
   deleteApartment,
   searchPointsWithinRadius,
-  createMatch
+  createMatch,
+  getMatchesByUserId
 };

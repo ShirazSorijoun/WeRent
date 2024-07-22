@@ -228,21 +228,9 @@ const getMatchesByApartmentId = async (req: Request, res: Response): Promise<voi
 const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { matchId } = req.params;
-    const { currentUserId } = req.locals;
-    const { apartmentId } = req.params;
-
-    if (!apartmentId) {
-      res.status(400).send('Apartment ID is required');
-      return;
-    }
 
     if (!matchId) {
       res.status(400).send('Match ID is required');
-      return;
-    }
-
-    if (!currentUserId) {
-      res.status(401).send('User ID is required');
       return;
     }
 

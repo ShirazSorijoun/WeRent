@@ -492,6 +492,6 @@ router.delete(
 
 router.post('/match', AuthMiddleware, ApartmentController.createMatch);
 
-router.get('/match', ApartmentController.getMatchesByUserId);
+router.get('/match/:id', ApartmentController.getMatchesByApartmentId);
 
 export default router;

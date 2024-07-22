@@ -494,4 +494,6 @@ router.post('/match', AuthMiddleware, ApartmentController.createMatch);
 
 router.get('/match/:apartmentId', ApartmentController.getMatchesByApartmentId);
 
+router.put('/match/accept', AuthMiddleware, ApartmentController.acceptMatch);
+
 export default router;

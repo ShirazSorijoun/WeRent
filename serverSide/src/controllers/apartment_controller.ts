@@ -225,6 +225,49 @@ const getMatchesByApartmentId = async (req: Request, res: Response): Promise<voi
   }
 };
 
+const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { matchId } = req.params;
+    const { currentUserId } = req.locals;
+
+    if (!matchId) {
+      res.status(400).send('Match ID is required');
+      return;
+    }
+
+    if (!currentUserId) {
+      res.status(401).send('User ID is required');
+      return;
+    }
+
+    const match = await Match.findById(matchId).populate('apartment');
+
+    if (!match) {
+      res.status(404).send('Match not found');
+      return;
+    }
+
+    const apartment = await Apartment.findById(match.apartment._id);
+
+    if (!apartment) {
+      res.status(404).send('Apartment not found');
+      return;
+    }
+
+    if (apartment.owner.toString() !== currentUserId) {
+      res.status(403).send('Access denied');
+      return;
+    }
+
+    match.accepted = true;
+    await match.save();
+
+    res.status(200).json(match);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
 export default {
   getAllApartments,
   getApartmentById,
@@ -234,4 +277,5 @@ export default {
   searchPointsWithinRadius,
   createMatch,
   getMatchesByApartmentId,
+  acceptMatch
 };

@@ -240,6 +240,7 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
       return;
     }
 
+    // Fetch the match and populate the apartment field
     const match = await Match.findById(matchId).populate('apartment');
 
     if (!match) {
@@ -247,18 +248,20 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
       return;
     }
 
-    const apartment = await Apartment.findById(match.apartment._id);
+    const apartment = match.apartment as unknown as Apartment;
 
     if (!apartment) {
       res.status(404).send('Apartment not found');
       return;
     }
 
+    // Check if the current user is the owner of the apartment
     if (apartment.owner.toString() !== currentUserId) {
       res.status(403).send('Access denied');
       return;
     }
 
+    // Update the match to be accepted
     match.accepted = true;
     await match.save();
 
@@ -268,6 +271,7 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 export default {
   getAllApartments,
   getApartmentById,

@@ -210,7 +210,7 @@ const getMatchesByApartmentId = async (req: Request, res: Response): Promise<voi
 
     const matches = await Match.find({ apartment: apartmentId }).populate({
       path: 'user',
-      select: 'name email',
+      select: 'name email _id',
     });
 
     if (!matches || matches.length === 0) {

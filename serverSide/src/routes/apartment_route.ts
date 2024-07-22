@@ -490,4 +490,6 @@ router.delete(
   ApartmentController.deleteApartment,
 );
 
+router.post('/match', AuthMiddleware, ApartmentController.createMatch);
+
 export default router;

@@ -3,6 +3,7 @@ import Apartment from '../models/apartment_model';
 import { CircularBoundary } from '../models/circular_boundry';
 import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
 import { User } from '../models/user_model';
+import Match from '../models/match';
 
 interface AuthRequest extends Request {
   locals?: {
@@ -163,6 +164,42 @@ const deleteApartment = async (
   }
 };
 
+const createMatch = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { apartmentId, userId } = req.body;
+
+    // Check if apartment and user exist
+    const apartment = await Apartment.findById(apartmentId);
+    const user = await User.findById(userId);
+
+    if (!apartment) {
+      res.status(404).send('Apartment not found');
+      return;
+    }
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    // Create a new match
+    const match = new Match({
+      apartment: apartmentId,
+      user: userId,
+      date: new Date(),
+      accepted: false
+    });
+
+    await match.save();
+
+    res.status(201).json(match);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
 export default {
   getAllApartments,
   getApartmentById,
@@ -170,4 +207,5 @@ export default {
   updateApartment,
   deleteApartment,
   searchPointsWithinRadius,
+  createMatch
 };

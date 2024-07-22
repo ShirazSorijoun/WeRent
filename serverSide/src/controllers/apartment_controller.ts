@@ -208,7 +208,10 @@ const getMatchesByApartmentId = async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const matches = await Match.find({ apartment: apartmentId }).populate('user');
+    const matches = await Match.find({ apartment: apartmentId }).populate({
+      path: 'user',
+      select: 'name phone',
+    });
 
     if (!matches || matches.length === 0) {
       res.status(404).send('No matches found');

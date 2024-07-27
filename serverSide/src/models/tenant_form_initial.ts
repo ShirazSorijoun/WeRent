@@ -22,7 +22,7 @@ export interface ITenantQuestionnaire extends Document {
   updatedAt?: Date;
 }
 
-const tenantQuestionnaireSchema: Schema<ITenantQuestionnaire> = new Schema({
+const TenantQuestionnaireInitialSchema: Schema<ITenantQuestionnaire> = new Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -106,7 +106,7 @@ const tenantQuestionnaireSchema: Schema<ITenantQuestionnaire> = new Schema({
 });
 
 
-const TenantQuestionnaire: Model<ITenantQuestionnaire> = mongoose.model('TenantQuestionnaire', tenantQuestionnaireSchema);
+const TenantQuestionnaireInitial: Model<ITenantQuestionnaire> = mongoose.model('TenantQuestionnaireInitial', TenantQuestionnaireInitialSchema);
 
-export default TenantQuestionnaire;
+export default TenantQuestionnaireInitial;
 

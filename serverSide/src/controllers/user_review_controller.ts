@@ -35,7 +35,7 @@ const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
     const userId = req.locals.currentUserId;
     review.userId = userId;
     const userFromDb = await User.findById(userId);
-    review.ownerName = userFromDb.name;
+    review.ownerName = `${userFromDb.firstName} ${userFromDb.lastName}`;
     review.ownerImage = userFromDb.profile_image;
     review.date = new Date().toLocaleDateString();
     const createdReview: IUserReview = await UserReview.create(review);

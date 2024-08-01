@@ -41,7 +41,7 @@ const createLeaseAgreement = async (
     }
 
     leaseAgreement.ownerId = ownerId;
-    leaseAgreement.ownerName = owner.name;
+    leaseAgreement.ownerName = `${owner.firstName} ${owner.lastName}`;
     leaseAgreement.ownerIDNumber = "owner.number"; // Assuming owner model has these fields
     leaseAgreement.ownerStreet = "owner.street";
     leaseAgreement.ownerCity = "owner.city";
@@ -55,7 +55,7 @@ const createLeaseAgreement = async (
     }
 
     leaseAgreement.tenantId = tenantId;
-    leaseAgreement.tenantName = tenant.name;
+    leaseAgreement.tenantName = `${tenant.firstName} ${tenant.lastName}`;
     leaseAgreement.tenantIDNumber = "tenant.number"; 
     leaseAgreement.tenantStreet = "tenant.street";
     leaseAgreement.tenantCity = "tenant.city";

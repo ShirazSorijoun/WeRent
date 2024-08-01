@@ -2,7 +2,12 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export const googleDefaultPass = 'sign by google';
 export interface IUser extends Document {
-  name: string;
+  firstName: string;
+  lastName: string;
+  personalId: string;
+  streetAddress: string;
+  cityAddress: string;
+  phoneNumber: string;
   email: string;
   password: string;
   profile_image?: string;
@@ -12,10 +17,29 @@ export interface IUser extends Document {
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
     required: true,
   },
+    lastName: {
+        type: String,
+        required: true,
+    },
+    personalId: {
+        type: String,
+        required: true,
+    },
+    streetAddress: {
+        type: String,
+        required: true,
+    },
+    cityAddress: {
+        type: String,
+        required: true,
+    },
+    phoneNumber: {
+            type: String,
+            required: true},
   email: {
     type: String,
     required: true,

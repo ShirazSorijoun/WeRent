@@ -61,7 +61,7 @@ const createLeaseAgreement = async (
     leaseAgreement.tenantCity = "tenant.city";
 
     // Fetch apartment details
-    const apartmentId = "669b68bda664f3944e6810c9"; // Assuming apartment ID is provided in the request or context
+    const apartmentId = "66adfeb2dd1240b14fb70520"; // Assuming apartment ID is provided in the request or context
     const apartment = await Apartment.findById(apartmentId);
     if (!apartment) {
       res.status(404).json({ message: 'Apartment not found' });

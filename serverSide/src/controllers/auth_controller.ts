@@ -36,19 +36,30 @@ const googleSignIn = async (req: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
+    
     const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
+    //console.log(payload);
+    const { email, given_name,family_name, picture } = payload;
 
     if (email) {
       let user = await User.findOne({ email });
+      console.log(user);
       if (!user) {
         user = await User.create({
-          name,
+          firstName: given_name,
+          lastName: family_name,
           email,
+          phoneNumber: "0524717657",
+          personalId: "123456789",
+          streetAddress: "Moshe Levi 11",
+          cityAddress: "Tel Aviv",
           password: googleDefaultPass,
           profile_image: picture,
         });
+
+        console.log(user);
       }
+      
       const token = await generateTokens(user);
       res.status(200).send({
         token,

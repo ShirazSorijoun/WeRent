@@ -88,12 +88,13 @@ const updateOwnProfile = async (
     return;
   }
 
-  const { name, email, profile_image } = req.body.user;
-  if (!name && !email && !profile_image) {
+  console.log(req.body.user);
+  const { firstName,lastName,phoneNumber,personalId,cityAddress,streetAddress, email, profile_image ,  } = req.body.user;
+  if (!firstName && !lastName && !phoneNumber && !personalId && !cityAddress && !streetAddress && !email && !profile_image) {
     res
       .status(400)
       .send(
-        'At least one field (name, email, password, or profile_image) is required for update',
+        'At least one field is required for update',
       );
     return;
   }
@@ -101,7 +102,7 @@ const updateOwnProfile = async (
   try {
     const updatedUser = await User.findByIdAndUpdate(
       currentUserId,
-      { name, email, profile_image },
+      { firstName,lastName,phoneNumber,personalId,cityAddress,streetAddress, email, profile_image },
       { new: true },
     );
     console.log(updatedUser);

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import TenantFormInitial from '../models/tenant_form_initial';
-import TenantQuestionnaireQuaterly from '../models/tenant_form_quarterly';
+import TenantQuestionnaireQuarterly from '../models/tenant_form_quarterly';
 
 interface AuthRequest extends Request {
   locals?: {
@@ -25,7 +25,10 @@ const createTenantFormInitial = async (
   }
 };
 
-const getTenantFormInitialByOwnerId = async (req: Request, res: Response): Promise<void> =>{
+const getTenantFormInitialByOwnerId = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { ownerId } = req.params;
     console.log('ownerId', ownerId);
@@ -50,7 +53,7 @@ const createTenantFormQuarterly = async (
     const { tenantForm } = req.body;
     console.log('tenantForm', tenantForm);
     tenantForm.owner = req.locals.currentUserId;
-    const createdForm = await TenantQuestionnaireQuaterly.create(tenantForm);
+    const createdForm = await TenantQuestionnaireQuarterly.create(tenantForm);
 
     res.status(201).json(createdForm);
   } catch (error) {
@@ -59,11 +62,16 @@ const createTenantFormQuarterly = async (
   }
 };
 
-const getTenantFormQuarterlyByOwnerId = async (req: Request, res: Response): Promise<void> =>{
+const getTenantFormQuarterlyByOwnerId = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { ownerId } = req.params;
     console.log('ownerId', ownerId);
-    const tenantForm = await TenantQuestionnaireQuaterly.findOne({ owner: ownerId });
+    const tenantForm = await TenantQuestionnaireQuarterly.findOne({
+      owner: ownerId,
+    });
     console.log('tenantForm', tenantForm);
     if (tenantForm) {
       console.log('tenantForm', tenantForm);

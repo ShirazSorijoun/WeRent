@@ -2,111 +2,109 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface ITenantQuestionnaire extends Document {
   owner: mongoose.Schema.Types.ObjectId;
-  rentalAgreement: 'Yes' | 'No';
+  rentalAgreement: boolean;
   rentalAgreementComments?: string;
-  propertyInformation: 'Yes' | 'No';
+  propertyInformation: boolean;
   propertyInformationComments?: string;
-  leaseSigningProcess: 'Yes' | 'No';
+  leaseSigningProcess: boolean;
   leaseSigningProcessComments?: string;
-  questionsAddressed: 'Yes' | 'No';
+  questionsAddressed: boolean;
   questionsAddressedComments?: string;
-  propertyCondition: 'Yes' | 'No';
+  propertyCondition: boolean;
   propertyConditionComments?: string;
-  receivedInformation: 'Yes' | 'No';
+  receivedInformation: boolean;
   transitionProblems?: string;
   satisfactionRating: number;
-  maintenanceRequests: 'Yes' | 'No';
+  maintenanceRequests: boolean;
   maintenanceRequestsComments?: string;
   firstImpression?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-const tenantQuestionnaireSchema: Schema<ITenantQuestionnaire> = new Schema({
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  rentalAgreement: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  rentalAgreementComments: {
-    type: String,
-    default: '',
-  },
-  propertyInformation: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  propertyInformationComments: {
-    type: String,
-    default: '',
-  },
-  leaseSigningProcess: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  leaseSigningProcessComments: {
-    type: String,
-    default: '',
-  },
-  questionsAddressed: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  questionsAddressedComments: {
-    type: String,
-    default: '',
-  },
-  propertyCondition: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  propertyConditionComments: {
-    type: String,
-    default: '',
-  },
-  receivedInformation: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  transitionProblems: {
-    type: String,
-    default: '',
-  },
-  satisfactionRating: {
-    type: Number,
-    min: 1,
-    max: 5,
-    required: true,
-  },
-  maintenanceRequests: {
-    type: String,
-    enum: ['Yes', 'No'],
-    required: true,
-  },
-  maintenanceRequestsComments: {
-    type: String,
-    default: '',
-  },
-  firstImpression: {
-    type: String,
-    default: '',
-  },
-}, {
-  timestamps: true, // Automatically manages createdAt and updatedAt fields
-});
+export const tenantQuestionnaireSchema: Schema<ITenantQuestionnaire> =
+  new Schema(
+    {
+      owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      rentalAgreement: {
+        type: Boolean,
+        required: true,
+      },
+      rentalAgreementComments: {
+        type: String,
+        default: '',
+      },
+      propertyInformation: {
+        type: Boolean,
+        required: true,
+      },
+      propertyInformationComments: {
+        type: String,
+        default: '',
+      },
+      leaseSigningProcess: {
+        type: Boolean,
+        required: true,
+      },
+      leaseSigningProcessComments: {
+        type: String,
+        default: '',
+      },
+      questionsAddressed: {
+        type: Boolean,
+        required: true,
+      },
+      questionsAddressedComments: {
+        type: String,
+        default: '',
+      },
+      propertyCondition: {
+        type: Boolean,
+        required: true,
+      },
+      propertyConditionComments: {
+        type: String,
+        default: '',
+      },
+      receivedInformation: {
+        type: Boolean,
+        required: true,
+      },
+      transitionProblems: {
+        type: String,
+        default: '',
+      },
+      satisfactionRating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true,
+      },
+      maintenanceRequests: {
+        type: Boolean,
+        required: true,
+      },
+      maintenanceRequestsComments: {
+        type: String,
+        default: '',
+      },
+      firstImpression: {
+        type: String,
+        default: '',
+      },
+    },
+    {
+      timestamps: true, // Automatically manages createdAt and updatedAt fields
+    },
+  );
 
-
-const TenantQuestionnaire: Model<ITenantQuestionnaire> = mongoose.model('TenantQuestionnaire', tenantQuestionnaireSchema);
+const TenantQuestionnaire: Model<ITenantQuestionnaire> = mongoose.model(
+  'TenantQuestionnaire',
+  tenantQuestionnaireSchema,
+);
 
 export default TenantQuestionnaire;
-

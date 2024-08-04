@@ -11,26 +11,25 @@ export class QuadTreeSingleton {
   private constructor() {
     const quadTreeBoundary = new CircularBoundary(0, 0, 100000); // Example boundary covering a large area
     this.quadTree = new QuadTree(quadTreeBoundary, 4); // Adjust capacity based on your expected data density
-    this.initTama();
   }
 
-  private async initTama(){
-    const tamaList: ITama[] = await Tama.find({
-    });
+  public async initTama() {
+    const tamaList: ITama[] = await Tama.find({});
 
-    if(tamaList.length) {
+    if (tamaList.length) {
       console.log('Tama data cache loaded');
     }
 
-    for(const tama of tamaList) {
-      const {lat, lng} = tama;
+    for (const tama of tamaList) {
+      const { lat, lng } = tama;
       this.quadTree.insert(new Point(lat, lng));
     }
   }
 
-  public static getInstance(): QuadTreeSingleton {
+  public static async getInstance(): Promise<QuadTreeSingleton> {
     if (!QuadTreeSingleton.instance) {
       QuadTreeSingleton.instance = new QuadTreeSingleton();
+      await QuadTreeSingleton.instance.initTama();
     }
     return QuadTreeSingleton.instance;
   }

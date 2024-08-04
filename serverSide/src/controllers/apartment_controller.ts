@@ -11,27 +11,40 @@ interface AuthRequest extends Request {
   };
 }
 
-export const searchPointsWithinRadius = (req: Request, res: Response) => {
-  const { lat, lng, radius } = req.params;
+const DEFAULT_RADIUS = 5000;
 
-  if (
-    typeof lat !== 'number' ||
-    typeof lng !== 'number' ||
-    typeof radius !== 'number' ||
-    radius <= 0
-  ) {
+const searchPointsWithinRadius = async (req: Request, res: Response) => {
+  const { apartmentId, radius } = req.params;
+
+  const apartment = await Apartment.findById(apartmentId);
+
+  if (!apartment?.coordinate) {
+    // Apartment not found
+    res.status(404).json({ message: 'Apartment not found' });
+    return;
+  }
+
+  const selectedRadius: number = radius ? +radius : DEFAULT_RADIUS;
+
+  if (selectedRadius <= 0) {
     return res.status(400).send('Invalid input');
   }
 
   // Get the singleton instance of the QuadTree
-  const quadTreeInstance = QuadTreeSingleton.getInstance();
+  const quadTreeInstance = await QuadTreeSingleton.getInstance();
   const { quadTree } = quadTreeInstance;
 
   // Create a circular boundary using the provided radius in meters
-  const range = new CircularBoundary(lat, lng, radius);
+  const range = new CircularBoundary(
+    apartment.coordinate.lat,
+    apartment.coordinate.lng,
+    selectedRadius,
+  );
   const foundPoints = quadTree.query(range);
 
-  res.json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
+  res
+    .status(200)
+    .json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
 };
 
 const getAllApartments = async (req: Request, res: Response): Promise<void> => {
@@ -187,7 +200,7 @@ const createMatch = async (req: AuthRequest, res: Response): Promise<void> => {
       apartment: apartmentId,
       user: userId,
       date: new Date(),
-      accepted: false
+      accepted: false,
     });
 
     await match.save();
@@ -199,7 +212,10 @@ const createMatch = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
-const getMatchesByApartmentId = async (req: Request, res: Response): Promise<void> => {
+const getMatchesByApartmentId = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { apartmentId } = req.params;
 
@@ -257,5 +273,5 @@ export default {
   searchPointsWithinRadius,
   createMatch,
   getMatchesByApartmentId,
-  acceptMatch
+  acceptMatch,
 };

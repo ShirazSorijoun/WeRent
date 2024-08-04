@@ -4,7 +4,7 @@ import fs from 'fs';
 import initApp from './app';
 import { QuadTreeSingleton } from './models/quadtree_apartment_list';
 
-initApp().then((app) => {
+initApp().then(async (app) => {
   // const port = process.env.PORT;
   // app.listen(port , ()=>{
   // console.log(`Listening on port ${port}`);
@@ -22,6 +22,6 @@ initApp().then((app) => {
     };
     https.createServer(options2, app).listen(process.env.HTTPS_PORT);
   }
-  
-  QuadTreeSingleton.getInstance();
+
+  await QuadTreeSingleton.getInstance();
 });

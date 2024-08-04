@@ -379,7 +379,7 @@ router.post('/create', AuthMiddleware, ApartmentController.createApartment);
  *                           $ref: '#/components/schemas/Error'
  */
 router.get(
-  '/searchPointsWithinRadius/:lat/:lng/:radius',
+  '/searchPointsWithinRadius/:apartmentId/:radius?',
   ApartmentController.searchPointsWithinRadius,
 );
 

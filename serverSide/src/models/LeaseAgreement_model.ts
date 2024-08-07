@@ -50,16 +50,26 @@ export interface ILeaseAgreement extends Document {
     animal: boolean;
 }
 
+
+
+
+
+
+
+
 const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
-    date_dayOfTheMonth: {
+
+
+  //Page 1
+    date_dayOfTheMonth: { //introduction
         type: String,
         default: new Date().getDate().toString()
     }, 
-    date_month: {
+    date_month: { //introduction
         type: String,
         default: new Date().getMonth().toString()
     },
-    date_year: {
+    date_year: { //introduction
         type: String,
         default: new Date().getFullYear().toString()
     },
@@ -68,40 +78,40 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    ownerName: {
+    ownerName: { //introduction
         type: String,
         required: true,
     },
-    ownerIDNumber: {
+    ownerIDNumber: { //introduction
         type: String,
         required: true,
     },
-    ownerStreet: {
+    ownerStreet: { //introduction
         type: String,
         required: true,
     },
-    ownerCity: {
+    ownerCity: { //introduction
         type: String,
         required: true,
     },
-    tenantId: {
+    tenantId: { //introduction
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    tenantName: {
+    tenantName: { //introduction
         type: String,
         required: true,
     },
-    tenantIDNumber: {
+    tenantIDNumber: { //introduction
         type: String,
         required: true,
     },
-    tenantStreet: {
+    tenantStreet: { //introduction
         type: String,
         required: true,
     },
-    tenantCity: {
+    tenantCity: { //introduction
         type: String,
         required: true,
     },
@@ -110,76 +120,90 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         ref: 'Apartment',
         required: true,
     },
-    apartmentNumberOfRooms: {
+    apartmentNumberOfRooms: { //1.1
         type: Number,
         required: true,
     },
-    apartmentFloorNumber: {
+    apartmentFloorNumber: { //1.1
         type: Number,
         required: true,
     },
-    apartmentStreet: {
+    apartmentStreet: { //1.1
         type: String,
         required: true,
     },
-    apartmentCity: {
+    apartmentCity: { //1.1
         type: String,
         required: true,
     },
-    numOfRentalMonths: {
+    numOfRentalMonths: { //4.1
         type: Number,
         required: true,
     },
-    startDate: {
+    startDate: { //4.1
         type: Date,
         required: true,
     },
-    endDate: {
+    endDate: { //4.1
         type: Date,
         required: true,
     },
-    rentalPricePerMonth: {
+
+
+
+
+
+
+//Page 2
+    rentalPricePerMonth: { //5.1
         type: Number,
         required: true,
     },
-    dayOfTheMonthForPayment: {
+    dayOfTheMonthForPayment: { //5.1
         type: Number,
         required: true,
     },
-    paymentMethod: {
+    paymentMethod: { //5.2
         type: String,
         enum: ['Bank Transfer', 'Checks'],
         required: true,
     },
-    nameOfBank: {
+    nameOfBank: { //5.2
         type: String,
         required: false,
     },
-    bankAccountNumber: {
+    bankAccountNumber: { //5.2
         type: String,
         required: false,
     },
-    bankBranch: {
+    bankBranch: { //5.2
         type: String,
         required: false,
     },
-    optionPeriod: {
+    optionPeriod: { //6
         type: Boolean,
         required: true,
     },
-    optionPeriodLength: { //amount of months
+    optionPeriodLength: { //amount of months //6.1 and 6.3.2
         type: Number,
         required: false,
     },
-    maxPercentageIncrease: {
+    maxPercentageIncrease: { //6.2
         type: Number,
         required: false,
     },
-    maxNumOfMonthsIncludeOptionPeriod: { //numberOfRentalMonths + optionPeriodLength
+    maxNumOfMonthsIncludeOptionPeriod: { //numberOfRentalMonths + optionPeriodLength //6.4
         type: Number,
         required: false,
     },
-    numOfDaysForRepair: {
+
+
+
+
+
+
+    //Page 3
+    numOfDaysForRepair: { //9.2
         type: Number,
         required: true,
     },
@@ -187,31 +211,45 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
-    numOfDaysPaymentDelay: {
+
+
+
+
+
+
+    //Page 4
+    numOfDaysPaymentDelay: { //14.2.1
         type: Number,
         required: true,
     },
-    promissoryNote: { //Appendix D - שטר חוב
+    promissoryNote: { //Appendix D - שטר חוב //15.1.1 
         type: Boolean,
         required: true,
     },
-    promissoryNoteAmount: {
+    promissoryNoteAmount: { //15.1.1
         type: Number,
         required: false,
     },
-    letterOfGuarantee: { //Appendix C - כתב ערבות
+    letterOfGuarantee: { //Appendix C - כתב ערבות //15.1.2
         type: Boolean,
         required: true,
     },
-    guarantee: {
+    guarantee: { //15.1.3
         type: String,
         enum: ['Financial deposit', 'Autonomous bank guarantee'],
         required: false,
     },
-    guaranteeAmount: {
+    guaranteeAmount: { //15.1.3
         type: Number,
         required: false,
     },
+
+
+
+
+
+
+    //Page 5
     animal: { //17.2
         type: Boolean,
         required: true,

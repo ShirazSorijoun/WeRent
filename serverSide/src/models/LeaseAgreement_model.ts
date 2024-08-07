@@ -62,16 +62,16 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
 
   //Page 1
     date_dayOfTheMonth: { //introduction
-        type: String,
-        default: new Date().getDate().toString()
+        type: Number,
+        default: new Date().getDate()
     }, 
     date_month: { //introduction
-        type: String,
-        default: new Date().getMonth().toString()
+        type: Number,
+        default: new Date().getMonth()
     },
     date_year: { //introduction
-        type: String,
-        default: new Date().getFullYear().toString()
+        type: Number,
+        default: new Date().getFullYear()
     },
     ownerId: {
         type: Schema.Types.ObjectId,

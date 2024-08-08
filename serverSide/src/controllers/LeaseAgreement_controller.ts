@@ -1,8 +1,5 @@
 import { Request, Response } from 'express';
-import LeaseAgreement, {
-  ILeaseAgreement,
-} from '../models/LeaseAgreement_model';
-import Apartment from '../models/apartment_model';
+import LeaseAgreement from '../models/LeaseAgreement_model';
 import { User } from '../models/user_model';
 
 interface AuthRequest extends Request {
@@ -20,10 +17,7 @@ const createLeaseAgreement = async (
 
     console.log('leaseAgreement', leaseAgreement);
     // Set the date based on the current date
-    const currentDate = new Date();
-    leaseAgreement.date_dayOfTheMonth = currentDate.getDate();
-    leaseAgreement.date_month = currentDate.getMonth() + 1; // Months are 0-indexed in JavaScript
-    leaseAgreement.date_year = currentDate.getFullYear();
+    leaseAgreement.date = new Date();
 
     // Set the owner based on the current user
     const ownerId = req.locals?.currentUserId;
@@ -41,40 +35,15 @@ const createLeaseAgreement = async (
     }
 
     leaseAgreement.ownerId = ownerId;
-    leaseAgreement.ownerName = `${owner.firstName} ${owner.lastName}`;
-    leaseAgreement.ownerIDNumber = "owner.number"; // Assuming owner model has these fields
-    leaseAgreement.ownerStreet = "owner.street";
-    leaseAgreement.ownerCity = "owner.city";
 
     // Fetch tenant details
-    const tenantId = "669b684ba664f3944e6810af"; // Assuming tenant ID is provided in the request or context
-    const tenant = await User.findById(tenantId);
-    if (!tenant) {
-      res.status(404).json({ message: 'Tenant not found' });
-      return;
-    }
-
+    const tenantId = '669b684ba664f3944e6810af'; // Assuming tenant ID is provided in the request or context
     leaseAgreement.tenantId = tenantId;
-    leaseAgreement.tenantName = `${tenant.firstName} ${tenant.lastName}`;
-    leaseAgreement.tenantIDNumber = "tenant.number"; 
-    leaseAgreement.tenantStreet = "tenant.street";
-    leaseAgreement.tenantCity = "tenant.city";
 
     // Fetch apartment details
-    const apartmentId = "66adfeb2dd1240b14fb70520"; // Assuming apartment ID is provided in the request or context
-    const apartment = await Apartment.findById(apartmentId);
-    if (!apartment) {
-      res.status(404).json({ message: 'Apartment not found' });
-      return;
-    }
-
+    const apartmentId = '66adfeb2dd1240b14fb70520'; // Assuming apartment ID is provided in the request or context
     leaseAgreement.apartmentId = apartmentId;
-    leaseAgreement.apartmentNumberOfRooms = apartment.rooms;
-    leaseAgreement.apartmentFloorNumber = apartment.floor;
-    leaseAgreement.apartmentStreet = apartment.address;
-    leaseAgreement.apartmentCity = apartment.city;
 
-    console.log('leaseAgreement2', leaseAgreement);
     const createdLeaseAgreement = await LeaseAgreement.create(leaseAgreement);
     res.status(201).json(createdLeaseAgreement);
   } catch (err) {

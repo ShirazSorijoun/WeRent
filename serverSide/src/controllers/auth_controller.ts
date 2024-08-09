@@ -36,35 +36,26 @@ const googleSignIn = async (req: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    
     const payload = ticket.getPayload();
-    //console.log(payload);
-    const { email, given_name,family_name, picture } = payload;
+    const { email, given_name, family_name, picture } = payload;
 
     if (email) {
       let user = await User.findOne({ email });
-      console.log(user);
       if (!user) {
         user = await User.create({
           firstName: given_name,
           lastName: family_name,
           email,
-          phoneNumber: "0524717657",
-          personalId: "123456789",
-          streetAddress: "Moshe Levi 11",
-          cityAddress: "Tel Aviv",
           password: googleDefaultPass,
           profile_image: picture,
         });
-
-        console.log(user);
       }
-      
+
       const token = await generateTokens(user);
       res.status(200).send({
         token,
         userId: user.id,
-        isNeedPass: user.password === googleDefaultPass,
+        isNeedMoreData: !user.phoneNumber,
       });
     }
   } catch (err) {
@@ -74,16 +65,17 @@ const googleSignIn = async (req: Request, res: Response) => {
 
 // Register a new user
 const register = async (req: Request, res: Response) => {
-  // firstName: string;
-  // lastName: string;
-  // personalId: string;
-  // streetAddress: string;
-  // cityAddress: string;
-  // phoneNumber: string;
-  // email: string;
-  // password: string;
-  const { firstName, lastName,personalId,streetAddress,cityAddress,
-    phoneNumber, email, password, profile_image } = req.body;
+  const {
+    firstName,
+    lastName,
+    personalId,
+    streetAddress,
+    cityAddress,
+    phoneNumber,
+    email,
+    password,
+    profile_image,
+  } = req.body;
 
   if (!email || !password || !firstName || !lastName) {
     return res.status(400).send('missing email or password or name');
@@ -117,8 +109,13 @@ const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
     const rs2 = await User.create({
-      firstName, lastName,personalId,streetAddress,cityAddress,
-      phoneNumber, email,
+      firstName,
+      lastName,
+      personalId,
+      streetAddress,
+      cityAddress,
+      phoneNumber,
+      email,
       password: encryptedPassword,
       profile_image,
     });

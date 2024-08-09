@@ -89,20 +89,43 @@ const updateOwnProfile = async (
   }
 
   console.log(req.body.user);
-  const { firstName,lastName,phoneNumber,personalId,cityAddress,streetAddress, email, profile_image ,  } = req.body.user;
-  if (!firstName && !lastName && !phoneNumber && !personalId && !cityAddress && !streetAddress && !email && !profile_image) {
-    res
-      .status(400)
-      .send(
-        'At least one field is required for update',
-      );
+  const {
+    firstName,
+    lastName,
+    phoneNumber,
+    personalId,
+    cityAddress,
+    streetAddress,
+    email,
+    profile_image,
+  } = req.body.user;
+  if (
+    !firstName &&
+    !lastName &&
+    !phoneNumber &&
+    !personalId &&
+    !cityAddress &&
+    !streetAddress &&
+    !email &&
+    !profile_image
+  ) {
+    res.status(400).send('At least one field is required for update');
     return;
   }
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       currentUserId,
-      { firstName,lastName,phoneNumber,personalId,cityAddress,streetAddress, email, profile_image },
+      {
+        firstName,
+        lastName,
+        phoneNumber,
+        personalId,
+        cityAddress,
+        streetAddress,
+        email,
+        profile_image,
+      },
       { new: true },
     );
     console.log(updatedUser);
@@ -111,7 +134,7 @@ const updateOwnProfile = async (
       return;
     }
 
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser.id);
   } catch (err) {
     console.error('Error in updateOwnProfile:', err);
     res.status(500).send('Internal Server Error -> updateOwnProfile');

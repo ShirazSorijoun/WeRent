@@ -21,25 +21,26 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    personalId: {
-        type: String,
-        required: true,
-    },
-    streetAddress: {
-        type: String,
-        required: true,
-    },
-    cityAddress: {
-        type: String,
-        required: true,
-    },
-    phoneNumber: {
-            type: String,
-            required: true},
+  lastName: {
+    type: String,
+    required: true,
+  },
+  personalId: {
+    type: String,
+    required: false,
+  },
+  streetAddress: {
+    type: String,
+    required: false,
+  },
+  cityAddress: {
+    type: String,
+    required: false,
+  },
+  phoneNumber: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: true,

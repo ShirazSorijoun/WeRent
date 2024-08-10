@@ -24,7 +24,6 @@ export interface IApartment extends Document {
     airConditioning: boolean;
   };
   description?: string;
-  phone?: string;
   coordinate?: {
     lng: number;
     lat: number;
@@ -119,9 +118,6 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
   description: {
     type: String,
     default: '',
-  },
-  phone: {
-    type: String,
   },
   coordinate: {
     lng: {

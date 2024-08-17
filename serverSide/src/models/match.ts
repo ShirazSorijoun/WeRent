@@ -8,10 +8,14 @@ export interface IMatch extends Document {
 }
 
 const matchSchema: Schema<IMatch> = new mongoose.Schema({
-  apartment: { type: mongoose.Schema.Types.ObjectId, ref: 'Apartment', required: true },
+  apartment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Apartment',
+    required: true,
+  },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, default: Date.now, required: true },
-  accepted: { type: Boolean, default: false, required: true }
+  accepted: { type: Boolean },
 });
 
 const Match = mongoose.model<IMatch>('Match', matchSchema);

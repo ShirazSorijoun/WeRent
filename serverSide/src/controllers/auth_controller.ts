@@ -82,7 +82,7 @@ const register = async (req: Request, res: Response) => {
   }
 
   // Name validation
-  const nameRegex = /^[a-zA-Z0-9\s]+$/;
+  const nameRegex = /^[a-zA-Z\u0590-\u05FF\s]+$/;
   if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
     return res.status(400).json({ error: 'Invalid name format' });
   }

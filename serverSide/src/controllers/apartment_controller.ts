@@ -4,12 +4,7 @@ import { CircularBoundary } from '../models/circular_boundry';
 import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
 import { User } from '../models/user_model';
 import Match from '../models/match';
-
-interface AuthRequest extends Request {
-  locals?: {
-    currentUserId?: string;
-  };
-}
+import { AuthRequest } from '../models/request';
 
 const DEFAULT_RADIUS = 5000;
 

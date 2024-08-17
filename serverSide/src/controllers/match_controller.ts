@@ -51,7 +51,7 @@ const getMatchesByApartmentId = async (
 
     const matches = await Match.find({ apartment: apartmentId }).populate({
       path: 'user',
-      select: 'name email _id',
+      select: 'profile_image email firstName lastName _id',
     });
 
     if (!matches || matches.length === 0) {
@@ -96,7 +96,7 @@ const getMatchStatus = async (
 
 const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { matchId } = req.body;
+    const { matchId, status } = req.body;
 
     if (!matchId) {
       res.status(400).send('Match ID is required');
@@ -107,7 +107,7 @@ const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
     const match = await Match.findById(matchId);
 
     // Update the match to be accepted
-    match.accepted = true;
+    match.accepted = !!status;
     await match.save();
 
     res.status(200).json(match);

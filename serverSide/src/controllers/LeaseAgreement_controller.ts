@@ -1,15 +1,8 @@
-import { Request, Response } from 'express';
-import LeaseAgreement, {
-  ILeaseAgreement,
-} from '../models/LeaseAgreement_model';
+import { Response } from 'express';
+import LeaseAgreement from '../models/LeaseAgreement_model';
 import Apartment from '../models/apartment_model';
 import { User } from '../models/user_model';
-
-interface AuthRequest extends Request {
-  locals?: {
-    currentUserId?: string;
-  };
-}
+import { AuthRequest } from '../models/request';
 
 const createLeaseAgreement = async (
   req: AuthRequest,
@@ -42,12 +35,12 @@ const createLeaseAgreement = async (
 
     leaseAgreement.ownerId = ownerId;
     leaseAgreement.ownerName = `${owner.firstName} ${owner.lastName}`;
-    leaseAgreement.ownerIDNumber = "owner.number"; // Assuming owner model has these fields
-    leaseAgreement.ownerStreet = "owner.street";
-    leaseAgreement.ownerCity = "owner.city";
+    leaseAgreement.ownerIDNumber = 'owner.number'; // Assuming owner model has these fields
+    leaseAgreement.ownerStreet = 'owner.street';
+    leaseAgreement.ownerCity = 'owner.city';
 
     // Fetch tenant details
-    const tenantId = "669b684ba664f3944e6810af"; // Assuming tenant ID is provided in the request or context
+    const tenantId = '669b684ba664f3944e6810af'; // Assuming tenant ID is provided in the request or context
     const tenant = await User.findById(tenantId);
     if (!tenant) {
       res.status(404).json({ message: 'Tenant not found' });
@@ -56,12 +49,12 @@ const createLeaseAgreement = async (
 
     leaseAgreement.tenantId = tenantId;
     leaseAgreement.tenantName = `${tenant.firstName} ${tenant.lastName}`;
-    leaseAgreement.tenantIDNumber = "tenant.number"; 
-    leaseAgreement.tenantStreet = "tenant.street";
-    leaseAgreement.tenantCity = "tenant.city";
+    leaseAgreement.tenantIDNumber = 'tenant.number';
+    leaseAgreement.tenantStreet = 'tenant.street';
+    leaseAgreement.tenantCity = 'tenant.city';
 
     // Fetch apartment details
-    const apartmentId = "66adfeb2dd1240b14fb70520"; // Assuming apartment ID is provided in the request or context
+    const apartmentId = '66adfeb2dd1240b14fb70520'; // Assuming apartment ID is provided in the request or context
     const apartment = await Apartment.findById(apartmentId);
     if (!apartment) {
       res.status(404).json({ message: 'Apartment not found' });

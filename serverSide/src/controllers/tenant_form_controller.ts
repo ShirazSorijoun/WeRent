@@ -1,12 +1,7 @@
 import { Request, Response } from 'express';
 import TenantFormInitial from '../models/tenant_form_initial';
 import TenantQuestionnaireQuarterly from '../models/tenant_form_quarterly';
-
-interface AuthRequest extends Request {
-  locals?: {
-    currentUserId?: string;
-  };
-}
+import { AuthRequest } from '../models/request';
 
 const createTenantFormInitial = async (
   req: AuthRequest,

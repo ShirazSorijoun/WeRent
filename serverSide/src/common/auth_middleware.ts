@@ -1,12 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models/user_model';
+import { AuthRequest } from '../models/request';
 
-export interface CustomRequest extends Request {
+export interface CustomRequest extends AuthRequest {
   user?: { _id: string };
-  locals?: {
-    currentUserId?: string;
-  };
 }
 
 const authMiddleware = async (

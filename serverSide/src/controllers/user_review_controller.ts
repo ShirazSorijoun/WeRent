@@ -30,15 +30,16 @@ const getAllReview = async (req: Request, res: Response): Promise<void> => {
 
 const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { review } = req.body;
-    // Set the owner based on the current user
+    const { reviewText } = req.body;
     const userId = req.locals.currentUserId;
-    review.userId = userId;
     const userFromDb = await User.findById(userId);
-    review.ownerName = `${userFromDb.firstName} ${userFromDb.lastName}`;
-    review.ownerImage = userFromDb.profile_image;
-    review.date = new Date().toLocaleDateString();
-    const createdReview: IUserReview = await UserReview.create(review);
+
+    const createdReview: IUserReview = await UserReview.create({
+      userId,
+      ownerName: `${userFromDb.firstName} ${userFromDb.lastName}`,
+      ownerImage: userFromDb.profile_image,
+      description: reviewText,
+    });
     res.status(201).json(createdReview);
   } catch (err) {
     res.status(400).send('Something went wrong -> createdReview');

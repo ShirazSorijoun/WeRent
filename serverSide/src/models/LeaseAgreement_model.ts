@@ -133,7 +133,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     required: true,
   },
   promissoryNote: {
-    // Appendix D - שטר חוב //15.1.1
+    // Appendix D - שטר חוב //15.1.1 // Optional
     type: Boolean,
     required: true,
   },
@@ -143,12 +143,12 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     required: false,
   },
   letterOfGuarantee: {
-    // Appendix C - כתב ערבות //15.1.2
+    // Appendix C - כתב ערבות //15.1.2 // Optional
     type: Boolean,
     required: true,
   },
   guarantee: {
-    // 15.1.3
+    // 15.1.3 // Optional
     type: String,
     enum: ['Financial deposit', 'Autonomous bank guarantee'],
     required: false,
@@ -161,7 +161,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
 
   // Page 5
   animal: {
-    // 17.2
+    // 17.2 // Optional
     type: Boolean,
     required: true,
   },

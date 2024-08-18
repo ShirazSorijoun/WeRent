@@ -5,14 +5,16 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
-import authRoute from './routes/auth_route';
-import userRoute from './routes/user_route';
-import apartmentRoute from './routes/apartment_route';
-import userReviewRoute from './routes/user_review_route';
-import fileRoute from './routes/file_route';
-import tenantFormRoute from './routes/tenant_forms_route';
-import LeaseAgreementRoute from './routes/LeaseAgreement_route';
-
+import {
+  authRoute,
+  userRoute,
+  apartmentRoute,
+  userReviewRoute,
+  fileRoute,
+  tenantFormRoute,
+  leaseAgreementRoute,
+  matchRoute,
+} from './routes';
 
 const options = {
   definition: {
@@ -57,7 +59,8 @@ const initApp = (): Promise<Express> => {
       app.use('/userReview', userReviewRoute);
       app.use('/file', fileRoute);
       app.use('/tenantForm', tenantFormRoute);
-      app.use('/leaseAgreement', LeaseAgreementRoute);
+      app.use('/leaseAgreement', leaseAgreementRoute);
+      app.use('/match', matchRoute);
       app.use('/public', express.static('public'));
 
       app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));

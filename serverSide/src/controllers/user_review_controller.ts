@@ -1,27 +1,14 @@
 import { Request, Response } from 'express';
 import UserReview, { IUserReview } from '../models/user_review_model';
 import { User } from '../models/user_model';
-
-interface AuthRequest extends Request {
-  locals: {
-    currentUserId?: string;
-  };
-}
-
-/*
-const contactUser = async (currentUserId: string, message: string): Promise<void> => {
-  // Retrieve the user's information from the database
-  const user = await User.findById(currentUserId);
-  if (!user) {
-    console.error(`User with ID ${currentUserId} not found`);
-    return;
-  }
-};
-*/
+import { AuthRequest } from '../models/request';
 
 const getAllReview = async (req: Request, res: Response): Promise<void> => {
   try {
-    const reviews = await UserReview.find();
+    const reviews = await UserReview.find().populate({
+      path: 'user',
+      select: 'profile_image firstName lastName ',
+    });
     res.status(200).json(reviews);
   } catch (error) {
     res.status(500).send({ message: 'Error fetching reviews' });
@@ -30,16 +17,20 @@ const getAllReview = async (req: Request, res: Response): Promise<void> => {
 
 const createReview = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { review } = req.body;
-    // Set the owner based on the current user
-    const userId = req.locals.currentUserId;
-    review.userId = userId;
-    const userFromDb = await User.findById(userId);
-    review.ownerName = `${userFromDb.firstName} ${userFromDb.lastName}`;
-    review.ownerImage = userFromDb.profile_image;
-    review.date = new Date().toLocaleDateString();
-    const createdReview: IUserReview = await UserReview.create(review);
-    res.status(201).json(createdReview);
+    const { reviewText } = req.body;
+    const user = req.locals.currentUserId;
+
+    const createdReview: IUserReview = await UserReview.create({
+      user,
+      description: reviewText,
+    });
+
+    res.status(201).json(
+      createdReview.populate({
+        path: 'user',
+        select: 'profile_image firstName lastName ',
+      }),
+    );
   } catch (err) {
     res.status(400).send('Something went wrong -> createdReview');
   }
@@ -84,7 +75,7 @@ const deleteReview = async (req: AuthRequest, res: Response): Promise<void> => {
 
     const user = await User.findById(req.locals.currentUserId);
 
-    const ownerOfReview = review.userId.toString();
+    const ownerOfReview = review.user.toString();
     const userId = user._id.toString();
 
     if (userId !== ownerOfReview) {

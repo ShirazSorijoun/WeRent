@@ -1,21 +1,24 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import LeaseAgreement from '../models/LeaseAgreement_model';
 import { User } from '../models/user_model';
-
-interface AuthRequest extends Request {
-  locals?: {
-    currentUserId?: string;
-  };
-}
+import { AuthRequest } from '../models/request';
+import Match from '../models/match';
 
 const createLeaseAgreement = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
-    const { leaseAgreement } = req.body;
+    const { leaseAgreement, matchId } = req.body;
+
+    const match = await Match.findById(matchId);
+    if (!match) {
+      res.status(400).json({ message: 'Match information is missing' });
+      return;
+    }
 
     console.log('leaseAgreement', leaseAgreement);
+
     // Set the date based on the current date
     leaseAgreement.date = new Date();
 
@@ -37,11 +40,11 @@ const createLeaseAgreement = async (
     leaseAgreement.ownerId = ownerId;
 
     // Fetch tenant details
-    const tenantId = '669b684ba664f3944e6810af'; // Assuming tenant ID is provided in the request or context
+    const tenantId = match.user; // Assuming tenant ID is provided in the request or context
     leaseAgreement.tenantId = tenantId;
 
     // Fetch apartment details
-    const apartmentId = '66adfeb2dd1240b14fb70520'; // Assuming apartment ID is provided in the request or context
+    const apartmentId = match.apartment; // Assuming apartment ID is provided in the request or context
     leaseAgreement.apartmentId = apartmentId;
 
     const createdLeaseAgreement = await LeaseAgreement.create(leaseAgreement);

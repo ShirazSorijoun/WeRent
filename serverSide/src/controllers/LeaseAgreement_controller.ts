@@ -3,14 +3,16 @@ import LeaseAgreement from '../models/LeaseAgreement_model';
 import Apartment from '../models/apartment_model';
 import { User } from '../models/user_model';
 import { AuthRequest } from '../models/request';
+import Match from '../models/match';
 
 const createLeaseAgreement = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
-    const { leaseAgreement, match } = req.body;
+    const { leaseAgreement, matchId } = req.body;
 
+    const match = await Match.findById(matchId);
     if (!match) {
       res.status(400).json({ message: 'Match information is missing' });
       return;

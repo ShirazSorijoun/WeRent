@@ -24,8 +24,8 @@ export interface ILeaseAgreement extends Document {
   apartmentCity: string;
 
   numOfRentalMonths: number;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   rentalPricePerMonth: number;
   dayOfTheMonthForPayment: number;
   paymentMethod: string;
@@ -150,12 +150,12 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
   },
   startDate: {
     // 4.1
-    type: String,
+    type: Date,
     required: true,
   },
   endDate: {
     // 4.1
-    type: String,
+    type: Date,
     required: true,
   },
 

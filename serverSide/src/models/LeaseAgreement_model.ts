@@ -1,29 +1,11 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface ILeaseAgreement extends Document {
-  date_dayOfTheMonth: number;
-  date_month: number;
-  date_year: number;
-
-  ownerId: Types.ObjectId;
-  ownerName: string;
-  ownerIDNumber: string;
-  ownerStreet: string;
-  ownerCity: string;
+  date: Date;
 
   tenantId: Types.ObjectId;
-  tenantName: string;
-  tenantIDNumber: string;
-  tenantStreet: string;
-  tenantCity: string;
-
   apartmentId: Types.ObjectId;
-  apartmentNumberOfRooms: number;
-  apartmentFloorNumber: number;
-  apartmentStreet: string;
-  apartmentCity: string;
 
-  numOfRentalMonths: number;
   startDate: Date;
   endDate: Date;
   rentalPricePerMonth: number;
@@ -37,7 +19,6 @@ export interface ILeaseAgreement extends Document {
   optionPeriod: boolean;
   optionPeriodLength?: number;
   maxPercentageIncrease?: number;
-  maxNumOfMonthsIncludeOptionPeriod?: number;
   numOfDaysForRepair: number;
   subtenant: boolean;
   numOfDaysPaymentDelay: number;
@@ -52,100 +33,21 @@ export interface ILeaseAgreement extends Document {
 
 const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
   // Page 1
-  date_dayOfTheMonth: {
+  date: {
     // introduction
-    type: Number,
-    default: new Date().getDate(),
-  },
-  date_month: {
-    // introduction
-    type: Number,
-    default: new Date().getMonth(),
-  },
-  date_year: {
-    // introduction
-    type: Number,
-    default: new Date().getFullYear(),
-  },
-  ownerId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  ownerName: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  ownerIDNumber: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  ownerStreet: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  ownerCity: {
-    // introduction
-    type: String,
-    required: true,
+    type: Date,
+    default: new Date(),
   },
   tenantId: {
     // introduction
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
   },
-  tenantName: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  tenantIDNumber: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  tenantStreet: {
-    // introduction
-    type: String,
-    required: true,
-  },
-  tenantCity: {
-    // introduction
-    type: String,
-    required: true,
-  },
+
   apartmentId: {
     type: Schema.Types.ObjectId,
     ref: 'Apartment',
-    required: true,
-  },
-  apartmentNumberOfRooms: {
-    // 1.1
-    type: Number,
-    required: true,
-  },
-  apartmentFloorNumber: {
-    // 1.1
-    type: Number,
-    required: true,
-  },
-  apartmentStreet: {
-    // 1.1
-    type: String,
-    required: true,
-  },
-  apartmentCity: {
-    // 1.1
-    type: String,
-    required: true,
-  },
-  numOfRentalMonths: {
-    // 4.1
-    type: Number,
     required: true,
   },
   startDate: {
@@ -192,7 +94,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     required: false,
   },
   optionPeriod: {
-    // 6 //Optional
+    // 6
     type: Boolean,
     required: true,
   },
@@ -206,12 +108,6 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     type: Number,
     required: false,
   },
-  maxNumOfMonthsIncludeOptionPeriod: {
-    // numberOfRentalMonths + optionPeriodLength //6.4
-    type: Number,
-    required: false,
-  },
-
   // Page 3
   numOfDaysForRepair: {
     // 9.2

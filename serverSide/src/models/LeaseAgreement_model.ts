@@ -1,9 +1,9 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface ILeaseAgreement extends Document {
-  date_dayOfTheMonth: number;
-  date_month: number;
-  date_year: number;
+  date_dayOfTheMonth: string;
+  date_month: string;
+  date_year: string;
 
   ownerId: Types.ObjectId;
   ownerName: string;
@@ -62,16 +62,16 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
 
   //Page 1
     date_dayOfTheMonth: { //introduction
-        type: Number,
-        default: new Date().getDate()
+        type: String,
+        default: new Date().getDate().toString(),
     }, 
     date_month: { //introduction
-        type: Number,
-        default: new Date().getMonth()
+        type: String,
+        default: new Date().getMonth().toString(),
     },
     date_year: { //introduction
-        type: Number,
-        default: new Date().getFullYear()
+        type: String,
+        default: new Date().getFullYear().toString(),
     },
     ownerId: {
         type: Schema.Types.ObjectId,
@@ -180,7 +180,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         type: String,
         required: false,
     },
-    optionPeriod: { //6
+    optionPeriod: { //6 //Optional
         type: Boolean,
         required: true,
     },
@@ -222,7 +222,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    promissoryNote: { //Appendix D - שטר חוב //15.1.1 
+    promissoryNote: { //Appendix D - שטר חוב //15.1.1 // Optional
         type: Boolean,
         required: true,
     },
@@ -230,11 +230,11 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
         type: Number,
         required: false,
     },
-    letterOfGuarantee: { //Appendix C - כתב ערבות //15.1.2
+    letterOfGuarantee: { //Appendix C - כתב ערבות //15.1.2 // Optional
         type: Boolean,
         required: true,
     },
-    guarantee: { //15.1.3
+    guarantee: { //15.1.3 // Optional
         type: String,
         enum: ['Financial deposit', 'Autonomous bank guarantee'],
         required: false,
@@ -250,7 +250,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
 
 
     //Page 5
-    animal: { //17.2
+    animal: { //17.2 // Optional
         type: Boolean,
         required: true,
     }

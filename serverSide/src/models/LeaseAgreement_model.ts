@@ -3,8 +3,7 @@ import mongoose, { Document, Schema, Types } from 'mongoose';
 export interface ILeaseAgreement extends Document {
   date: Date;
 
-  ownerId: Types.ObjectId;
-  tenantId?: Types.ObjectId;
+  tenantId: Types.ObjectId;
   apartmentId: Types.ObjectId;
 
   startDate: Date;
@@ -38,11 +37,6 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     // introduction
     type: Date,
     default: new Date(),
-  },
-  ownerId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
   },
   tenantId: {
     // introduction

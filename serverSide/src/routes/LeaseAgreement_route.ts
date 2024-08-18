@@ -10,6 +10,11 @@ router.post(
   LeaseAgreementController.createLeaseAgreement,
 );
 router.get('/:id', LeaseAgreementController.getLeaseAgreementById);
+router.get(
+  '/:tenantId/:apartmentId',
+  AuthMiddleware,
+  LeaseAgreementController.getLeaseAgreementByApartmentAndUserId,
+);
 router.delete(
   '/delete/:id',
   AuthMiddleware,

@@ -1,30 +1,20 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IUserReview extends Document {
-  userId: Types.ObjectId;
-  ownerName: string;
-  ownerImage: string;
-  date: string;
+  user: Types.ObjectId;
+  date: Date;
   description: string;
 }
 
 const userReviewSchema: Schema<IUserReview> = new mongoose.Schema({
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  ownerName: {
-    type: String,
-    required: true,
-  },
-  ownerImage: {
-    type: String,
-    required: true,
-  },
   date: {
-    type: String,
-    default: new Date().toLocaleDateString(),
+    type: Date,
+    default: new Date(),
   },
   description: {
     type: String,

@@ -74,12 +74,13 @@ const updateLeaseAgreement = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { id } = req.params;
     const {
       updatedLeaseAgreement,
-    }: { updatedLeaseAgreement: ILeaseAgreement } = req.body;
+      leaseId,
+    }: { updatedLeaseAgreement: ILeaseAgreement; leaseId: string } = req.body;
 
-    const existingLeaseAgreement = await LeaseAgreement.findById(id);
+    const existingLeaseAgreement = await LeaseAgreement.findById(leaseId);
+
     if (!existingLeaseAgreement) {
       res.status(404).send('Lease Agreement not found');
       return;
@@ -88,12 +89,17 @@ const updateLeaseAgreement = async (
     // Validate owner
     const ownerId = req.locals.currentUserId;
 
+    if (!ownerId) {
+      res.status(400).send('User ID is required for updating the lease');
+      return;
+    }
+
     const isOwnerValid = await Apartment.exists({
-      _id: updatedLeaseAgreement.apartmentId,
+      _id: existingLeaseAgreement.apartmentId,
       owner: ownerId,
     });
 
-    if (isOwnerValid) {
+    if (!isOwnerValid) {
       res.status(403).json({
         message: 'You do not have permission to perform this operation',
       });

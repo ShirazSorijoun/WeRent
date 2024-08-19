@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import LeaseAgreement, {
   ILeaseAgreement,
 } from '../models/LeaseAgreement_model';
@@ -15,7 +16,7 @@ const createLeaseAgreement = async (
     console.log('leaseAgreement', leaseAgreement);
 
     leaseAgreement.tenantId = tenantId;
-    leaseAgreement.apartmentId = apartmentId;
+    leaseAgreement.apartment = apartmentId;
 
     const createdLeaseAgreement = await LeaseAgreement.create(leaseAgreement);
     res.status(201).json(createdLeaseAgreement);
@@ -45,7 +46,7 @@ const getLeaseAgreementByApartmentAndUserId = async (
   try {
     const { tenantId, apartmentId } = req.params;
     const leaseAgreement = await LeaseAgreement.findOne({
-      apartmentId,
+      apartment: apartmentId,
       tenantId,
     });
 
@@ -95,7 +96,7 @@ const updateLeaseAgreement = async (
     }
 
     const isOwnerValid = await Apartment.exists({
-      _id: existingLeaseAgreement.apartmentId,
+      _id: existingLeaseAgreement.apartment,
       owner: ownerId,
     });
 
@@ -115,28 +116,36 @@ const updateLeaseAgreement = async (
   }
 };
 
-const getLeaseAgreementListByUserId = async (req: AuthRequest, res: Response) => {
+const getLeaseAgreementListByUserId = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
-    const userId = req.locals.currentUserId;
+    const userId = new mongoose.Schema.Types.ObjectId(req.locals.currentUserId);
 
-    const leaseAgreements = await LeaseAgreement.find();
-    const totalLeaseAgreements = [];
+    const leaseAgreements = await LeaseAgreement.aggregate([
+      {
+        $lookup: {
+          from: Apartment.collection.name,
+          localField: 'apartment',
+          foreignField: '_id',
+          as: 'apartment',
+        },
+      },
+      {
+        $unwind: '$apartment',
+      },
+      {
+        $match: { $or: [{ tenantId: userId }, { 'apartment.owner': userId }] },
+      },
+    ]);
 
-    for (let leaseAgreement of leaseAgreements) {
-      if (leaseAgreement.tenantId.toString() == userId) {
-        totalLeaseAgreements.push(leaseAgreement);
-      } else {
-        const apartment = await Apartment.findOne({ _id: leaseAgreement.apartmentId});
-        if (apartment.owner.toString() == userId) {
-          totalLeaseAgreements.push(leaseAgreement);
-        }
-      }
-    }
-
-    res.status(200).json(totalLeaseAgreements);
+    res.status(200).json(leaseAgreements);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Something went wrong -> getLeaseAgreementListByUserId');
+    res
+      .status(500)
+      .send('Something went wrong -> getLeaseAgreementListByUserId');
   }
 };
 

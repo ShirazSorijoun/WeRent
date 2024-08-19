@@ -4,7 +4,7 @@ export interface ILeaseAgreement extends Document {
   date: Date;
 
   tenantId: Types.ObjectId;
-  apartmentId: Types.ObjectId;
+  apartment: Types.ObjectId;
 
   startDate: Date;
   endDate: Date;
@@ -45,7 +45,7 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     required: false,
   },
 
-  apartmentId: {
+  apartment: {
     type: Schema.Types.ObjectId,
     ref: 'Apartment',
     required: true,

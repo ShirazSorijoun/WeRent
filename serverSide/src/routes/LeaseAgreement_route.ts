@@ -26,7 +26,7 @@ router.patch(
   LeaseAgreementController.updateLeaseAgreement,
 );
 router.get(
-    '/:userId',
+    '/list',
     LeaseAgreementController.getLeaseAgreementListByUserId,
 );
 

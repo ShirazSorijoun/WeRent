@@ -117,7 +117,7 @@ const updateLeaseAgreement = async (
 
 const getLeaseAgreementListByUserId = async (req: AuthRequest, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = req.locals.currentUserId;
 
     const leaseAgreements = await LeaseAgreement.find();
     const totalLeaseAgreements = [];

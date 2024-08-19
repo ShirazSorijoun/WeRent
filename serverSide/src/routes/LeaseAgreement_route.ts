@@ -25,5 +25,9 @@ router.patch(
   AuthMiddleware,
   LeaseAgreementController.updateLeaseAgreement,
 );
+router.get(
+    '/:userId',
+    LeaseAgreementController.getLeaseAgreementListByUserId,
+);
 
 export default router;

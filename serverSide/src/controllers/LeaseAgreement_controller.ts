@@ -115,10 +115,36 @@ const updateLeaseAgreement = async (
   }
 };
 
+const getLeaseAgreementListByUserId = async (req: AuthRequest, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    const leaseAgreements = await LeaseAgreement.find();
+    const totalLeaseAgreements = [];
+
+    for (let leaseAgreement of leaseAgreements) {
+      if (leaseAgreement.tenantId.toString() == userId) {
+        totalLeaseAgreements.push(leaseAgreement);
+      } else {
+        const apartment = await Apartment.findOne({ _id: leaseAgreement.apartmentId});
+        if (apartment.owner.toString() == userId) {
+          totalLeaseAgreements.push(leaseAgreement);
+        }
+      }
+    }
+
+    res.status(200).json(totalLeaseAgreements);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Something went wrong -> getLeaseAgreementListByUserId');
+  }
+};
+
 export default {
   createLeaseAgreement,
   getLeaseAgreementById,
   deleteLeaseAgreement,
   updateLeaseAgreement,
   getLeaseAgreementByApartmentAndUserId,
+  getLeaseAgreementListByUserId,
 };

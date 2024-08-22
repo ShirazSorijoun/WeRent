@@ -121,7 +121,7 @@ const getLeaseAgreementListByUserId = async (
   res: Response,
 ) => {
   try {
-    const userId = new mongoose.Schema.Types.ObjectId(req.locals.currentUserId);
+    const userId = new mongoose.Types.ObjectId(req.locals.currentUserId);
 
     const leaseAgreements = await LeaseAgreement.aggregate([
       {

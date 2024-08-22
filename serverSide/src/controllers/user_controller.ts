@@ -89,43 +89,12 @@ const updateOwnProfile = async (
   }
 
   console.log(req.body.user);
-  const {
-    firstName,
-    lastName,
-    phoneNumber,
-    personalId,
-    cityAddress,
-    streetAddress,
-    email,
-    profile_image,
-  } = req.body.user;
-  if (
-    !firstName &&
-    !lastName &&
-    !phoneNumber &&
-    !personalId &&
-    !cityAddress &&
-    !streetAddress &&
-    !email &&
-    !profile_image
-  ) {
-    res.status(400).send('At least one field is required for update');
-    return;
-  }
+  const updatedData = req.body.user as Partial<IUser>;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       currentUserId,
-      {
-        firstName,
-        lastName,
-        phoneNumber,
-        personalId,
-        cityAddress,
-        streetAddress,
-        email,
-        profile_image,
-      },
+      updatedData,
       { new: true },
     );
     console.log(updatedUser);

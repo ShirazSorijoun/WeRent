@@ -7,7 +7,7 @@ import { AuthRequest } from '../models/request';
 
 const DEFAULT_RADIUS = 5000;
 
-const searchPointsWithinRadius = async (req: Request, res: Response) => {
+export const searchPointsWithinRadius = async (req: Request, res: Response) => {
   const { apartmentId, radius } = req.params;
 
   const apartment = await Apartment.findById(apartmentId);
@@ -41,7 +41,10 @@ const searchPointsWithinRadius = async (req: Request, res: Response) => {
     .json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
 };
 
-const getAllApartments = async (req: Request, res: Response): Promise<void> => {
+export const getAllApartments = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const apartments = await Apartment.find();
     res.status(200).json(apartments);
@@ -50,7 +53,10 @@ const getAllApartments = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getApartmentById = async (req: Request, res: Response): Promise<void> => {
+export const getApartmentById = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const apartment = await Apartment.findById(id);
@@ -69,7 +75,32 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const createApartment = async (
+export const getApartmentByIds = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { ids } = req.query;
+
+    const apartments = await Apartment.find({
+      _id: { $in: ids },
+    });
+
+    if (!apartments?.length) {
+      // Apartment not found
+      res.status(404).json({ message: ' no apartments were found' });
+      return;
+    }
+
+    res.status(200).json(apartments);
+  } catch (err) {
+    // Internal Server Error
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const createApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -97,7 +128,7 @@ const createApartment = async (
   }
 };
 
-const updateApartment = async (
+export const updateApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -133,7 +164,7 @@ const updateApartment = async (
   }
 };
 
-const deleteApartment = async (
+export const deleteApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -169,13 +200,4 @@ const deleteApartment = async (
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
-};
-
-export default {
-  getAllApartments,
-  getApartmentById,
-  createApartment,
-  updateApartment,
-  deleteApartment,
-  searchPointsWithinRadius,
 };

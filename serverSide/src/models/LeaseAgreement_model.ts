@@ -29,6 +29,9 @@ export interface ILeaseAgreement extends Document {
   guarantee?: string;
   guaranteeAmount?: number;
   animal: boolean;
+
+  tenantSignature?: string;
+  ownerSignature?: string;
 }
 
 const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
@@ -158,6 +161,14 @@ const LeaseAgreementSchema: Schema<ILeaseAgreement> = new mongoose.Schema({
     // 17.2 // Optional
     type: Boolean,
     required: true,
+  },
+  ownerSignature: {
+    type: String,
+    required: false,
+  },
+  tenantSignature: {
+    type: String,
+    required: false,
   },
 });
 

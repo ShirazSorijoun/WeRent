@@ -28,6 +28,7 @@ export interface IApartment extends Document {
     lng: number;
     lat: number;
   };
+  leaseId?: mongoose.Schema.Types.ObjectId;
 }
 
 const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
@@ -128,6 +129,10 @@ const apartmentSchema: Schema<IApartment> = new mongoose.Schema({
       type: Number,
       required: false,
     },
+  },
+  leaseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'LeaseAgreement',
   },
 });
 

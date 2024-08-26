@@ -1,5 +1,5 @@
 import express from 'express';
-import LeaseAgreementController from '../controllers/LeaseAgreement_controller';
+import * as LeaseAgreementController from '../controllers/LeaseAgreement_controller';
 import AuthMiddleware from '../common/auth_middleware';
 
 const router = express.Router();

@@ -15,6 +15,13 @@ router.get(
   AuthMiddleware,
   LeaseAgreementController.getLeaseAgreementByApartmentAndUserId,
 );
+
+router.get(
+  'id/:leaseId',
+  AuthMiddleware,
+  LeaseAgreementController.getLeaseAgreementById,
+);
+
 router.delete(
   '/delete/:id',
   AuthMiddleware,

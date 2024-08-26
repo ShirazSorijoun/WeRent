@@ -56,6 +56,38 @@ const getLeaseAgreementByApartmentAndUserId = async (
   }
 };
 
+const getLeaseAgreementByApartmentId = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  console.log('Entering getLeaseAgreementByApartmentId function');
+
+  try {
+    console.log('Request received');
+    const { apartment } = req.params;
+    console.log('apartmentId:', apartment);
+
+    if (!apartment) {
+      console.log('No apartmentId provided');
+      return res.status(400).json({ message: 'Apartment ID is required' });
+    }
+
+    const leaseAgreement = await LeaseAgreement.findOne({
+      apartment: apartment,
+    });
+
+    if (!leaseAgreement) {
+      console.log('Lease agreement not found for apartmentId:', apartment);
+      return res.status(404).json({ message: 'Lease agreement not found' });
+    }
+
+    console.log('Lease agreement found:', leaseAgreement);
+    res.status(200).json(leaseAgreement.toJSON());
+  } catch (err) {
+    console.log('Error occurred:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
 const deleteLeaseAgreement = async (req: AuthRequest, res: Response) => {
   try {
     const id = req.params;
@@ -155,5 +187,6 @@ export default {
   deleteLeaseAgreement,
   updateLeaseAgreement,
   getLeaseAgreementByApartmentAndUserId,
+  getLeaseAgreementByApartmentId,
   getLeaseAgreementListByUserId,
 };

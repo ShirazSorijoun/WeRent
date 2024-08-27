@@ -3,12 +3,11 @@ import Apartment from '../models/apartment_model';
 import { CircularBoundary } from '../models/circular_boundry';
 import { QuadTreeSingleton } from '../models/quadtree_apartment_list';
 import { User } from '../models/user_model';
-import Match from '../models/match';
 import { AuthRequest } from '../models/request';
 
 const DEFAULT_RADIUS = 5000;
 
-const searchPointsWithinRadius = async (req: Request, res: Response) => {
+export const searchPointsWithinRadius = async (req: Request, res: Response) => {
   const { apartmentId, radius } = req.params;
 
   const apartment = await Apartment.findById(apartmentId);
@@ -42,7 +41,10 @@ const searchPointsWithinRadius = async (req: Request, res: Response) => {
     .json(foundPoints.map((point) => ({ x: point.x, y: point.y })));
 };
 
-const getAllApartments = async (req: Request, res: Response): Promise<void> => {
+export const getAllApartments = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const apartments = await Apartment.find();
     res.status(200).json(apartments);
@@ -51,7 +53,10 @@ const getAllApartments = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getApartmentById = async (req: Request, res: Response): Promise<void> => {
+export const getApartmentById = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const apartment = await Apartment.findById(id);
@@ -70,7 +75,32 @@ const getApartmentById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const createApartment = async (
+export const getApartmentByIds = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { ids } = req.query;
+
+    const apartments = await Apartment.find({
+      _id: { $in: ids },
+    });
+
+    if (!apartments?.length) {
+      // Apartment not found
+      res.status(404).json({ message: ' no apartments were found' });
+      return;
+    }
+
+    res.status(200).json(apartments);
+  } catch (err) {
+    // Internal Server Error
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const createApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -98,7 +128,7 @@ const createApartment = async (
   }
 };
 
-const updateApartment = async (
+export const updateApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -134,7 +164,7 @@ const updateApartment = async (
   }
 };
 
-const deleteApartment = async (
+export const deleteApartment = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -170,103 +200,4 @@ const deleteApartment = async (
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
-};
-
-const createMatch = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { apartmentId, userId } = req.body;
-
-    // Check if apartment and user exist
-    const apartment = await Apartment.findById(apartmentId);
-    const user = await User.findById(userId);
-
-    if (!apartment) {
-      res.status(404).send('Apartment not found');
-      return;
-    }
-
-    if (!user) {
-      res.status(404).send('User not found');
-      return;
-    }
-
-    // Create a new match
-    const match = new Match({
-      apartment: apartmentId,
-      user: userId,
-      date: new Date(),
-      accepted: false,
-    });
-
-    await match.save();
-
-    res.status(201).json(match);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-const getMatchesByApartmentId = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const { apartmentId } = req.params;
-
-    if (!apartmentId) {
-      res.status(400).send('Apartment ID is required');
-      return;
-    }
-
-    const matches = await Match.find({ apartment: apartmentId }).populate({
-      path: 'user',
-      select: 'name email _id',
-    });
-
-    if (!matches || matches.length === 0) {
-      res.status(404).send('No matches found');
-      return;
-    }
-
-    res.status(200).json(matches);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-const acceptMatch = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { matchId } = req.body;
-
-    if (!matchId) {
-      res.status(400).send('Match ID is required');
-      return;
-    }
-
-    // Fetch the match and populate the apartment field
-    const match = await Match.findById(matchId).populate('apartment');
-
-    // Update the match to be accepted
-    match.accepted = true;
-    await match.save();
-
-    res.status(200).json(match);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-export default {
-  getAllApartments,
-  getApartmentById,
-  createApartment,
-  updateApartment,
-  deleteApartment,
-  searchPointsWithinRadius,
-  createMatch,
-  getMatchesByApartmentId,
-  acceptMatch,
 };

@@ -1,12 +1,17 @@
 import express from 'express';
-import matchController from '../controllers/match_controller';
+import * as matchController from '../controllers/match_controller';
 import AuthMiddleware from '../common/auth_middleware';
 
 const router = express.Router();
 
 router.post('/', AuthMiddleware, matchController.createMatch);
 
-router.get('/:apartmentId', matchController.getMatchesByApartmentId);
+router.get(
+  '/byApartment/:apartmentId',
+  matchController.getMatchesByApartmentId,
+);
+
+router.get('/byUser/:userId', matchController.getMatchesByUserId);
 
 router.get(
   '/status/:apartmentId',

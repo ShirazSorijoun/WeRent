@@ -1,5 +1,5 @@
 import express from 'express';
-import ApartmentController from '../controllers/apartment_controller';
+import * as ApartmentController from '../controllers/apartment_controller';
 import AuthMiddleware from '../common/auth_middleware';
 
 const router = express.Router();
@@ -276,7 +276,8 @@ router.get('/', ApartmentController.getAllApartments);
  *                           $ref: '#/components/schemas/Error'
  */
 
-router.get('/:id', ApartmentController.getApartmentById);
+router.get('/id/:id', ApartmentController.getApartmentById);
+router.get('/ids', ApartmentController.getApartmentByIds);
 
 /**
  * @swagger
@@ -489,11 +490,5 @@ router.delete(
   AuthMiddleware,
   ApartmentController.deleteApartment,
 );
-
-router.post('/match', AuthMiddleware, ApartmentController.createMatch);
-
-router.get('/match/:apartmentId', ApartmentController.getMatchesByApartmentId);
-
-router.put('/match/accept', AuthMiddleware, ApartmentController.acceptMatch);
 
 export default router;

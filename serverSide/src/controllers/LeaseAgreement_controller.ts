@@ -6,7 +6,7 @@ import LeaseAgreement, {
 import { AuthRequest } from '../models/request';
 import Apartment from '../models/apartment_model';
 
-const createLeaseAgreement = async (
+export const createLeaseAgreement = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -26,7 +26,10 @@ const createLeaseAgreement = async (
   }
 };
 
-const getLeaseAgreementById = async (req: AuthRequest, res: Response) => {
+export const getLeaseAgreementById = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   try {
     const id = req.params;
     const leaseAgreement = await LeaseAgreement.findById(id);
@@ -39,7 +42,7 @@ const getLeaseAgreementById = async (req: AuthRequest, res: Response) => {
   }
 };
 
-const getLeaseAgreementByApartmentAndUserId = async (
+export const getLeaseAgreementByApartmentAndUserId = async (
   req: AuthRequest,
   res: Response,
 ) => {
@@ -56,7 +59,7 @@ const getLeaseAgreementByApartmentAndUserId = async (
   }
 };
 
-const getLeaseAgreementByApartmentId = async (
+export const getLeaseAgreementByApartmentId = async (
   req: AuthRequest,
   res: Response,
 ) => {
@@ -73,7 +76,7 @@ const getLeaseAgreementByApartmentId = async (
     }
 
     const leaseAgreement = await LeaseAgreement.findOne({
-      apartment: apartment,
+      apartment,
     });
 
     if (!leaseAgreement) {
@@ -88,7 +91,8 @@ const getLeaseAgreementByApartmentId = async (
     res.status(500).json({ message: err.message });
   }
 };
-const deleteLeaseAgreement = async (req: AuthRequest, res: Response) => {
+
+export const deleteLeaseAgreement = async (req: AuthRequest, res: Response) => {
   try {
     const id = req.params;
     const leaseAgreement = await LeaseAgreement.findByIdAndDelete(id);
@@ -102,7 +106,7 @@ const deleteLeaseAgreement = async (req: AuthRequest, res: Response) => {
 };
 
 // Editing before signing
-const updateLeaseAgreement = async (
+export const updateLeaseAgreement = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
@@ -148,7 +152,7 @@ const updateLeaseAgreement = async (
   }
 };
 
-const getLeaseAgreementListByUserId = async (
+export const getLeaseAgreementListByUserId = async (
   req: AuthRequest,
   res: Response,
 ) => {
@@ -179,14 +183,4 @@ const getLeaseAgreementListByUserId = async (
       .status(500)
       .send('Something went wrong -> getLeaseAgreementListByUserId');
   }
-};
-
-export default {
-  createLeaseAgreement,
-  getLeaseAgreementById,
-  deleteLeaseAgreement,
-  updateLeaseAgreement,
-  getLeaseAgreementByApartmentAndUserId,
-  getLeaseAgreementByApartmentId,
-  getLeaseAgreementListByUserId,
 };

@@ -28,9 +28,7 @@ const getTenantFormInitialByOwnerId = async (
     const { ownerId } = req.params;
     console.log('ownerId', ownerId);
     const tenantForm = await TenantFormInitial.findOne({ owner: ownerId });
-    console.log('tenantForm', tenantForm);
     if (tenantForm) {
-      console.log('tenantForm', tenantForm);
       res.status(200).json(tenantForm);
     } else {
       res.status(404).json({ message: 'Tenant form not found' });
@@ -46,7 +44,6 @@ const createTenantFormQuarterly = async (
 ): Promise<void> => {
   try {
     const { tenantForm } = req.body;
-    console.log('tenantForm', tenantForm);
     tenantForm.owner = req.locals.currentUserId;
     const createdForm = await TenantQuestionnaireQuarterly.create(tenantForm);
 
@@ -63,11 +60,9 @@ const getTenantFormQuarterlyByOwnerId = async (
 ): Promise<void> => {
   try {
     const { ownerId } = req.params;
-    console.log('ownerId', ownerId);
     const tenantForm = await TenantQuestionnaireQuarterly.findOne({
       owner: ownerId,
     });
-    console.log('tenantForm', tenantForm);
     if (tenantForm) {
       console.log('tenantForm', tenantForm);
       res.status(200).json(tenantForm);

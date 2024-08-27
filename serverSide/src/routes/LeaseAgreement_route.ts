@@ -37,5 +37,10 @@ router.get(
   AuthMiddleware,
   LeaseAgreementController.getLeaseAgreementListByUserId,
 );
+router.get(
+  '/:apartment',
+  AuthMiddleware,
+  LeaseAgreementController.getLeaseAgreementByApartmentId,
+);
 
 export default router;

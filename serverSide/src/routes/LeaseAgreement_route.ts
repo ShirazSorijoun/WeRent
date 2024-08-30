@@ -10,11 +10,6 @@ router.post(
   LeaseAgreementController.createLeaseAgreement,
 );
 // router.get('/:id', LeaseAgreementController.getLeaseAgreementById);
-router.get(
-  '/:tenantId/:apartmentId',
-  AuthMiddleware,
-  LeaseAgreementController.getLeaseAgreementByApartmentAndUserId,
-);
 
 router.get(
   'id/:leaseId',
@@ -38,9 +33,14 @@ router.get(
   LeaseAgreementController.getLeaseAgreementListByUserId,
 );
 router.get(
-  '/:apartment',
+  'byApartment/:apartment',
   AuthMiddleware,
   LeaseAgreementController.getLeaseAgreementByApartmentId,
 );
 
+router.get(
+  '/byApartmentAndTenant',
+  AuthMiddleware,
+  LeaseAgreementController.getLeaseAgreementByApartmentAndTenant,
+);
 export default router;

@@ -53,6 +53,18 @@ export const getAllApartments = async (
   }
 };
 
+export const getAllApartmentsWithoutLLease = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const apartments = await Apartment.find({ leaseId: { $exists: false } });
+    res.status(200).json(apartments);
+  } catch (error) {
+    res.status(500).send({ message: 'Error fetching apartments' });
+  }
+};
+
 export const getApartmentById = async (
   req: Request,
   res: Response,

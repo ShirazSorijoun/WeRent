@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 interface ITenantQuestionnaireQuarterly extends Document {
   owner: mongoose.Schema.Types.ObjectId;
+  apartment: mongoose.Schema.Types.ObjectId;
   propertyConditionRating: number; // Satisfaction with property condition (1-5)
   maintenanceIssues: string; // Description of maintenance issues and how they were treated
   responseTimeSatisfaction: number; // Satisfaction with response time for maintenance and repair (1-5)
@@ -32,6 +33,10 @@ const tenantQuestionnaireQuarterlySchema: Schema<ITenantQuestionnaireQuarterly> 
       owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
+      },
+      apartment: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
       propertyConditionRating: {

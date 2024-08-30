@@ -8,9 +8,10 @@ const createTenantFormInitial = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { tenantForm } = req.body;
-    console.log('tenantForm', tenantForm);
+    const { tenantForm, apartment } = req.body;
+    console.log(apartment);
     tenantForm.owner = req.locals.currentUserId;
+    tenantForm.apartment = apartment;
     const createdForm = await TenantFormInitial.create(tenantForm);
 
     res.status(201).json(createdForm);
@@ -26,8 +27,16 @@ const getTenantFormInitialByOwnerId = async (
 ): Promise<void> => {
   try {
     const { ownerId } = req.params;
+    const { apartment } = req.query;
+
     console.log('ownerId', ownerId);
-    const tenantForm = await TenantFormInitial.findOne({ owner: ownerId });
+    console.log('apartment', apartment);
+
+    const tenantForm = await TenantFormInitial.findOne({
+      owner: ownerId,
+      apartment: apartment,
+    });
+    console.log('tenantForm', tenantForm);
     if (tenantForm) {
       res.status(200).json(tenantForm);
     } else {
@@ -43,8 +52,9 @@ const createTenantFormQuarterly = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const { tenantForm } = req.body;
+    const { tenantForm , apartment } = req.body;
     tenantForm.owner = req.locals.currentUserId;
+    tenantForm.apartment = apartment;
     const createdForm = await TenantQuestionnaireQuarterly.create(tenantForm);
 
     res.status(201).json(createdForm);
@@ -60,8 +70,11 @@ const getTenantFormQuarterlyByOwnerId = async (
 ): Promise<void> => {
   try {
     const { ownerId } = req.params;
+    const {apartment} = req.query;
+
     const tenantForm = await TenantQuestionnaireQuarterly.findOne({
       owner: ownerId,
+      apartment: apartment,
     });
     if (tenantForm) {
       console.log('tenantForm', tenantForm);

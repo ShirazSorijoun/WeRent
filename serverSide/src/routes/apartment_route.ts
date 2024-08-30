@@ -241,6 +241,7 @@ const router = express.Router();
  */
 
 router.get('/', ApartmentController.getAllApartments);
+router.get('/withoutLease', ApartmentController.getAllApartmentsWithoutLLease);
 
 /**
  * @swagger

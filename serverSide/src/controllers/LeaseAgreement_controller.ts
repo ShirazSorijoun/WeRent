@@ -42,18 +42,18 @@ export const getLeaseAgreementById = async (
   }
 };
 
-export const getLeaseAgreementByApartmentAndUserId = async (
+export const getLeaseAgreementByApartmentAndTenant = async (
   req: AuthRequest,
   res: Response,
 ) => {
   try {
-    const { tenantId, apartmentId } = req.params;
+    const { tenantId, apartmentId } = req.query;
     const leaseAgreement = await LeaseAgreement.findOne({
       apartment: apartmentId,
       tenantId,
     });
 
-    res.status(200).json(leaseAgreement.toJSON());
+    res.status(200).json(leaseAgreement?.toJSON());
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -145,6 +145,10 @@ export const updateLeaseAgreement = async (
 
     await existingLeaseAgreement.updateOne(updatedLeaseAgreement);
 
+    existingLeaseAgreement.tenantSignature = undefined;
+    existingLeaseAgreement.tenantSignature = undefined;
+
+    await existingLeaseAgreement.save();
     res.status(200).json(existingLeaseAgreement.toJSON());
   } catch (err) {
     console.error(err);

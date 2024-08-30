@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface ITenantQuestionnaireInitialy extends Document {
   owner: mongoose.Schema.Types.ObjectId;
+  apartment: mongoose.Schema.Types.ObjectId;
   rentalAgreement: boolean;
   rentalAgreementComments?: string;
   propertyInformation: boolean;
@@ -28,6 +29,10 @@ export const tenantQuestionnaireInitialySchema: Schema<ITenantQuestionnaireIniti
       owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
+      },
+      apartment: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
       rentalAgreement: {

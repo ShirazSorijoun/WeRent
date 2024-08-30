@@ -13,8 +13,6 @@ export const createLeaseAgreement = async (
   try {
     const { leaseAgreement, tenantId, apartmentId } = req.body;
 
-    console.log('leaseAgreement', leaseAgreement);
-
     leaseAgreement.tenantId = tenantId;
     leaseAgreement.apartment = apartmentId;
 
@@ -63,12 +61,8 @@ export const getLeaseAgreementByApartmentId = async (
   req: AuthRequest,
   res: Response,
 ) => {
-  console.log('Entering getLeaseAgreementByApartmentId function');
-
   try {
-    console.log('Request received');
     const { apartment } = req.params;
-    console.log('apartmentId:', apartment);
 
     if (!apartment) {
       console.log('No apartmentId provided');

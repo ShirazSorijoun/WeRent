@@ -59,7 +59,7 @@ export const getMatchesByApartmentId = async (
         select: 'profile_image email firstName lastName _id',
       },
       {
-        path: 'Apartment',
+        path: 'apartment',
         select: 'leaseId _id',
       },
     ]);

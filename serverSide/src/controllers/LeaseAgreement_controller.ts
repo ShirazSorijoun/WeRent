@@ -145,6 +145,10 @@ export const updateLeaseAgreement = async (
 
     await existingLeaseAgreement.updateOne(updatedLeaseAgreement);
 
+    existingLeaseAgreement.tenantSignature = undefined;
+    existingLeaseAgreement.tenantSignature = undefined;
+
+    await existingLeaseAgreement.save();
     res.status(200).json(existingLeaseAgreement.toJSON());
   } catch (err) {
     console.error(err);

@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
+import path from 'path';
+import { engine } from 'express-handlebars'; // Import the engine function
 import {
   authRoute,
   userRoute,
@@ -15,6 +17,8 @@ import {
   leaseAgreementRoute,
   matchRoute,
 } from './routes';
+
+dotenv.config();
 
 const options = {
   definition: {
@@ -30,8 +34,6 @@ const options = {
   apis: ['./src/routes/*.ts'],
 };
 const specs = swaggerJsDoc(options);
-
-dotenv.config();
 
 const initApp = (): Promise<Express> => {
   const promise = new Promise<Express>((resolve) => {
@@ -53,6 +55,22 @@ const initApp = (): Promise<Express> => {
       // Enable CORS for all routes
       app.use(cors());
 
+      // Configure Handlebars
+      // Configure Handlebars with prototype property access allowed
+      app.engine(
+        'handlebars',
+        engine({
+          extname: '.handlebars',
+          helpers: {},
+          runtimeOptions: {
+            allowProtoPropertiesByDefault: true,
+          },
+        }),
+      );
+      app.set('view engine', 'handlebars');
+      app.set('views', path.join(__dirname, '../views')); // Set the views directory
+
+      // Define your routes
       app.use('/auth', authRoute);
       app.use('/user', userRoute);
       app.use('/apartment', apartmentRoute);
@@ -63,11 +81,15 @@ const initApp = (): Promise<Express> => {
       app.use('/match', matchRoute);
       app.use('/public', express.static('public'));
 
+      // Swagger UI
       app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
       app.use('/assets', express.static('static/assets'));
+
+      // Catch-all Route
       app.use('*', (req, res) => {
         res.sendFile('index.html', { root: 'static/' });
       });
+
       resolve(app);
     });
   });

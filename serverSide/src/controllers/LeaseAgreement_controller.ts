@@ -5,6 +5,9 @@ import LeaseAgreement, {
 } from '../models/LeaseAgreement_model';
 import { AuthRequest } from '../models/request';
 import Apartment from '../models/apartment_model';
+import { User } from '../models/user_model';
+
+import { format } from 'date-fns';
 
 export const createLeaseAgreement = async (
   req: AuthRequest,
@@ -180,5 +183,50 @@ export const getLeaseAgreementListByUserId = async (
     res
       .status(500)
       .send('Something went wrong -> getLeaseAgreementListByUserId');
+  }
+};
+
+export const renderLeaseAgreementDocument = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const leaseAgreement = await LeaseAgreement.findById(id);
+
+    if (!leaseAgreement) {
+      return res.status(404).json({ message: 'Lease Agreement not found' });
+    }
+
+    // Fetch tenant details
+    const tenant = await User.findById(leaseAgreement.tenantId);
+
+    // Fetch apartment details and apartment owner details
+    const apartment = await Apartment.findById(leaseAgreement.apartment).populate('owner');
+    const apartmentOwner = await User.findById(apartment.owner);
+
+    // Format dates
+    const formattedDate = format(leaseAgreement.date, 'dd/MM/yyyy');
+    const formattedStartDate = format(leaseAgreement.startDate, 'dd/MM/yyyy');
+    const formattedEndDate = format(leaseAgreement.endDate, 'dd/MM/yyyy');
+
+    // Prepare data for the template
+    const templateData = {
+      lease: {
+        ...leaseAgreement.toObject(),
+        formattedDate,
+        formattedStartDate,
+        formattedEndDate,
+        tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : 'N/A',
+        apartmentOwnerName: apartmentOwner ? `${apartmentOwner.firstName} ${apartmentOwner.lastName}` : 'N/A',
+        apartmentAddress: apartment ? `${apartment.address}, ${apartment.city}` : 'N/A',
+      },
+    };
+
+    // Render the Handlebars template with the data
+    res.render('lease', templateData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error rendering lease agreement document');
   }
 };

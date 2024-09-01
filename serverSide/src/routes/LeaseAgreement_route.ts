@@ -17,7 +17,7 @@ router.post(
 );
 
 router.get(
-  'id/:leaseId',
+  '/id/:leaseId',
   AuthMiddleware,
   LeaseAgreementController.getLeaseAgreementById,
 );

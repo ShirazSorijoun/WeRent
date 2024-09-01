@@ -1,13 +1,12 @@
 import { Response } from 'express';
 import mongoose from 'mongoose';
+import { format } from 'date-fns';
 import LeaseAgreement, {
   ILeaseAgreement,
 } from '../models/LeaseAgreement_model';
 import { AuthRequest } from '../models/request';
 import Apartment from '../models/apartment_model';
 import { User } from '../models/user_model';
-
-import { format } from 'date-fns';
 
 export const createLeaseAgreement = async (
   req: AuthRequest,
@@ -18,6 +17,21 @@ export const createLeaseAgreement = async (
 
     leaseAgreement.tenantId = tenantId;
     leaseAgreement.apartment = apartmentId;
+
+    const isApartmentExist = await Apartment.exists({
+      _id: apartmentId,
+    });
+
+    const isTenantExist = await User.exists({
+      _id: tenantId,
+    });
+
+    if (!isApartmentExist || !isTenantExist) {
+      res.status(403).json({
+        message: "tenant or apartment doesn't exists",
+      });
+      return;
+    }
 
     const createdLeaseAgreement = await LeaseAgreement.create(leaseAgreement);
     res.status(201).json(createdLeaseAgreement);
@@ -32,8 +46,9 @@ export const getLeaseAgreementById = async (
   res: Response,
 ) => {
   try {
-    const id = req.params;
-    const leaseAgreement = await LeaseAgreement.findById(id);
+    const { leaseId } = req.params;
+    const leaseAgreement =
+      await LeaseAgreement.findById(leaseId).populate('apartment');
     if (!leaseAgreement) {
       return res.status(404).json({ message: 'Lease Agreement not found' });
     }
@@ -143,9 +158,55 @@ export const updateLeaseAgreement = async (
     await existingLeaseAgreement.updateOne(updatedLeaseAgreement);
 
     existingLeaseAgreement.tenantSignature = undefined;
-    existingLeaseAgreement.tenantSignature = undefined;
+    existingLeaseAgreement.ownerSignature = undefined;
 
     await existingLeaseAgreement.save();
+    res.status(200).json(existingLeaseAgreement.toJSON());
+  } catch (err) {
+    console.error(err);
+    res.status(400).send('Something went wrong -> updateApartment');
+  }
+};
+
+export const addSignatureToLease = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { leaseId, signatureUrl }: { leaseId: string; signatureUrl: string } =
+      req.body;
+
+    const existingLeaseAgreement = await LeaseAgreement.findById(leaseId);
+
+    if (!existingLeaseAgreement) {
+      res.status(404).send('Lease Agreement not found');
+      return;
+    }
+
+    // Validate owner
+    const userId = req.locals.currentUserId;
+    const apartment = await Apartment.findById(
+      existingLeaseAgreement.apartment,
+    );
+
+    if (userId === existingLeaseAgreement.tenantId.toString()) {
+      existingLeaseAgreement.tenantSignature = signatureUrl;
+    } else if (userId === apartment.owner.toString()) {
+      existingLeaseAgreement.ownerSignature = signatureUrl;
+    } else {
+      res.status(400).send('user is not tenant or owner of this lease');
+      return;
+    }
+
+    await existingLeaseAgreement.save();
+
+    if (
+      existingLeaseAgreement.tenantSignature &&
+      existingLeaseAgreement.ownerSignature
+    ) {
+      await apartment.updateOne({ leaseId });
+    }
+
     res.status(200).json(existingLeaseAgreement.toJSON());
   } catch (err) {
     console.error(err);
@@ -188,7 +249,7 @@ export const getLeaseAgreementListByUserId = async (
 
 export const renderLeaseAgreementDocument = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { id } = req.params;
@@ -202,7 +263,9 @@ export const renderLeaseAgreementDocument = async (
     const tenant = await User.findById(leaseAgreement.tenantId);
 
     // Fetch apartment details and apartment owner details
-    const apartment = await Apartment.findById(leaseAgreement.apartment).populate('owner');
+    const apartment = await Apartment.findById(
+      leaseAgreement.apartment,
+    ).populate('owner');
     const apartmentOwner = await User.findById(apartment.owner);
 
     // Format dates
@@ -218,8 +281,12 @@ export const renderLeaseAgreementDocument = async (
         formattedStartDate,
         formattedEndDate,
         tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : 'N/A',
-        apartmentOwnerName: apartmentOwner ? `${apartmentOwner.firstName} ${apartmentOwner.lastName}` : 'N/A',
-        apartmentAddress: apartment ? `${apartment.address}, ${apartment.city}` : 'N/A',
+        apartmentOwnerName: apartmentOwner
+          ? `${apartmentOwner.firstName} ${apartmentOwner.lastName}`
+          : 'N/A',
+        apartmentAddress: apartment
+          ? `${apartment.address}, ${apartment.city}`
+          : 'N/A',
       },
     };
 

@@ -47,7 +47,8 @@ export const getLeaseAgreementById = async (
 ) => {
   try {
     const { leaseId } = req.params;
-    const leaseAgreement = await LeaseAgreement.findById(leaseId);
+    const leaseAgreement =
+      await LeaseAgreement.findById(leaseId).populate('apartment');
     if (!leaseAgreement) {
       return res.status(404).json({ message: 'Lease Agreement not found' });
     }

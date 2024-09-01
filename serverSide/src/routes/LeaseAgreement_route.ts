@@ -9,7 +9,12 @@ router.post(
   AuthMiddleware,
   LeaseAgreementController.createLeaseAgreement,
 );
-// router.get('/:id', LeaseAgreementController.getLeaseAgreementById);
+
+router.post(
+  '/addSignature',
+  AuthMiddleware,
+  LeaseAgreementController.addSignatureToLease,
+);
 
 router.get(
   'id/:leaseId',

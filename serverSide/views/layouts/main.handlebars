@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הסכם שכירות</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            text-decoration: underline;
+            margin-bottom: 20px;
+        }
+        .lease-container {
+            border: 1px solid #000;
+            padding: 30px;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .lease-field {
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .lease-field span {
+            font-weight: bold;
+            display: inline-block;
+            min-width: 150px;
+        }
+        .section-title {
+            font-size: 18px;
+            text-decoration: underline;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        @media print {
+            .lease-container {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lease-container">
+        <h1>הסכם שכירות</h1>
+        
+        <!-- Lease Details Section -->
+        <div class="section-title">פרטי הסכם</div>
+        <p class="lease-field"><span>תאריך:</span> {{lease.formattedDate}}</p>
+        <p class="lease-field"><span>דייר:</span> {{lease.tenantName}}</p>
+        <p class="lease-field"><span>בעל הדירה:</span> {{lease.apartmentOwnerName}}</p>
+        <p class="lease-field"><span>כתובת הדירה:</span> {{lease.apartmentAddress}}</p>
+
+        <!-- Lease Period Section -->
+        <div class="section-title">תקופת השכירות</div>
+        <p class="lease-field"><span>תאריך התחלה:</span> {{lease.formattedStartDate}}</p>
+        <p class="lease-field"><span>תאריך סיום:</span> {{lease.formattedEndDate}}</p>
+
+        <!-- Payment Details Section -->
+        <div class="section-title">פרטי תשלום</div>
+        <p class="lease-field"><span>מחיר שכירות חודשי:</span> {{lease.rentalPricePerMonth}} ₪</p>
+        <p class="lease-field"><span>יום בחודש לתשלום:</span> {{lease.dayOfTheMonthForPayment}}</p>
+        <p class="lease-field"><span>שיטת תשלום:</span> {{lease.paymentMethod}}</p>
+        <p class="lease-field"><span>שם הבנק:</span> {{lease.nameOfBank}}</p>
+        <p class="lease-field"><span>מספר חשבון בנק:</span> {{lease.bankAccountNumber}}</p>
+        <p class="lease-field"><span>סניף בנק:</span> {{lease.bankBranch}}</p>
+
+        <!-- Guarantee Section -->
+        <div class="section-title">ערבויות והערות</div>
+        <p class="lease-field"><span>ערבות:</span> {{lease.guarantee}} - {{lease.guaranteeAmount}} ₪</p>
+        <p class="lease-field"><span>הערות נוספות:</span> {{#if lease.promissoryNote}}שטר חוב: {{lease.promissoryNoteAmount}} ₪{{/if}}</p>
+        <p class="lease-field"><span>בעלי חיים:</span> {{#if lease.animal}}כן{{else}}לא{{/if}}</p>
+    </div>
+</body>
+</html>

@@ -43,4 +43,11 @@ router.get(
   AuthMiddleware,
   LeaseAgreementController.getLeaseAgreementByApartmentAndTenant,
 );
+
+// Route to Render Lease Agreement Document
+router.get(
+  '/render/:id',
+  LeaseAgreementController.renderLeaseAgreementDocument,
+);
+
 export default router;
